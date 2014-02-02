@@ -5,62 +5,69 @@
  */
 package parser;
 
+import cpn.Place;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+ 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import org.xml.sax.Attributes;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+ 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 /**
  *
  * @author hmg
  */
 public class Main {
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         try {
-
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser saxParser = factory.newSAXParser();
-
-            DefaultHandler handler = new DefaultHandler() {
-
-                boolean place = false;
-                boolean place_posX = false;
-                boolean place_posY = false;
-
-                @Override
-                public void startElement(String uri, String localName, String qName,
-                        Attributes attributes) throws SAXException {
-
-                    if (qName.equalsIgnoreCase("PLACE")) {
-                        System.out.println("ID: " + attributes.getValue("id"));
-                        place = true;
-                    } 
-               }
-
-                @Override
-                public void endElement(String uri, String localName,
-                        String qName) throws SAXException {
-
-                }
-
-                @Override
-                public void characters(char ch[], int start, int length) throws SAXException {
-
-                    if (place) {
-                        System.out.println("Text: " + new String(ch, start, length));
-                        place = false;
+            FileInputStream file = new FileInputStream(new File("/Users/hmg/Desktop/SimpleProtocol.xml"));
+            
+            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+             
+            DocumentBuilder builder =  builderFactory.newDocumentBuilder();
+             
+            Document xmlDocument = builder.parse(file);
+ 
+            XPath xPath =  XPathFactory.newInstance().newXPath();
+            
+            XPathExpression expr = xPath.compile("//place/type/text"); 
+            NodeList nodes = (NodeList) expr.evaluate(xmlDocument,XPathConstants.NODESET);
+            Place p = new Place();
+            for (int i=0; i<nodes.getLength();i++) {
+                Node node = nodes.item(i).getParentNode().getParentNode();
+                p.setId(node.getAttributes().getNamedItem("id").getTextContent());
+                NodeList childs = node.getChildNodes();
+                for (int j=0;j<childs.getLength();j++) {
+                    switch (childs.item(j).getNodeName()) {
+                        case "posattr":
+                            double x = Double.parseDouble(childs.item(j).getAttributes().getNamedItem("x").getTextContent());
+                            double y = Double.parseDouble(childs.item(j).getAttributes().getNamedItem("y").getTextContent());
+                            p.setPosX(x);
+                            p.setPosY(y);
+                            break;
+                        case "text":
+                            p.setText(childs.item(j).getTextContent());
+                            break;
                     }
                 }
+                p.setType(nodes.item(i).getTextContent());
+                System.out.println(p);
+            }
 
-            };
-
-            saxParser.parse("/Users/hmg/Desktop/SimpleProtocol.xml", handler);
-
-        } catch (IOException | ParserConfigurationException | SAXException e) {
+        } catch (FileNotFoundException e) {
+            
         }
     }
 }

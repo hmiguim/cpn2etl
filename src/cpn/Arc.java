@@ -120,7 +120,7 @@ public class Arc {
     public String toString() {
         StringBuilder str = new StringBuilder("[ID: " + this.id + ", ");
         str.append("Orientation: ").append(this.orientation).append(", ");
-        str.append("Text: ").append(this.text).append(", ");
+        str.append("Text: \'").append(this.text).append("\', ");
         str.append("Place: {").append(this.placeEnd.toString()).append("}, ");
         str.append("Transtition: {").append(this.transEnd.toString()).append("}];");
 

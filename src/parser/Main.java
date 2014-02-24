@@ -6,10 +6,11 @@
 package parser;
 
 import cpn.Arc;
+import cpn.Cpn;
 import cpn.Place;
-import cpn.Transition;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import org.xml.sax.SAXException;
@@ -26,15 +27,29 @@ public class Main {
         ParserFactory parserFactory = ParserFactory.newInstance();
 
         // Create a parser build to the specific path
-        ParserBuilder parserBuild = parserFactory.newParserBuilder("/Users/hmg/Desktop/SimpleProtocol.xml");
+        ParserBuilder parserBuild = parserFactory.newParserBuilder("/Users/hmg/Documents/Universidade/MSc Dissertation/Files/Surrogate Key Pipeline.xml");
 
         // Parse the file
-        parserBuild.parse();
+        Cpn cpn = parserBuild.parse();
 
         // Get the parsed elements
-        HashMap<String, Place> places = parserBuild.getPlaces();
-        HashMap<String, Transition> transitions = parserBuild.getTransitions();
-        HashMap<String, Arc> arcs = parserBuild.getArcs();
-
+        HashMap<String,Arc> arcs = cpn.getArcs();
+        HashMap<String,Place> places = cpn.getPlacesPort();
+        
+        for(Entry<String,Place> entry : places.entrySet()) {
+           // StringBuilder str = new StringBuilder("Arc id = " + entry.getValue().getId());
+           // str.append("; Text: ").append(entry.getValue().getText());
+           // str.append("; Orientation: ").append(entry.getValue().getOrientation());
+           // str.append("; Place: ").append(entry.getValue().getPlaceEnd().getText());
+           // str.append("; Trans: ").append(entry.getValue().getTransEnd().getText());
+            
+           // System.out.println(str.toString());
+           
+            System.out.println(entry.getValue().toString());
+        }
+    
+        
+        
+        
     }
 }

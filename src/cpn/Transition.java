@@ -95,10 +95,7 @@ public class Transition {
         if (Double.doubleToLongBits(this.posY) != Double.doubleToLongBits(other.posY)) {
             return false;
         }
-        if (!Objects.equals(this.text, other.text)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.text, other.text);
     }
 
     @Override

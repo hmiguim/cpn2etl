@@ -6,7 +6,9 @@
 package parser;
 
 import cpn.Arc;
+import cpn.Cpn;
 import cpn.Place;
+import cpn.Port;
 import cpn.Transition;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,40 +36,28 @@ public class ParserBuilder {
     private FileInputStream file;
     private DocumentBuilder builder;
     private Document xmlDocument;
-    private HashMap<String, Place> places;
-    private HashMap<String, Transition> transitions;
-    private HashMap<String, Arc> arcs;
+    private Cpn cpn;
 
     public ParserBuilder() {
 
     }
 
     public ParserBuilder(String path, DocumentBuilder b) throws FileNotFoundException, SAXException, IOException {
-        this.places = new HashMap<>();
-        this.transitions = new HashMap();
-        this.arcs = new HashMap();
+        this.cpn = new Cpn();
         this.file = new FileInputStream(new File(path));
         this.builder = b;
     }
 
-    public void parse() throws SAXException, IOException, XPathExpressionException {
+    public Cpn parse() throws SAXException, IOException, XPathExpressionException {
         this.xmlDocument = this.builder.parse(this.file);
         this.parsePlaces();
+        this.builder.reset();
         this.parseTransitions();
+        this.builder.reset();
         this.parseArcs();
         this.builder.reset();
-    }
 
-    public HashMap<String, Place> getPlaces() {
-        return places;
-    }
-
-    public HashMap<String, Transition> getTransitions() {
-        return transitions;
-    }
-
-    public HashMap<String, Arc> getArcs() {
-        return arcs;
+        return cpn.clone();
     }
 
     public void parsePlaces() throws SAXException, IOException, XPathExpressionException {
@@ -79,9 +69,14 @@ public class ParserBuilder {
         NodeList nodes = (NodeList) expr.evaluate(this.xmlDocument, XPathConstants.NODESET);
 
         Place p;
+        Port port;
+        HashMap<String, Place> places = new HashMap<>();
+        HashMap<String, Place> places_port = new HashMap<>();
+        boolean is_port = false;
 
         for (int i = 0; i < nodes.getLength(); i++) {
             p = new Place();
+            port = new Port();
             Node node = nodes.item(i).getParentNode().getParentNode();
             p.setId(node.getAttributes().getNamedItem("id").getTextContent());
             NodeList childs = node.getChildNodes();
@@ -95,16 +90,27 @@ public class ParserBuilder {
                         break;
                     case "text":
                         p.setText(childs.item(j).getTextContent());
+                        p.setText(p.getText().replaceAll("\n", " "));
+                        break;
+                    case "port":
+                        is_port = true;
+                        port.setType(childs.item(j).getAttributes().getNamedItem("type").getTextContent());
+                        port.setId(childs.item(j).getAttributes().getNamedItem("id").getTextContent());
+                        p.setPort(port);
                         break;
                 }
+
+                p.setType(nodes.item(i).getTextContent());
             }
-            p.setType(nodes.item(i).getTextContent());
-
-            this.places.put(p.getId(), p);
-
+            if (is_port) {
+                places_port.put(p.getId(), p);
+                is_port = false;
+            } else {
+                places.put(p.getId(), p);
+            }
         }
-
-        this.builder.reset();
+        this.cpn.setPlaces(places);
+        this.cpn.setPlacesPort(places_port);
     }
 
     public void parseTransitions() throws SAXException, IOException, XPathExpressionException {
@@ -116,6 +122,7 @@ public class ParserBuilder {
         NodeList nodes = (NodeList) expr.evaluate(this.xmlDocument, XPathConstants.NODESET);
 
         Transition t;
+        HashMap<String, Transition> transitions = new HashMap<>();
 
         for (int i = 0; i < nodes.getLength(); i++) {
             t = new Transition();
@@ -131,12 +138,13 @@ public class ParserBuilder {
                         break;
                     case "text":
                         String text = childs.item(j).getTextContent();
-                        t.setText(text.replaceFirst("\n", " "));
+                        t.setText(text.replaceAll("\n", " "));
                         break;
                 }
             }
-            this.transitions.put(t.getId(), t);
+            transitions.put(t.getId(), t);
         }
+        this.cpn.setTransitions(transitions);
     }
 
     public void parseArcs() throws SAXException, IOException, XPathExpressionException {
@@ -148,6 +156,7 @@ public class ParserBuilder {
         NodeList nodes = (NodeList) expr.evaluate(this.xmlDocument, XPathConstants.NODESET);
 
         Arc a;
+        HashMap<String, Arc> arcs = new HashMap<>();
 
         for (int i = 0; i < nodes.getLength(); i++) {
             a = new Arc();
@@ -162,17 +171,17 @@ public class ParserBuilder {
                 switch (childs.item(j).getNodeName()) {
                     case "transend":
                         String t_id = childs.item(j).getAttributes().getNamedItem("idref").getTextContent();
-                        Transition t = this.transitions.get(t_id);
+                        Transition t = this.cpn.getTransitions().get(t_id);
                         a.setTransEnd(t);
                         break;
                     case "placeend":
                         String p_id = childs.item(j).getAttributes().getNamedItem("idref").getTextContent();
-                        Place p = this.places.get(p_id);
+                        Place p = this.cpn.getPlaces().get(p_id);
                         a.setPlaceEnd(p);
                         break;
                     case "annot":
                         NodeList annot_child_nodes = childs.item(j).getChildNodes();
-                        for (int k = 0 ; k<annot_child_nodes.getLength();k++) {
+                        for (int k = 0; k < annot_child_nodes.getLength(); k++) {
                             if (annot_child_nodes.item(k).getNodeName().equalsIgnoreCase("TEXT")) {
                                 String text = annot_child_nodes.item(k).getTextContent();
                                 a.setText(text.replaceAll("\n", " "));
@@ -181,8 +190,8 @@ public class ParserBuilder {
                         break;
                 }
             }
-
-            this.arcs.put(a.getId(), a);
+            arcs.put(a.getId(), a);
         }
+        this.cpn.setArcs(arcs);
     }
 }

@@ -5,6 +5,8 @@
  */
 package cpn;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -14,7 +16,7 @@ import java.util.Objects;
 public class Arc {
 
     private String id;
-    private String orientation;
+    private String orientation; //PtoT: place to transition; TtoP: transition to place; BOTHDIR: both
     private Place placeEnd;
     private Transition transEnd;
     private String text;
@@ -110,10 +112,7 @@ public class Arc {
         if (!Objects.equals(this.transEnd, other.transEnd)) {
             return false;
         }
-        if (!Objects.equals(this.text, other.text)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.text, other.text);
     }
 
     @Override

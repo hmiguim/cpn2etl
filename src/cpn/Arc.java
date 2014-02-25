@@ -14,7 +14,7 @@ import java.util.Objects;
 public class Arc {
 
     private String id;
-    private String orientation; //PtoT: place to transition; TtoP: transition to place; BOTHDIR: both
+    private String orientation; //PtoT: Place to Transition; TtoP: Transition to Place; BOTHDIR: Both Directions
     private Place placeEnd;
     private Transition transEnd;
     private String text;

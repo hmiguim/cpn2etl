@@ -37,28 +37,23 @@ public class ParserBuilder {
     private Document xmlDocument;
     private Cpn cpn;
 
-    public ParserBuilder() {
-
-    }
+    public ParserBuilder() { }
 
     public ParserBuilder(String path, DocumentBuilder b) throws FileNotFoundException, SAXException, IOException {
         this.cpn = new Cpn();
         this.file = new FileInputStream(new File(path));
         this.builder = b;
     }
-
+    
+    // Public Method to invoke the parse
     public Cpn parse() throws SAXException, IOException, XPathExpressionException {
         this.xmlDocument = this.builder.parse(this.file);
-        //  this.parsePlaces();
-        //  this.builder.reset();
-        //  this.parseTransitions();
-        //  this.builder.reset();
         this.parseCPN();
         this.builder.reset();
-
         return cpn.clone();
     }
 
+    // Parse the CPN File
     private void parseCPN() throws XPathExpressionException, SAXException, IOException {
 
         XPath xPath = XPathFactory.newInstance().newXPath();
@@ -118,6 +113,7 @@ public class ParserBuilder {
         cpn.setPages(pages);
     }
 
+    // Return the information for each place
     private Place parsePlace(Node node) {
 
         NodeList childs = node.getChildNodes();
@@ -154,6 +150,7 @@ public class ParserBuilder {
         return p;
     }
 
+    // Return the information for each transition
     private Transition parseTransition(Node node) {
 
         Transition t = new Transition();
@@ -180,6 +177,7 @@ public class ParserBuilder {
         return t;
     }
 
+    // Return the information for each arc
     private Arc parseArc(Node node, Page page) {
 
         Arc a = new Arc();

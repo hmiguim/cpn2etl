@@ -5,8 +5,6 @@
  */
 package cpn;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -21,8 +19,7 @@ public class Arc {
     private Transition transEnd;
     private String text;
 
-    public Arc() {
-    }
+    public Arc() { }
 
     public Arc(String id, String orientation, Place placeEnd, Transition transEnd, String text) {
         this.id = id;

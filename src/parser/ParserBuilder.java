@@ -7,14 +7,14 @@ package parser;
 
 import cpn.Arc;
 import cpn.Cpn;
+import cpn.Page;
 import cpn.Place;
-import cpn.Port;
 import cpn.Transition;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -50,148 +50,165 @@ public class ParserBuilder {
 
     public Cpn parse() throws SAXException, IOException, XPathExpressionException {
         this.xmlDocument = this.builder.parse(this.file);
-        this.parsePlaces();
-        this.builder.reset();
-        this.parseTransitions();
-        this.builder.reset();
-        this.parseArcs();
+        //  this.parsePlaces();
+        //  this.builder.reset();
+        //  this.parseTransitions();
+        //  this.builder.reset();
+        this.parseCPN();
         this.builder.reset();
 
         return cpn.clone();
     }
 
-    public void parsePlaces() throws SAXException, IOException, XPathExpressionException {
+    private void parseCPN() throws XPathExpressionException, SAXException, IOException {
 
         XPath xPath = XPathFactory.newInstance().newXPath();
-
-        XPathExpression expr = xPath.compile("//place/type/text");
-
+        XPathExpression expr = xPath.compile("//page");
         NodeList nodes = (NodeList) expr.evaluate(this.xmlDocument, XPathConstants.NODESET);
 
-        Place p;
-        Port port;
-        HashMap<String, Place> places = new HashMap<>();
-        HashMap<String, Place> places_port = new HashMap<>();
-        boolean is_port = false;
+        Page page;
+
+        // Linked Hash with the pages from the CPN file
+        LinkedHashMap<String, Page> pages = new LinkedHashMap<>();
+
+        // Linked Hash with the places from a page
+        LinkedHashMap<String, Place> places = new LinkedHashMap<>();
+
+        // Linked Hash with the transitions from a page
+        LinkedHashMap<String, Transition> transitions = new LinkedHashMap<>();
+        
+        // Linked Hash with the arcs from a page
+        LinkedHashMap<String, Arc> arcs = new LinkedHashMap<>();
 
         for (int i = 0; i < nodes.getLength(); i++) {
-            p = new Place();
-            port = new Port();
-            Node node = nodes.item(i).getParentNode().getParentNode();
-            p.setId(node.getAttributes().getNamedItem("id").getTextContent());
-            NodeList childs = node.getChildNodes();
-            for (int j = 0; j < childs.getLength(); j++) {
-                switch (childs.item(j).getNodeName()) {
-                    case "posattr":
-                        double x = Double.parseDouble(childs.item(j).getAttributes().getNamedItem("x").getTextContent());
-                        double y = Double.parseDouble(childs.item(j).getAttributes().getNamedItem("y").getTextContent());
-                        p.setPosX(x);
-                        p.setPosY(y);
-                        break;
-                    case "text":
-                        p.setText(childs.item(j).getTextContent());
-                        p.setText(p.getText().replaceAll("\n", " "));
-                        break;
-                    case "port":
-                        is_port = true;
-                        port.setType(childs.item(j).getAttributes().getNamedItem("type").getTextContent());
-                        port.setId(childs.item(j).getAttributes().getNamedItem("id").getTextContent());
-                        p.setPort(port);
-                        break;
-                }
+            page = new Page();
 
-                p.setType(nodes.item(i).getTextContent());
-            }
-            if (is_port) {
-                places_port.put(p.getId(), p);
-                is_port = false;
-            } else {
-                places.put(p.getId(), p);
-            }
-        }
-        this.cpn.setPlaces(places);
-        this.cpn.setPlacesPort(places_port);
-    }
-
-    public void parseTransitions() throws SAXException, IOException, XPathExpressionException {
-
-        XPath xPath = XPathFactory.newInstance().newXPath();
-
-        XPathExpression expr = xPath.compile("//trans");
-
-        NodeList nodes = (NodeList) expr.evaluate(this.xmlDocument, XPathConstants.NODESET);
-
-        Transition t;
-        HashMap<String, Transition> transitions = new HashMap<>();
-
-        for (int i = 0; i < nodes.getLength(); i++) {
-            t = new Transition();
-            t.setId(nodes.item(i).getAttributes().getNamedItem("id").getTextContent());
-            NodeList childs = nodes.item(i).getChildNodes();
-            for (int j = 0; j < childs.getLength(); j++) {
-                switch (childs.item(j).getNodeName()) {
-                    case "posattr":
-                        double x = Double.parseDouble(childs.item(j).getAttributes().getNamedItem("x").getTextContent());
-                        double y = Double.parseDouble(childs.item(j).getAttributes().getNamedItem("y").getTextContent());
-                        t.setPosX(x);
-                        t.setPosY(y);
-                        break;
-                    case "text":
-                        String text = childs.item(j).getTextContent();
-                        t.setText(text.replaceAll("\n", " "));
-                        break;
-                }
-            }
-            transitions.put(t.getId(), t);
-        }
-        this.cpn.setTransitions(transitions);
-    }
-
-    public void parseArcs() throws SAXException, IOException, XPathExpressionException {
-
-        XPath xPath = XPathFactory.newInstance().newXPath();
-
-        XPathExpression expr = xPath.compile("//arc");
-
-        NodeList nodes = (NodeList) expr.evaluate(this.xmlDocument, XPathConstants.NODESET);
-
-        Arc a;
-        HashMap<String, Arc> arcs = new HashMap<>();
-
-        for (int i = 0; i < nodes.getLength(); i++) {
-            a = new Arc();
-
-            NamedNodeMap attr = nodes.item(i).getAttributes();
-
-            a.setId(attr.getNamedItem("id").getTextContent());
-            a.setOrientation(attr.getNamedItem("orientation").getTextContent());
+            page.setId(nodes.item(i).getAttributes().getNamedItem("id").getTextContent());
 
             NodeList childs = nodes.item(i).getChildNodes();
+
             for (int j = 0; j < childs.getLength(); j++) {
                 switch (childs.item(j).getNodeName()) {
-                    case "transend":
-                        String t_id = childs.item(j).getAttributes().getNamedItem("idref").getTextContent();
-                        Transition t = this.cpn.getTransitions().get(t_id);
-                        a.setTransEnd(t);
+                    case "pageattr":
+                        page.setName(childs.item(j).getAttributes().getNamedItem("name").getTextContent());
                         break;
-                    case "placeend":
-                        String p_id = childs.item(j).getAttributes().getNamedItem("idref").getTextContent();
-                        Place p = this.cpn.getPlaces().get(p_id);
-                        a.setPlaceEnd(p);
+                    case "place":
+                        Place p = parsePlace(childs.item(j));
+                        places.put(p.getId(), p);
+                        page.setPlaces(places);
                         break;
-                    case "annot":
-                        NodeList annot_child_nodes = childs.item(j).getChildNodes();
-                        for (int k = 0; k < annot_child_nodes.getLength(); k++) {
-                            if (annot_child_nodes.item(k).getNodeName().equalsIgnoreCase("TEXT")) {
-                                String text = annot_child_nodes.item(k).getTextContent();
-                                a.setText(text.replaceAll("\n", " "));
-                            }
+                    case "trans":
+                        Transition t = parseTransition(childs.item(j));
+                        transitions.put(t.getId(), t);
+                        page.setTransitions(transitions);
+                        break;
+                    case "arc":
+                        Arc a = parseArc(childs.item(j), page);
+                        arcs.put(a.getId(), a);
+                        page.setArcs(arcs);
+                }
+                pages.put(page.getId(), page);
+            }
+
+        }
+
+        cpn.setPages(pages);
+    }
+
+    private Place parsePlace(Node node) {
+
+        NodeList childs = node.getChildNodes();
+
+        Place p = new Place();
+
+        p.setId(node.getAttributes().getNamedItem("id").getTextContent());
+
+        for (int i = 0; i < childs.getLength(); i++) {
+            switch (childs.item(i).getNodeName()) {
+                case "posattr":
+                    double x = Double.parseDouble(childs.item(i).getAttributes().getNamedItem("x").getTextContent());
+                    double y = Double.parseDouble(childs.item(i).getAttributes().getNamedItem("y").getTextContent());
+                    p.setPosX(x);
+                    p.setPosY(y);
+                    break;
+                case "text":
+                    p.setText(childs.item(i).getTextContent());
+                    p.setText(p.getText().replaceAll("\n", " "));
+                    break;
+                case "type":
+                    NodeList type_node = childs.item(i).getChildNodes();
+                    for (int j = 0; j < type_node.getLength(); j++) {
+                        switch (type_node.item(j).getNodeName()) {
+                            case "text":
+                                p.setType(type_node.item(j).getTextContent());
+                                p.setText(p.getText().replaceAll("\n", " "));
+                                break;
                         }
-                        break;
-                }
+                    }
+                    break;
             }
-            arcs.put(a.getId(), a);
         }
-        this.cpn.setArcs(arcs);
+        return p;
+    }
+
+    private Transition parseTransition(Node node) {
+
+        Transition t = new Transition();
+
+        t.setId(node.getAttributes().getNamedItem("id").getTextContent());
+
+        NodeList childs = node.getChildNodes();
+
+        for (int i = 0; i < childs.getLength(); i++) {
+            switch (childs.item(i).getNodeName()) {
+                case "posattr":
+                    double x = Double.parseDouble(childs.item(i).getAttributes().getNamedItem("x").getTextContent());
+                    double y = Double.parseDouble(childs.item(i).getAttributes().getNamedItem("y").getTextContent());
+                    t.setPosX(x);
+                    t.setPosY(y);
+                    break;
+                case "text":
+                    String text = childs.item(i).getTextContent();
+                    t.setText(text.replaceAll("\n", " "));
+                    break;
+            }
+        }
+
+        return t;
+    }
+
+    private Arc parseArc(Node node, Page page) {
+
+        Arc a = new Arc();
+
+        a.setId(node.getAttributes().getNamedItem("id").getTextContent());
+
+        NodeList childs = node.getChildNodes();
+
+        for (int i = 0; i < childs.getLength(); i++) {
+            switch (childs.item(i).getNodeName()) {
+                case "transend":
+                    String t_id = childs.item(i).getAttributes().getNamedItem("idref").getTextContent();
+                    Transition t = page.getTransitions().get(t_id);
+                    a.setTransEnd(t);
+                    break;
+                case "placeend":
+                    String p_id = childs.item(i).getAttributes().getNamedItem("idref").getTextContent();
+                    Place p = page.getPlaces().get(p_id);
+                    a.setPlaceEnd(p);
+                    break;
+                case "annot":
+                    NodeList annot_nodes = childs.item(i).getChildNodes();
+                    for (int j = 0; j < annot_nodes.getLength(); j++) {
+                        switch (annot_nodes.item(j).getNodeName()) {
+                            case "text":
+                                String text = annot_nodes.item(j).getTextContent();
+                                a.setText(text.replaceAll("\n", " "));
+                        }
+                    }
+            }
+        }
+
+        return a;
     }
 }

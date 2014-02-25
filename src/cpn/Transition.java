@@ -17,15 +17,27 @@ public class Transition {
     private double posX;
     private double posY;
     private String text;
+    private boolean subPage;
+    private SubPage subPageInfo;
 
     public Transition() {
     }
 
-    public Transition(String id, double posX, double posY, String text) {
+    public Transition(String id, double posX, double posY, String text, boolean subpage) {
         this.id = id;
         this.posX = posX;
         this.posY = posY;
         this.text = text;
+        this.subPage = subpage;
+    }
+
+    public Transition(String id, double posX, double posY, String text, boolean subpage, SubPage subPageInfo) {
+        this.id = id;
+        this.posX = posX;
+        this.posY = posY;
+        this.text = text;
+        this.subPage = subpage;
+        this.subPageInfo = subPageInfo;
     }
 
     public Transition(Transition t) {
@@ -33,6 +45,8 @@ public class Transition {
         this.posX = t.getPosX();
         this.posY = t.getPosY();
         this.text = t.getText();
+        this.subPage = t.isSubPage();
+        this.subPageInfo = t.getSubPageInfo();
     }
 
     public String getId() {
@@ -67,13 +81,31 @@ public class Transition {
         this.text = text;
     }
 
+    public boolean isSubPage() {
+        return subPage;
+    }
+
+    public void setSubpage(boolean subPage) {
+        this.subPage = subPage;
+    }
+
+    public SubPage getSubPageInfo() {
+        return subPageInfo;
+    }
+
+    public void setSubPageInfo(SubPage subPageInfo) {
+        this.subPageInfo = subPageInfo;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 23 * hash + Objects.hashCode(this.id);
-        hash = 23 * hash + (int) (Double.doubleToLongBits(this.posX) ^ (Double.doubleToLongBits(this.posX) >>> 32));
-        hash = 23 * hash + (int) (Double.doubleToLongBits(this.posY) ^ (Double.doubleToLongBits(this.posY) >>> 32));
-        hash = 23 * hash + Objects.hashCode(this.text);
+        int hash = 5;
+        hash = 71 * hash + Objects.hashCode(this.id);
+        hash = 71 * hash + (int) (Double.doubleToLongBits(this.posX) ^ (Double.doubleToLongBits(this.posX) >>> 32));
+        hash = 71 * hash + (int) (Double.doubleToLongBits(this.posY) ^ (Double.doubleToLongBits(this.posY) >>> 32));
+        hash = 71 * hash + Objects.hashCode(this.text);
+        hash = 71 * hash + (this.subPage ? 1 : 0);
+        hash = 71 * hash + Objects.hashCode(this.subPageInfo);
         return hash;
     }
 
@@ -95,7 +127,13 @@ public class Transition {
         if (Double.doubleToLongBits(this.posY) != Double.doubleToLongBits(other.posY)) {
             return false;
         }
-        return Objects.equals(this.text, other.text);
+        if (!Objects.equals(this.text, other.text)) {
+            return false;
+        }
+        if (this.subPage != other.subPage) {
+            return false;
+        }
+        return Objects.equals(this.subPageInfo, other.subPageInfo);
     }
 
     @Override

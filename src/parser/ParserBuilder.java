@@ -9,12 +9,14 @@ import cpn.Arc;
 import cpn.Cpn;
 import cpn.Page;
 import cpn.Place;
+import cpn.SubPage;
 import cpn.Transition;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -110,6 +112,8 @@ public class ParserBuilder {
             pages.put(page.getId(), page);
         }
 
+        updateSubPageInfo(pages);
+        
         cpn.setPages(pages);
     }
 
@@ -171,6 +175,10 @@ public class ParserBuilder {
                     String text = childs.item(i).getTextContent();
                     t.setText(text.replaceAll("\n", " "));
                     break;
+                case "subst":
+                    t.setSubpage(true);
+                    t.setSubPageInfo(parseSubPages(childs.item(i)));
+                    break;
             }
         }
 
@@ -211,5 +219,41 @@ public class ParserBuilder {
         }
 
         return a;
+    }
+    
+    // Return the information for each subpage
+    private SubPage parseSubPages(Node node) {
+        
+        SubPage subPage = new SubPage();
+        
+        subPage.setPageRef(node.getAttributes().getNamedItem("subpage").getTextContent());
+        
+        NodeList childs = node.getChildNodes();
+           
+        for (int i = 0; i < childs.getLength(); i++) {
+            switch(childs.item(i).getNodeName()) {
+                case "subpageinfo":
+                    String id = childs.item(i).getAttributes().getNamedItem("id").getTextContent();
+                    subPage.setId(id);
+                    break;
+            }
+        }
+        
+        return subPage;
+    }
+    
+    private void updateSubPageInfo(LinkedHashMap<String,Page> pages) {
+        
+        for (Entry<String,Page> entry : pages.entrySet()) {
+            LinkedHashMap<String,Transition> transitions = entry.getValue().getTransitions();
+            
+            for (Entry<String,Transition> trans_entry : transitions.entrySet()) {
+                Transition t = trans_entry.getValue();
+                if(t.isSubPage()) {
+                    t.getSubPageInfo().setPage(pages.get(t.getSubPageInfo().getPageRef()));
+                }
+            }
+        }
+        
     }
 }

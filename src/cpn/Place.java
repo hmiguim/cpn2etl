@@ -18,11 +18,8 @@ public class Place {
     private double posY;
     private String text;
     private String type;
-    private Port port;
 
-    public Place() {
-        this.port = new Port();
-    }
+    public Place() { }
 
     public Place(String id, double posX, double posY, String text, String type) {
         this.id = id;
@@ -32,22 +29,12 @@ public class Place {
         this.type = type;
     }
 
-    public Place(String id, double posX, double posY, String text, String type, Port port) {
-        this.id = id;
-        this.posX = posX;
-        this.posY = posY;
-        this.text = text;
-        this.type = type;
-        this.port = port;
-    }
-
     public Place(Place p) {
         this.id = p.getId();
         this.posX = p.getPosX();
         this.posY = p.getPosY();
         this.text = p.getText();
         this.type = p.getType();
-        this.port = p.getPort();
     }
 
     public String getId() {
@@ -70,10 +57,6 @@ public class Place {
         return posY;
     }
 
-    public Port getPort() {
-        return port;
-    }
-
     public void setPosY(double posY) {
         this.posY = posY;
     }
@@ -94,10 +77,6 @@ public class Place {
         this.type = type;
     }
 
-    public void setPort(Port port) {
-        this.port = port;
-    }
-
     @Override
     public int hashCode() {
         int hash = 7;
@@ -106,7 +85,6 @@ public class Place {
         hash = 79 * hash + (int) (Double.doubleToLongBits(this.posY) ^ (Double.doubleToLongBits(this.posY) >>> 32));
         hash = 79 * hash + Objects.hashCode(this.text);
         hash = 79 * hash + Objects.hashCode(this.type);
-        hash = 79 * hash + Objects.hashCode(this.port);
         return hash;
     }
 
@@ -131,10 +109,7 @@ public class Place {
         if (!Objects.equals(this.text, other.text)) {
             return false;
         }
-        if (!Objects.equals(this.type, other.type)) {
-            return false;
-        }
-        return Objects.equals(this.port, other.port);
+        return Objects.equals(this.type, other.type);
     }
 
     @Override
@@ -143,7 +118,6 @@ public class Place {
         str.append("PosX: ").append(this.posX).append(", ");
         str.append("PosY: ").append(this.posY).append(", ");
         str.append("Text: " + "\'").append(this.text).append("\', ");
-        if(! this.port.getId().equals("-1")) str.append("Port: {").append(this.port.toString()).append("}, ");
         str.append("Type: " + "\'").append(this.type).append("\']");
 
         return str.toString();

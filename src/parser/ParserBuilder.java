@@ -22,7 +22,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -72,17 +71,21 @@ public class ParserBuilder {
         LinkedHashMap<String, Page> pages = new LinkedHashMap<>();
 
         // Linked Hash with the places from a page
-        LinkedHashMap<String, Place> places = new LinkedHashMap<>();
+        LinkedHashMap<String, Place> places;
 
         // Linked Hash with the transitions from a page
-        LinkedHashMap<String, Transition> transitions = new LinkedHashMap<>();
+        LinkedHashMap<String, Transition> transitions;
         
         // Linked Hash with the arcs from a page
-        LinkedHashMap<String, Arc> arcs = new LinkedHashMap<>();
+        LinkedHashMap<String, Arc> arcs;
 
         for (int i = 0; i < nodes.getLength(); i++) {
+            
             page = new Page();
-
+            places = new LinkedHashMap<>();
+            transitions = new LinkedHashMap<>();
+            arcs = new LinkedHashMap<>();
+            
             page.setId(nodes.item(i).getAttributes().getNamedItem("id").getTextContent());
 
             NodeList childs = nodes.item(i).getChildNodes();
@@ -107,9 +110,9 @@ public class ParserBuilder {
                         arcs.put(a.getId(), a);
                         page.setArcs(arcs);
                 }
-                pages.put(page.getId(), page);
+                
             }
-
+            pages.put(page.getId(), page);
         }
 
         cpn.setPages(pages);

@@ -27,7 +27,7 @@ public class Main {
         ParserFactory parserFactory = ParserFactory.newInstance();
 
         // Create a parser build to the specific path
-        ParserBuilder parserBuild = parserFactory.newParserBuilder("/Users/hmg/Desktop/test.xml");
+        ParserBuilder parserBuild = parserFactory.newParserBuilder("/Users/hmg/Desktop/HierarchicalProtocol.xml");
 
         // Parse the file
         Cpn cpn = parserBuild.parse();
@@ -36,17 +36,20 @@ public class Main {
         LinkedHashMap<String, Page> pages = cpn.getPages();
 
         
-        System.out.println(pages.size());
-        
+        int count_places = 0;
         for (Entry<String, Page> entry : pages.entrySet()) {
-           // StringBuilder str = new StringBuilder("Arc id = " + entry.getValue().getId());
-            // str.append("; Text: ").append(entry.getValue().getText());
-            // str.append("; Orientation: ").append(entry.getValue().getOrientation());
-            // str.append("; Place: ").append(entry.getValue().getPlaceEnd().getText());
-            // str.append("; Trans: ").append(entry.getValue().getTransEnd().getText());
-
-            System.out.println(entry.getValue().getPlaces().size());
+            
+            System.out.println("Page: " + entry.getValue().getName() + "; ID: " + entry.getValue().getId());
+            
+            for(Entry<String,Transition> transition : entry.getValue().getTransitions().entrySet()) {
+                System.out.println("Transition: " + transition.getValue().getText());
+            }
+            
+            count_places += entry.getValue().getTransitions().size();
+            
         }
+        
+        System.out.println(count_places);
 
     }
 }

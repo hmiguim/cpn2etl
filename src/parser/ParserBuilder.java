@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import javax.xml.parsers.DocumentBuilder;
@@ -39,6 +40,8 @@ public class ParserBuilder {
     private DocumentBuilder builder;
     private Document xmlDocument;
     private Cpn cpn;
+
+    private ArrayList<String> ports = new ArrayList<>();
 
     public ParserBuilder() {
     }
@@ -114,6 +117,7 @@ public class ParserBuilder {
             pages.put(page.getId(), page);
         }
 
+        updatePorts(pages);
         updateSubPageInfo(pages);
 
         cpn.setPages(pages);
@@ -184,6 +188,7 @@ public class ParserBuilder {
                 case "subst":
                     t.setSubpage(true);
                     t.setSubPageInfo(parseSubPages(childs.item(i)));
+                    parsePortSock(childs.item(i));
                     break;
             }
         }
@@ -218,12 +223,13 @@ public class ParserBuilder {
                         switch (annot_nodes.item(j).getNodeName()) {
                             case "text":
                                 String text = annot_nodes.item(j).getTextContent();
+
                                 a.setText(text.replaceAll("\n", " "));
+                                System.out.println(a.getText());
                                 break;
                         }
                     }
                     break;
-                
             }
         }
 
@@ -273,5 +279,43 @@ public class ParserBuilder {
             }
         }
 
+    }
+
+    private void parsePortSock(Node node) {
+        ports.add(node.getAttributes().getNamedItem("portsock").getTextContent());
+    }
+
+    private void updatePorts(LinkedHashMap<String, Page> pages) {
+
+        for (String str : ports) {
+            str = str.replaceAll("[(]", "");
+            str = str.replaceAll("[)]", ";");
+
+            String[] split = str.split(";");
+
+            for (String ps : split) {
+                String[] portSocks = ps.split(",");
+                Place place = getPlaceByID(pages, portSocks[0]);
+                Port port = place.getPort();
+                port.setPlace(getPlaceByID(pages, portSocks[1]));
+                place.setPortInfo(port);
+                place.setPort(true);
+            }
+        }
+
+    }
+
+    private Place getPlaceByID(LinkedHashMap<String, Page> pages, String id) {
+        Place p = new Place();
+
+        for (Entry<String, Page> entry : pages.entrySet()) {
+            LinkedHashMap<String, Place> places = entry.getValue().getPlaces();
+
+            if (places.containsKey(id)) {
+                p = places.get(id);
+            }
+
+        }
+        return p;
     }
 }

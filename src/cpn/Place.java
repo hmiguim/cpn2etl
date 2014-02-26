@@ -147,8 +147,12 @@ public class Place {
         str.append("PosX: ").append(this.posX).append(", ");
         str.append("PosY: ").append(this.posY).append(", ");
         str.append("Text: " + "\'").append(this.text).append("\', ");
-        str.append("Type: " + "\'").append(this.type).append("\',");
-        str.append("Port: {").append(this.portInfo.toString()).append("}];");
+        if(this.havePort()) {
+            str.append("Type: " + "\'").append(this.type).append("\',");
+            str.append("Port: {").append(this.portInfo.toString()).append("}];");
+        } else {
+            str.append("Type: " + "\'").append(this.type).append("\'];");
+        }
 
         return str.toString();
     }

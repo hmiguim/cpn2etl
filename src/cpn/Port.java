@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package cpn;
 
 import java.util.Objects;
@@ -13,20 +12,24 @@ import java.util.Objects;
  * @author hmg
  */
 public class Port {
-    
+
     private String id;
     private String type;
-    
-    public Port() { }
-    
-    public Port(String id, String type) {
+    private Place place;
+
+    public Port() {
+    }
+
+    public Port(String id, String type, Place place) {
         this.id = id;
         this.type = type;
+        this.place = place;
     }
-    
+
     public Port(Port p) {
         this.id = p.getId();
         this.type = p.getType();
+        this.place = p.getPlace();
     }
 
     public String getId() {
@@ -45,11 +48,20 @@ public class Port {
         this.type = type;
     }
 
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 19 * hash + Objects.hashCode(this.id);
-        hash = 19 * hash + Objects.hashCode(this.type);
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.id);
+        hash = 59 * hash + Objects.hashCode(this.type);
+        hash = 59 * hash + Objects.hashCode(this.place);
         return hash;
     }
 
@@ -65,16 +77,24 @@ public class Port {
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
-        return Objects.equals(this.type, other.type);
+        if (!Objects.equals(this.type, other.type)) {
+            return false;
+        }
+        return Objects.equals(this.place, other.place);
     }
 
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder("[ID: " + this.id + ", ");
-        str.append("Type: " + "\'").append(this.type).append("\'];");
+        if (this.place == null) {
+            str.append("Type: " + "\'").append(this.type).append("\']");
+        } else {
+            str.append("Type: " + "\'").append(this.type).append("\', ");
+            str.append("Place: {").append(this.place.toString()).append("}];");
+        }
         return str.toString();
     }
-    
+
     @Override
     public Port clone() {
         return new Port(this);

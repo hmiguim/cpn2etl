@@ -7,6 +7,7 @@ package parser;
 
 import cpn.Cpn;
 import cpn.Page;
+import cpn.Place;
 import cpn.Transition;
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -27,7 +28,7 @@ public class Main {
         ParserFactory parserFactory = ParserFactory.newInstance();
 
         // Create a parser build to the specific path
-        ParserBuilder parserBuild = parserFactory.newParserBuilder("/Users/hmg/Desktop/etl.xml");
+        ParserBuilder parserBuild = parserFactory.newParserBuilder("/Users/hmg/Desktop/HierarchicalProtocol.xml");
 
         // Parse the file
         Cpn cpn = parserBuild.parse();
@@ -43,13 +44,20 @@ public class Main {
             
             Page p = entry.getValue();
             
+            for (Entry<String,Place> place_entry  : p.getPlaces().entrySet()) {
+                if(place_entry.getValue().havePort()) {
+                    System.out.println(place_entry.getValue());
+                }
+            }
+            
             count_places += p.getPlaces().size();
             count_arcs += p.getArcs().size();
             
             for (Entry<String,Transition> trans_entry : p.getTransitions().entrySet()) {
-                if (!trans_entry.getValue().isSubPage()) {
+                if (!trans_entry.getValue().haveSubPage()) {
                     count_transitions += 1;
                 }
+                
             }
         } 
         

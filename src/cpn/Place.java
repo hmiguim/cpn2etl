@@ -18,15 +18,18 @@ public class Place {
     private double posY;
     private String text;
     private String type;
+    private Port portInfo;
+    private boolean port;
 
     public Place() { }
 
-    public Place(String id, double posX, double posY, String text, String type) {
+    public Place(String id, double posX, double posY, String text, String type,Port portInfo, boolean port) {
         this.id = id;
         this.posX = posX;
         this.posY = posY;
         this.text = text;
         this.type = type;
+        this.portInfo = portInfo;
     }
 
     public Place(Place p) {
@@ -35,6 +38,8 @@ public class Place {
         this.posY = p.getPosY();
         this.text = p.getText();
         this.type = p.getType();
+        this.portInfo = p.getPort();
+        this.port = p.havePort();
     }
 
     public String getId() {
@@ -76,15 +81,33 @@ public class Place {
     public void setType(String type) {
         this.type = type;
     }
+    
+    public Port getPort() {
+        return portInfo;
+    }
+    
+    public void setPortInfo(Port port) {
+        this.portInfo = port;
+    } 
+    
+    public boolean havePort() {
+        return port;
+    }
+    
+    public void setPort(boolean port) {
+        this.port = port;
+    }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + Objects.hashCode(this.id);
-        hash = 79 * hash + (int) (Double.doubleToLongBits(this.posX) ^ (Double.doubleToLongBits(this.posX) >>> 32));
-        hash = 79 * hash + (int) (Double.doubleToLongBits(this.posY) ^ (Double.doubleToLongBits(this.posY) >>> 32));
-        hash = 79 * hash + Objects.hashCode(this.text);
-        hash = 79 * hash + Objects.hashCode(this.type);
+        int hash = 5;
+        hash = 29 * hash + Objects.hashCode(this.id);
+        hash = 29 * hash + (int) (Double.doubleToLongBits(this.posX) ^ (Double.doubleToLongBits(this.posX) >>> 32));
+        hash = 29 * hash + (int) (Double.doubleToLongBits(this.posY) ^ (Double.doubleToLongBits(this.posY) >>> 32));
+        hash = 29 * hash + Objects.hashCode(this.text);
+        hash = 29 * hash + Objects.hashCode(this.type);
+        hash = 29 * hash + Objects.hashCode(this.portInfo);
+        hash = 29 * hash + (this.port ? 1 : 0);
         return hash;
     }
 
@@ -109,7 +132,13 @@ public class Place {
         if (!Objects.equals(this.text, other.text)) {
             return false;
         }
-        return Objects.equals(this.type, other.type);
+        if (!Objects.equals(this.type, other.type)) {
+            return false;
+        }
+        if (!Objects.equals(this.portInfo, other.portInfo)) {
+            return false;
+        }
+        return this.port == other.port;
     }
 
     @Override
@@ -118,7 +147,8 @@ public class Place {
         str.append("PosX: ").append(this.posX).append(", ");
         str.append("PosY: ").append(this.posY).append(", ");
         str.append("Text: " + "\'").append(this.text).append("\', ");
-        str.append("Type: " + "\'").append(this.type).append("\']");
+        str.append("Type: " + "\'").append(this.type).append("\',");
+        str.append("Port: {").append(this.portInfo.toString()).append("}];");
 
         return str.toString();
     }

@@ -9,6 +9,7 @@ import cpn.Arc;
 import cpn.Cpn;
 import cpn.Page;
 import cpn.Place;
+import cpn.Port;
 import cpn.SubPage;
 import cpn.Transition;
 import java.io.File;
@@ -39,14 +40,15 @@ public class ParserBuilder {
     private Document xmlDocument;
     private Cpn cpn;
 
-    public ParserBuilder() { }
+    public ParserBuilder() {
+    }
 
     public ParserBuilder(String path, DocumentBuilder b) throws FileNotFoundException, SAXException, IOException {
         this.cpn = new Cpn();
         this.file = new FileInputStream(new File(path));
         this.builder = b;
     }
-    
+
     // Public Method to invoke the parse
     public Cpn parse() throws SAXException, IOException, XPathExpressionException {
         this.xmlDocument = this.builder.parse(this.file);
@@ -72,17 +74,17 @@ public class ParserBuilder {
 
         // Linked Hash with the transitions from a page
         LinkedHashMap<String, Transition> transitions;
-        
+
         // Linked Hash with the arcs from a page
         LinkedHashMap<String, Arc> arcs;
 
         for (int i = 0; i < nodes.getLength(); i++) {
-            
+
             page = new Page();
             places = new LinkedHashMap<>();
             transitions = new LinkedHashMap<>();
             arcs = new LinkedHashMap<>();
-            
+
             page.setId(nodes.item(i).getAttributes().getNamedItem("id").getTextContent());
 
             NodeList childs = nodes.item(i).getChildNodes();
@@ -107,13 +109,13 @@ public class ParserBuilder {
                         arcs.put(a.getId(), a);
                         page.setArcs(arcs);
                 }
-                
+
             }
             pages.put(page.getId(), page);
         }
 
         updateSubPageInfo(pages);
-        
+
         cpn.setPages(pages);
     }
 
@@ -148,6 +150,10 @@ public class ParserBuilder {
                                 break;
                         }
                     }
+                    break;
+                case "port":
+                    p.setPortInfo(parsePort(childs.item(i)));
+                    p.setPort(true);
                     break;
             }
         }
@@ -213,47 +219,59 @@ public class ParserBuilder {
                             case "text":
                                 String text = annot_nodes.item(j).getTextContent();
                                 a.setText(text.replaceAll("\n", " "));
+                                break;
                         }
                     }
+                    break;
+                
             }
         }
 
         return a;
     }
-    
+
     // Return the information for each subpage
     private SubPage parseSubPages(Node node) {
-        
+
         SubPage subPage = new SubPage();
-        
+
         subPage.setPageRef(node.getAttributes().getNamedItem("subpage").getTextContent());
-        
+
         NodeList childs = node.getChildNodes();
-           
+
         for (int i = 0; i < childs.getLength(); i++) {
-            switch(childs.item(i).getNodeName()) {
+            switch (childs.item(i).getNodeName()) {
                 case "subpageinfo":
                     String id = childs.item(i).getAttributes().getNamedItem("id").getTextContent();
                     subPage.setId(id);
                     break;
             }
         }
-        
+
         return subPage;
     }
-    
-    private void updateSubPageInfo(LinkedHashMap<String,Page> pages) {
-        
-        for (Entry<String,Page> entry : pages.entrySet()) {
-            LinkedHashMap<String,Transition> transitions = entry.getValue().getTransitions();
-            
-            for (Entry<String,Transition> trans_entry : transitions.entrySet()) {
+
+    private Port parsePort(Node node) {
+        Port p = new Port();
+
+        p.setId(node.getAttributes().getNamedItem("id").getTextContent());
+        p.setType(node.getAttributes().getNamedItem("type").getTextContent());
+
+        return p;
+    }
+
+    private void updateSubPageInfo(LinkedHashMap<String, Page> pages) {
+
+        for (Entry<String, Page> entry : pages.entrySet()) {
+            LinkedHashMap<String, Transition> transitions = entry.getValue().getTransitions();
+
+            for (Entry<String, Transition> trans_entry : transitions.entrySet()) {
                 Transition t = trans_entry.getValue();
-                if(t.isSubPage()) {
+                if (t.haveSubPage()) {
                     t.getSubPageInfo().setPage(pages.get(t.getSubPageInfo().getPageRef()));
                 }
             }
         }
-        
+
     }
 }

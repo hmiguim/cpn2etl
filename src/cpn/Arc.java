@@ -18,10 +18,10 @@ public class Arc {
     private Place placeEnd;
     private Transition transEnd;
     private String text;
-
+    
     public Arc() { }
 
-    public Arc(String id, String orientation, Place placeEnd, Transition transEnd, String text) {
+    public Arc(String id, String orientation, Place placeEnd, Transition transEnd, String text, Port port) {
         this.id = id;
         this.orientation = orientation;
         this.placeEnd = placeEnd;
@@ -119,7 +119,6 @@ public class Arc {
         str.append("Text: \'").append(this.text).append("\', ");
         str.append("Place: {").append(this.placeEnd.toString()).append("}, ");
         str.append("Transtition: {").append(this.transEnd.toString()).append("}];");
-
         return str.toString();
     }
 

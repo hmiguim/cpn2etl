@@ -41,10 +41,9 @@ public class ParserBuilder {
     private Document xmlDocument;
     private Cpn cpn;
 
-    private ArrayList<String> ports = new ArrayList<>();
+    private final ArrayList<String> ports = new ArrayList<>();
 
-    public ParserBuilder() {
-    }
+    public ParserBuilder() { }
 
     public ParserBuilder(String path, DocumentBuilder b) throws FileNotFoundException, SAXException, IOException {
         this.cpn = new Cpn();
@@ -223,9 +222,8 @@ public class ParserBuilder {
                         switch (annot_nodes.item(j).getNodeName()) {
                             case "text":
                                 String text = annot_nodes.item(j).getTextContent();
-
-                                a.setText(text.replaceAll("\n", " "));
-                                System.out.println(a.getText());
+                                text = text.replaceAll("\n", " ");
+                                a.setText(text.replaceAll("\\s+", " "));
                                 break;
                         }
                     }
@@ -278,7 +276,6 @@ public class ParserBuilder {
                 }
             }
         }
-
     }
 
     private void parsePortSock(Node node) {

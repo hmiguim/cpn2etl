@@ -51,7 +51,7 @@ public class Cpn {
         
         return results;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 3;

@@ -5,9 +5,12 @@
  */
 package cpn;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Objects;
+import stats.CpnStats;
 
 /**
  *
@@ -50,6 +53,65 @@ public class Cpn {
         }
         
         return results;
+    }
+    
+    public CpnStats stats() {
+        
+        CpnStats cpnStats = new CpnStats();
+        
+        cpnStats.setPages(this.pages.size());
+        
+        int count_arcs = 0;
+        int count_places = 0;
+        int count_transitions = 0;
+        int count_places_in = 0;
+        int count_places_out = 0;
+        int count_places_io = 0;
+        int count_unique_places = 0;
+        
+        ArrayList<String> pageRefs = new ArrayList<>();
+        
+        Collection<Page> pages_collection = this.pages.values();
+        
+        for(Page p : pages_collection) {
+            count_arcs += p.getArcs().size();
+            count_places += p.getPlaces().size();
+            
+            Collection<Transition> transitions = p.getTransitions().values();
+            
+            for (Transition t : transitions) {
+                if(t.haveSubPage()) {
+                    if (!pageRefs.contains(t.getSubPageInfo().getPageRef())) pageRefs.add(t.getSubPageInfo().getPageRef());
+                }
+                else count_transitions++;
+            }
+            
+            Collection<Place> places = p.getPlaces().values();
+            for (Place place : places) {
+                if (place.havePort()) {
+                    switch (place.getPort().getType()) {
+                        case "In" : count_places_in++;
+                            break;
+                        case "Out": count_places_out++;
+                            break;
+                        case "I/O": count_places_io++;
+                            break;
+                    }
+                } else count_unique_places++;
+            }
+        }
+        
+        cpnStats.setArcs(count_arcs);
+        cpnStats.setModules(this.getModules().size());
+        cpnStats.setPlaces(count_places);
+        cpnStats.setPlacesIO(count_places_io);
+        cpnStats.setPlacesInput(count_places_in);
+        cpnStats.setPlacesOutput(count_places_out);
+        cpnStats.setSubPages(pageRefs.size());
+        cpnStats.setTransitions(count_transitions);
+        cpnStats.setUniquePlaces(count_unique_places);
+        
+        return cpnStats;
     }
     
     @Override

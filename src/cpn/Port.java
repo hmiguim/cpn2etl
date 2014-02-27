@@ -14,7 +14,7 @@ import java.util.Objects;
 public class Port {
 
     private String id;
-    private String type;
+    private String type; //In | Out | I/O
     private Place place;
 
     public Port() {

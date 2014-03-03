@@ -12,8 +12,8 @@ import static java.lang.System.exit;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import org.xml.sax.SAXException;
-import parser.ParserBuilder;
-import parser.ParserFactory;
+import xml.XMLBuilder;
+import xml.XMLFactory;
 
 /**
  *
@@ -46,10 +46,10 @@ public class Main {
         }
 
         // Initialize the parserFactory
-        ParserFactory parserFactory = ParserFactory.newInstance();
+        XMLFactory parserFactory = XMLFactory.newInstance();
 
         // Create a parser build to the specific path
-        ParserBuilder parserBuild = parserFactory.newParserBuilder(path);
+        XMLBuilder parserBuild = parserFactory.newParserBuilder(path);
 
         // Parse the file
         Cpn cpn = parserBuild.parse();

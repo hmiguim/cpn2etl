@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package parser;
+package xml;
 
 import cpn.Arc;
 import cpn.Cpn;
@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  *
  * @author hmg
  */
-public class ParserBuilder {
+public class XMLBuilder {
 
     private FileInputStream file;
     private DocumentBuilder builder;
@@ -43,9 +43,9 @@ public class ParserBuilder {
 
     private final ArrayList<String> ports = new ArrayList<>();
 
-    public ParserBuilder() { }
+    public XMLBuilder() { }
 
-    public ParserBuilder(String path, DocumentBuilder b) throws FileNotFoundException, SAXException, IOException {
+    public XMLBuilder(String path, DocumentBuilder b) throws FileNotFoundException, SAXException, IOException {
         this.cpn = new Cpn();
         this.file = new FileInputStream(new File(path));
         this.builder = b;

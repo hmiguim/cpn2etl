@@ -8,7 +8,7 @@ package etl;
 
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
-import parser.ParserFactory;
+import xml.XMLFactory;
 
 /**
  *
@@ -16,10 +16,10 @@ import parser.ParserFactory;
  */
 public class Constructor {
     
-    private final ParserFactory document;
+    private final XMLFactory document;
     
     public Constructor() throws ParserConfigurationException {
-        document = ParserFactory.newInstance();
+        document = XMLFactory.newInstance();
     }
     
     public void create(String name) {

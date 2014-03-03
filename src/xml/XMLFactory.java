@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package parser;
+package xml;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,24 +18,24 @@ import org.xml.sax.SAXException;
  *
  * @author hmg
  */
-public class ParserFactory {
+public class XMLFactory {
     
     private final DocumentBuilderFactory builderFactory;
     private final DocumentBuilder builder;
     
-    public static ParserFactory newInstance() throws ParserConfigurationException {
-        return new ParserFactory();
+    public static XMLFactory newInstance() throws ParserConfigurationException {
+        return new XMLFactory();
     }
     
-    public ParserBuilder newParserBuilder(String path) throws FileNotFoundException, SAXException, IOException {
-        return new ParserBuilder(path,builder);
+    public XMLBuilder newParserBuilder(String path) throws FileNotFoundException, SAXException, IOException {
+        return new XMLBuilder(path,builder);
     }
     
     public Document newDocument() {
         return builder.newDocument();
     }
     
-    private ParserFactory() throws ParserConfigurationException { 
+    private XMLFactory() throws ParserConfigurationException { 
         builderFactory = DocumentBuilderFactory.newInstance();
         builder =  builderFactory.newDocumentBuilder();
     }

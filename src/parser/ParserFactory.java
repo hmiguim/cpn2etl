@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
@@ -28,6 +29,10 @@ public class ParserFactory {
     
     public ParserBuilder newParserBuilder(String path) throws FileNotFoundException, SAXException, IOException {
         return new ParserBuilder(path,builder);
+    }
+    
+    public Document newDocument() {
+        return builder.newDocument();
     }
     
     private ParserFactory() throws ParserConfigurationException { 

@@ -19,5 +19,5 @@ public interface ConfigFields {
     
     public ArrayList<Field> getFields();
     
-    public void readOverConfig();
+    public void overrideConfig();
 }

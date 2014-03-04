@@ -10,9 +10,18 @@ import java.io.File;
 import java.io.IOException;
 import static java.lang.System.exit;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPathExpressionException;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import xml.XMLBuilder;
+import xml.XMLParser;
 import xml.XMLFactory;
 
 /**
@@ -21,7 +30,7 @@ import xml.XMLFactory;
  */
 public class Main {
 
-    public static void main(String args[]) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+    public static void main(String args[]) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException, TransformerConfigurationException, TransformerException {
 
         if (args.length == 0) {
             badUsage(1);
@@ -46,16 +55,19 @@ public class Main {
         }
 
         // Initialize the parserFactory
-        XMLFactory parserFactory = XMLFactory.newInstance();
+        XMLFactory xmlFactory = XMLFactory.newInstance();
 
         // Create a parser build to the specific path
-        XMLBuilder parserBuild = parserFactory.newParserBuilder(path);
+        XMLParser parser = xmlFactory.newXMLParser(path);
 
         // Parse the file
-        Cpn cpn = parserBuild.parse();
+        Cpn cpn = parser.parse();
 
         System.out.println(cpn.stats());
-
+        
+        XMLBuilder builder = xmlFactory.newXMLBuilder();
+        
+        builder.construct(out);
     }
 
     private static void badUsage(int usage) {

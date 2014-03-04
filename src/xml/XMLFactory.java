@@ -27,12 +27,12 @@ public class XMLFactory {
         return new XMLFactory();
     }
     
-    public XMLBuilder newParserBuilder(String path) throws FileNotFoundException, SAXException, IOException {
-        return new XMLBuilder(path,builder);
+    public XMLParser newXMLParser(String path) throws FileNotFoundException, SAXException, IOException {
+        return new XMLParser(path,builder);
     }
     
-    public Document newDocument() {
-        return builder.newDocument();
+    public XMLBuilder newXMLBuilder() throws ParserConfigurationException {
+        return new XMLBuilder(builder);
     }
     
     private XMLFactory() throws ParserConfigurationException { 

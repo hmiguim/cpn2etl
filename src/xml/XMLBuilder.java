@@ -5,30 +5,27 @@
  */
 package xml;
 
-import cpn.Arc;
-import cpn.Cpn;
-import cpn.Page;
-import cpn.Place;
-import cpn.Port;
-import cpn.SubPage;
-import cpn.Transition;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import kettel.Field;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import kettel.ConfigChannelLogTable;
+import kettel.ConfigInfo;
+import kettel.ConfigMetricsLogTable;
+import kettel.ConfigPerfLogTable;
+import kettel.ConfigStepLogTable;
+import kettel.ConfigTransLogTable;
+import kettel.KettelConfigsFactory;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import org.w3c.dom.Element;
 
 /**
  *
@@ -36,283 +33,371 @@ import org.xml.sax.SAXException;
  */
 public class XMLBuilder {
 
-    private FileInputStream file;
-    private DocumentBuilder builder;
-    private Document xmlDocument;
-    private Cpn cpn;
+    private DocumentBuilder documentBuilder;
+    private KettelConfigsFactory configFactory;
+    private String filename;
 
-    private final ArrayList<String> ports = new ArrayList<>();
-
-    public XMLBuilder() { }
-
-    public XMLBuilder(String path, DocumentBuilder b) throws FileNotFoundException, SAXException, IOException {
-        this.cpn = new Cpn();
-        this.file = new FileInputStream(new File(path));
-        this.builder = b;
+    public XMLBuilder() {
     }
 
-    // Public Method to invoke the parse
-    public Cpn parse() throws SAXException, IOException, XPathExpressionException {
-        this.xmlDocument = this.builder.parse(this.file);
-        this.parseCPN();
-        this.builder.reset();
-        return cpn.clone();
+    public XMLBuilder(DocumentBuilder documentBuilder) throws ParserConfigurationException {
+        this.documentBuilder = documentBuilder;
+        this.configFactory = KettelConfigsFactory.newInstance();
     }
 
-    // Parse the CPN File
-    private void parseCPN() throws XPathExpressionException, SAXException, IOException {
+    public void construct(String filename) throws TransformerException {
+        Document doc = documentBuilder.newDocument();
+        this.filename = filename;
+        
+        doc = initialize(doc);
+        
+        finalize(doc);
+        
+    }
 
-        XPath xPath = XPathFactory.newInstance().newXPath();
-        XPathExpression expr = xPath.compile("//page");
-        NodeList nodes = (NodeList) expr.evaluate(this.xmlDocument, XPathConstants.NODESET);
+    private Document initialize(Document doc) {
+        
+        // Root Element
+        Element transformation = doc.createElement("transformation");
+        doc.appendChild(transformation);
+        
+        transformation.appendChild(createInfo(doc));
+        
+        Element notepads = doc.createElement("notepads");
+        transformation.appendChild(notepads);
+        
+        Element step_error_handling = doc.createElement("step_error_handling");
+        transformation.appendChild(step_error_handling);
+        
+        Element slave_step_copy_partition_distribution = doc.createElement("slave-step-copy-partition-distribution");
+        transformation.appendChild(slave_step_copy_partition_distribution);
+        
+        Element slave_transformation = doc.createElement("slave_transformation");
+        slave_transformation.setTextContent("N");
+        transformation.appendChild(slave_transformation);
+        
+        return doc;
+    }
+    
+    private Element createInfo(Document doc) {
+        // Info Element
+        Element info = doc.createElement("info");
+        
+        // Name Element
+        Element name = doc.createElement("name");
+        int j = filename.lastIndexOf("/");
+        name.setTextContent(filename.substring(j+1).replaceAll(".xml", ""));
+        info.appendChild(name);
+        
+        // Description Element
+        Element description = doc.createElement("description");
+        info.appendChild(description);
 
-        Page page;
+        // Extended Description Element
+        Element extended_description = doc.createElement("extended_description");
+        info.appendChild(extended_description);
 
-        // Linked Hash with the pages from the CPN file
-        LinkedHashMap<String, Page> pages = new LinkedHashMap<>();
+        // Trans Version Element
+        Element trans_version = doc.createElement("trans_version");
+        info.appendChild(trans_version);
 
-        // Linked Hash with the places from a page
-        LinkedHashMap<String, Place> places;
+        // Trans Type Element
+        Element trans_type = doc.createElement("trans_type");
+        trans_type.setTextContent("Normal");
+        info.appendChild(trans_type);
 
-        // Linked Hash with the transitions from a page
-        LinkedHashMap<String, Transition> transitions;
+        // Directory Element
+        Element directory = doc.createElement("directory");
+        directory.setTextContent("&#x2f;");
+        info.appendChild(directory);
 
-        // Linked Hash with the arcs from a page
-        LinkedHashMap<String, Arc> arcs;
+        // Parameters Element
+        Element parameters = doc.createElement("parameters");
+        info.appendChild(parameters);
 
-        for (int i = 0; i < nodes.getLength(); i++) {
-
-            page = new Page();
-            places = new LinkedHashMap<>();
-            transitions = new LinkedHashMap<>();
-            arcs = new LinkedHashMap<>();
-
-            page.setId(nodes.item(i).getAttributes().getNamedItem("id").getTextContent());
-
-            NodeList childs = nodes.item(i).getChildNodes();
-
-            for (int j = 0; j < childs.getLength(); j++) {
-                switch (childs.item(j).getNodeName()) {
-                    case "pageattr":
-                        page.setName(childs.item(j).getAttributes().getNamedItem("name").getTextContent());
-                        break;
-                    case "place":
-                        Place p = parsePlace(childs.item(j));
-                        places.put(p.getId(), p);
-                        page.setPlaces(places);
-                        break;
-                    case "trans":
-                        Transition t = parseTransition(childs.item(j));
-                        transitions.put(t.getId(), t);
-                        page.setTransitions(transitions);
-                        break;
-                    case "arc":
-                        Arc a = parseArc(childs.item(j), page);
-                        arcs.put(a.getId(), a);
-                        page.setArcs(arcs);
-                }
-
-            }
-            pages.put(page.getId(), page);
+        info.appendChild(createLog(doc));
+        
+        info.appendChild(createMaxDate(doc));
+        
+        ConfigInfo ci = configFactory.newInfo();
+        
+        for(kettel.Element e : ci.getElements()) {
+            Element a = doc.createElement(e.getTag());
+            a.setTextContent(e.getContextText());
+            
+            info.appendChild(a);
         }
-
-        updatePorts(pages);
-        updateSubPageInfo(pages);
-
-        cpn.setPages(pages);
+        
+        Element shared_objects_file = doc.createElement("shared_objects_file");
+        info.appendChild(shared_objects_file);
+        
+        Element dependencies = doc.createElement("dependencies");
+        info.appendChild(dependencies); 
+        
+        Element partitionschemas = doc.createElement("partitionschemas");
+        info.appendChild(partitionschemas);
+        
+        Element slaveservers = doc.createElement("slaveservers");
+        info.appendChild(slaveservers);
+        
+        Element clusterschemas = doc.createElement("clusterschemas");
+        info.appendChild(clusterschemas);
+        
+        Element created_user = doc.createElement("created_user");
+        created_user.setTextContent("cpn2etl");
+        info.appendChild(created_user);
+        
+        Element created_date = doc.createElement("created_date");
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.S");
+        String today = sdf.format(date);
+        created_date.setTextContent(today);
+        info.appendChild(created_date);
+        
+        Element modified_user = doc.createElement("modified_user");
+        modified_user.setTextContent("cpn2etl");
+        info.appendChild(modified_user);
+        
+        Element modified_date = doc.createElement("modified_date");
+        modified_date.setTextContent(today);
+        info.appendChild(modified_date);
+        
+        return info;
     }
+    
+    private Element createMaxDate(Document doc) {
+        
+        // Root Element
+        Element maxdate = doc.createElement("maxdate");
+        
+        // Connection element
+        Element connection = doc.createElement("connection");
+        maxdate.appendChild(connection);
+        
+        // Table element
+        Element table = doc.createElement("table");
+        maxdate.appendChild(table);
+        
+        // Field element
+        Element field = doc.createElement("field");
+        maxdate.appendChild(field);
+        
+        // Offset element
+        Element offset = doc.createElement("offset");
+        offset.setTextContent("0.0");
+        maxdate.appendChild(offset);
+        
+        // Maxdiff element
+        Element maxdiff = doc.createElement("maxdiff");
+        maxdiff.setTextContent("0.0");
+        maxdate.appendChild(maxdiff);
+        
+        return maxdate;
+    }
+    
+    private Element createLog(Document doc) {
 
-    // Return the information for each place
-    private Place parsePlace(Node node) {
+        // Root element
+        Element log = doc.createElement("log");
+        
+        log.appendChild(createTransLogTable(doc));
+        
+        log.appendChild(createPerfLogTable(doc));
+        
+        log.appendChild(createChannelLogTable(doc));
+        
+        log.appendChild(createStepLogTable(doc));
+        
+        log.appendChild(createMetricsLogTable(doc));
+        
+        return log;
+    }
+    
+    private Element createMetricsLogTable(Document doc) {
+        
+        // Root element
+        Element metrics_log_table = doc.createElement("metrics-log-table");
+     
+        Element connection = doc.createElement("connection");
+        metrics_log_table.appendChild(connection);
+        
+        // schema element
+        Element schema = doc.createElement("schema");
+        metrics_log_table.appendChild(schema);
 
-        NodeList childs = node.getChildNodes();
+        // table element
+        Element table = doc.createElement("table");
+        metrics_log_table.appendChild(table);
 
-        Place p = new Place();
-
-        p.setId(node.getAttributes().getNamedItem("id").getTextContent());
-
-        for (int i = 0; i < childs.getLength(); i++) {
-            switch (childs.item(i).getNodeName()) {
-                case "posattr":
-                    double x = Double.parseDouble(childs.item(i).getAttributes().getNamedItem("x").getTextContent());
-                    double y = Double.parseDouble(childs.item(i).getAttributes().getNamedItem("y").getTextContent());
-                    p.setPosX(x);
-                    p.setPosY(y);
-                    break;
-                case "text":
-                    p.setText(childs.item(i).getTextContent());
-                    p.setText(p.getText().replaceAll("\n", " "));
-                    break;
-                case "type":
-                    NodeList type_node = childs.item(i).getChildNodes();
-                    for (int j = 0; j < type_node.getLength(); j++) {
-                        switch (type_node.item(j).getNodeName()) {
-                            case "text":
-                                p.setType(type_node.item(j).getTextContent());
-                                p.setText(p.getText().replaceAll("\n", " "));
-                                break;
-                        }
-                    }
-                    break;
-                case "port":
-                    p.setPortInfo(parsePort(childs.item(i)));
-                    p.setPort(true);
-                    break;
-            }
+        // timeout_days element
+        Element timeout_days = doc.createElement("timeout_days");
+        metrics_log_table.appendChild(timeout_days);
+        
+        ConfigMetricsLogTable config = configFactory.newMetricsLogTable();
+        
+        for (Field f : config.getFields()) {
+            metrics_log_table.appendChild(createField(f, doc));
         }
-        return p;
+        
+        return metrics_log_table;
     }
+    
+    private Element createStepLogTable(Document doc) {
+        
+        // Root element
+        Element step_log_table = doc.createElement("step-log-table");
+     
+        Element connection = doc.createElement("connection");
+        step_log_table.appendChild(connection);
+        
+        // schema element
+        Element schema = doc.createElement("schema");
+        step_log_table.appendChild(schema);
 
-    // Return the information for each transition
-    private Transition parseTransition(Node node) {
+        // table element
+        Element table = doc.createElement("table");
+        step_log_table.appendChild(table);
 
-        Transition t = new Transition();
-
-        t.setId(node.getAttributes().getNamedItem("id").getTextContent());
-
-        NodeList childs = node.getChildNodes();
-
-        for (int i = 0; i < childs.getLength(); i++) {
-            switch (childs.item(i).getNodeName()) {
-                case "posattr":
-                    double x = Double.parseDouble(childs.item(i).getAttributes().getNamedItem("x").getTextContent());
-                    double y = Double.parseDouble(childs.item(i).getAttributes().getNamedItem("y").getTextContent());
-                    t.setPosX(x);
-                    t.setPosY(y);
-                    break;
-                case "text":
-                    String text = childs.item(i).getTextContent();
-                    t.setText(text.replaceAll("\n", " "));
-                    break;
-                case "subst":
-                    t.setSubpage(true);
-                    t.setSubPageInfo(parseSubPages(childs.item(i)));
-                    parsePortSock(childs.item(i));
-                    break;
-            }
+        // timeout_days element
+        Element timeout_days = doc.createElement("timeout_days");
+        step_log_table.appendChild(timeout_days);
+        
+        ConfigStepLogTable config = configFactory.newStepLogTable();
+        
+        for (Field f : config.getFields()) {
+            step_log_table.appendChild(createField(f, doc));
         }
-
-        return t;
+        
+        return step_log_table;
     }
+    
+    private Element createChannelLogTable(Document doc) {
+        // Root element
+        Element channel_log_table = doc.createElement("channel-log-table");
+     
+        Element connection = doc.createElement("connection");
+        channel_log_table.appendChild(connection);
+        
+        // schema element
+        Element schema = doc.createElement("schema");
+        channel_log_table.appendChild(schema);
 
-    // Return the information for each arc
-    private Arc parseArc(Node node, Page page) {
+        // table element
+        Element table = doc.createElement("table");
+        channel_log_table.appendChild(table);
 
-        Arc a = new Arc();
-
-        a.setId(node.getAttributes().getNamedItem("id").getTextContent());
-
-        NodeList childs = node.getChildNodes();
-
-        for (int i = 0; i < childs.getLength(); i++) {
-            switch (childs.item(i).getNodeName()) {
-                case "transend":
-                    String t_id = childs.item(i).getAttributes().getNamedItem("idref").getTextContent();
-                    Transition t = page.getTransitions().get(t_id);
-                    a.setTransEnd(t);
-                    break;
-                case "placeend":
-                    String p_id = childs.item(i).getAttributes().getNamedItem("idref").getTextContent();
-                    Place p = page.getPlaces().get(p_id);
-                    a.setPlaceEnd(p);
-                    break;
-                case "annot":
-                    NodeList annot_nodes = childs.item(i).getChildNodes();
-                    for (int j = 0; j < annot_nodes.getLength(); j++) {
-                        switch (annot_nodes.item(j).getNodeName()) {
-                            case "text":
-                                String text = annot_nodes.item(j).getTextContent();
-                                text = text.replaceAll("\n", " ");
-                                a.setText(text.replaceAll("\\s+", " "));
-                                break;
-                        }
-                    }
-                    break;
-            }
+        // timeout_days element
+        Element timeout_days = doc.createElement("timeout_days");
+        channel_log_table.appendChild(timeout_days);
+        
+        ConfigChannelLogTable config = configFactory.newChannelLogTable();
+        
+        for (Field f : config.getFields()) {
+            channel_log_table.appendChild(createField(f, doc));
         }
-
-        return a;
+        
+        return channel_log_table;
     }
+    
+    private Element createPerfLogTable(Document doc) {
+        
+        // Root element
+        Element perf_log_table = doc.createElement("perf-log-table");
+        
+        Element connection = doc.createElement("connection");
+        perf_log_table.appendChild(connection);
+        
+        // schema element
+        Element schema = doc.createElement("schema");
+        perf_log_table.appendChild(schema);
 
-    // Return the information for each subpage
-    private SubPage parseSubPages(Node node) {
+        // table element
+        Element table = doc.createElement("table");
+        perf_log_table.appendChild(table);
 
-        SubPage subPage = new SubPage();
+        // interval element
+        Element interval = doc.createElement("interval");
+        perf_log_table.appendChild(interval);
 
-        subPage.setPageRef(node.getAttributes().getNamedItem("subpage").getTextContent());
-
-        NodeList childs = node.getChildNodes();
-
-        for (int i = 0; i < childs.getLength(); i++) {
-            switch (childs.item(i).getNodeName()) {
-                case "subpageinfo":
-                    String id = childs.item(i).getAttributes().getNamedItem("id").getTextContent();
-                    subPage.setId(id);
-                    break;
-            }
+        // timeout_days element
+        Element timeout_days = doc.createElement("timeout_days");
+        perf_log_table.appendChild(timeout_days);
+        
+        ConfigPerfLogTable confs = configFactory.newPerfLogTable();
+        
+        for (Field f : confs.getFields()) {
+            perf_log_table.appendChild(createField(f, doc));
         }
+        
+        return perf_log_table;
 
-        return subPage;
     }
+    
+    private Element createTransLogTable(Document doc) {
+        
+        // Root element
+        Element trans_log_table = doc.createElement("trans-log-table");
+        
+        // connection element
+        Element connection = doc.createElement("connection");
+        trans_log_table.appendChild(connection);
 
-    private Port parsePort(Node node) {
-        Port p = new Port();
+        // schema element
+        Element schema = doc.createElement("schema");
+        trans_log_table.appendChild(schema);
 
-        p.setId(node.getAttributes().getNamedItem("id").getTextContent());
-        p.setType(node.getAttributes().getNamedItem("type").getTextContent());
+        // table element
+        Element table = doc.createElement("table");
+        trans_log_table.appendChild(table);
 
-        return p;
-    }
+        // size_limit_lines element
+        Element size_limit_lines = doc.createElement("size_limit_lines");
+        trans_log_table.appendChild(size_limit_lines);
 
-    private void updateSubPageInfo(LinkedHashMap<String, Page> pages) {
+        // interval element
+        Element interval = doc.createElement("interval");
+        trans_log_table.appendChild(interval);
 
-        for (Entry<String, Page> entry : pages.entrySet()) {
-            LinkedHashMap<String, Transition> transitions = entry.getValue().getTransitions();
-
-            for (Entry<String, Transition> trans_entry : transitions.entrySet()) {
-                Transition t = trans_entry.getValue();
-                if (t.haveSubPage()) {
-                    t.getSubPageInfo().setPage(pages.get(t.getSubPageInfo().getPageRef()));
-                }
-            }
+        // timeout_days element
+        Element timeout_days = doc.createElement("timeout_days");
+        trans_log_table.appendChild(timeout_days);
+        
+        ConfigTransLogTable confs = configFactory.newTransLogTable();
+        
+        for (Field f : confs.getFields()) {
+            trans_log_table.appendChild(createField(f, doc));
         }
+        
+        return trans_log_table;
     }
-
-    private void parsePortSock(Node node) {
-        ports.add(node.getAttributes().getNamedItem("portsock").getTextContent());
+    
+    private Element createField(Field f,Document doc) {
+        
+        Element field = doc.createElement("field");
+        Element id = doc.createElement("id");
+        id.setTextContent(f.getId());
+        field.appendChild(id);
+        Element enable = doc.createElement("enabled");
+        enable.setTextContent(f.getEnable());
+        field.appendChild(enable);
+        Element name = doc.createElement("name");
+        name.setTextContent(f.getName());
+        field.appendChild(name);
+        
+        return field;
     }
-
-    private void updatePorts(LinkedHashMap<String, Page> pages) {
-
-        for (String str : ports) {
-            str = str.replaceAll("[(]", "");
-            str = str.replaceAll("[)]", ";");
-
-            String[] split = str.split(";");
-
-            for (String ps : split) {
-                String[] portSocks = ps.split(",");
-                Place place = getPlaceByID(pages, portSocks[0]);
-                Port port = place.getPort();
-                port.setPlace(getPlaceByID(pages, portSocks[1]));
-                place.setPortInfo(port);
-                place.setPort(true);
-            }
-        }
-
-    }
-
-    private Place getPlaceByID(LinkedHashMap<String, Page> pages, String id) {
-        Place p = new Place();
-
-        for (Entry<String, Page> entry : pages.entrySet()) {
-            LinkedHashMap<String, Place> places = entry.getValue().getPlaces();
-
-            if (places.containsKey(id)) {
-                p = places.get(id);
-            }
-
-        }
-        return p;
-    }
+    
+    private void finalize(Document doc) throws TransformerException {
+        
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(new File(filename));
+        
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+        transformer.transform(source, result);
+        
+    } 
 }

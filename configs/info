@@ -1,0 +1,10 @@
+size_rowset,10000
+sleep_time_empty,50
+sleep_time_full,50
+unique_connections,N
+feedback_shown,Y
+feedback_size,50000
+using_thread_priorities,Y
+capture_step_performance,N
+step_performance_capturing_delay,1000
+step_performance_capturing_size_limit,100

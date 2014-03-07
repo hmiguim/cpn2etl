@@ -37,24 +37,23 @@ public class XMLBuilder {
     private KettelConfigsFactory configFactory;
     private String filename;
 
-    public XMLBuilder() {
-    }
+    public XMLBuilder() { }
 
     public XMLBuilder(DocumentBuilder documentBuilder) throws ParserConfigurationException {
         this.documentBuilder = documentBuilder;
         this.configFactory = KettelConfigsFactory.newInstance();
     }
 
+    // Public Method to invoke the builder
     public void construct(String filename) throws TransformerException {
-        Document doc = documentBuilder.newDocument();
+        Document doc = documentBuilder.newDocument();    
         this.filename = filename;
         
         doc = initialize(doc);
         
         finalize(doc);
-        
     }
-
+    
     private Document initialize(Document doc) {
         
         // Root Element
@@ -119,7 +118,7 @@ public class XMLBuilder {
         
         info.appendChild(createMaxDate(doc));
         
-        ConfigInfo ci = configFactory.newInfo();
+        ConfigInfo ci = configFactory.info();
         
         for(kettel.Element e : ci.getElements()) {
             Element a = doc.createElement(e.getTag());
@@ -233,7 +232,7 @@ public class XMLBuilder {
         Element timeout_days = doc.createElement("timeout_days");
         metrics_log_table.appendChild(timeout_days);
         
-        ConfigMetricsLogTable config = configFactory.newMetricsLogTable();
+        ConfigMetricsLogTable config = configFactory.metricsLogTable();
         
         for (Field f : config.getFields()) {
             metrics_log_table.appendChild(createField(f, doc));
@@ -262,7 +261,7 @@ public class XMLBuilder {
         Element timeout_days = doc.createElement("timeout_days");
         step_log_table.appendChild(timeout_days);
         
-        ConfigStepLogTable config = configFactory.newStepLogTable();
+        ConfigStepLogTable config = configFactory.stepLogTable();
         
         for (Field f : config.getFields()) {
             step_log_table.appendChild(createField(f, doc));
@@ -290,7 +289,7 @@ public class XMLBuilder {
         Element timeout_days = doc.createElement("timeout_days");
         channel_log_table.appendChild(timeout_days);
         
-        ConfigChannelLogTable config = configFactory.newChannelLogTable();
+        ConfigChannelLogTable config = configFactory.channelLogTable();
         
         for (Field f : config.getFields()) {
             channel_log_table.appendChild(createField(f, doc));
@@ -323,7 +322,7 @@ public class XMLBuilder {
         Element timeout_days = doc.createElement("timeout_days");
         perf_log_table.appendChild(timeout_days);
         
-        ConfigPerfLogTable confs = configFactory.newPerfLogTable();
+        ConfigPerfLogTable confs = configFactory.perfLogTable();
         
         for (Field f : confs.getFields()) {
             perf_log_table.appendChild(createField(f, doc));
@@ -362,7 +361,7 @@ public class XMLBuilder {
         Element timeout_days = doc.createElement("timeout_days");
         trans_log_table.appendChild(timeout_days);
         
-        ConfigTransLogTable confs = configFactory.newTransLogTable();
+        ConfigTransLogTable confs = configFactory.transLogTable();
         
         for (Field f : confs.getFields()) {
             trans_log_table.appendChild(createField(f, doc));

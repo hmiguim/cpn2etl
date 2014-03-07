@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Objects;
-import stats.CpnStats;
 
 /**
  *
@@ -55,9 +54,9 @@ public class Cpn {
         return results;
     }
     
-    public CpnStats stats() {
+    public Stats stats() {
         
-        CpnStats cpnStats = new CpnStats();
+        Stats cpnStats = new Stats();
         
         cpnStats.setPages(this.pages.size());
         

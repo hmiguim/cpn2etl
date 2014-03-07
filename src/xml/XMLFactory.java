@@ -6,12 +6,12 @@
 
 package xml;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
@@ -27,8 +27,8 @@ public class XMLFactory {
         return new XMLFactory();
     }
     
-    public XMLParser newXMLParser(String path) throws FileNotFoundException, SAXException, IOException {
-        return new XMLParser(path,builder);
+    public XMLParser newXMLParser(File file) throws FileNotFoundException, SAXException, IOException {
+        return new XMLParser(file,builder);
     }
     
     public XMLBuilder newXMLBuilder() throws ParserConfigurationException {

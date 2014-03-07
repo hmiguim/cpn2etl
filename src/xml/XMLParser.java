@@ -45,9 +45,9 @@ public class XMLParser {
 
     public XMLParser() { }
 
-    public XMLParser(String path, DocumentBuilder b) throws FileNotFoundException, SAXException, IOException {
+    public XMLParser(File file, DocumentBuilder b) throws FileNotFoundException, SAXException, IOException {
         this.cpn = new Cpn();
-        this.file = new FileInputStream(new File(path));
+        this.file = new FileInputStream(file);
         this.builder = b;
     }
 

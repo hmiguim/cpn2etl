@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-package stats;
+package cpn;
 
 /**
  *
  * @author hmg
  */
-public class CpnStats {
+public class Stats {
 
     private int places;
     private int transitions;
@@ -23,7 +22,7 @@ public class CpnStats {
     private int placesOutput;
     private int placesIO;
 
-    public CpnStats() {
+    public Stats() {
         this.places = 0;
         this.transitions = 0;
         this.uniquePlaces = 0;
@@ -36,7 +35,7 @@ public class CpnStats {
         this.modules = 0;
     }
 
-    public CpnStats(int places, int transitions, int uniquePlaces, int pages, int subPages, int modules, int arcs, int placesInput, int placesOutput, int placesIO) {
+    public Stats(int places, int transitions, int uniquePlaces, int pages, int subPages, int modules, int arcs, int placesInput, int placesOutput, int placesIO) {
         this.places = places;
         this.transitions = transitions;
         this.uniquePlaces = uniquePlaces;
@@ -49,19 +48,19 @@ public class CpnStats {
         this.placesIO = placesIO;
     }
 
-    public CpnStats(CpnStats cpn) {
-        this.places         = cpn.getPlaces();
-        this.transitions    = cpn.getTransitions();
-        this.uniquePlaces   = cpn.getUniquePlaces();
-        this.pages          = cpn.getPages();
-        this.subPages       = cpn.getSubPages();
-        this.modules        = cpn.getModules();
-        this.arcs           = cpn.getArcs();
-        this.placesInput    = cpn.getPlacesInput();
-        this.placesOutput   = cpn.getPlacesOutput();
-        this.placesIO       = cpn.getPlacesIO();
+    public Stats(Stats cpn) {
+        this.places = cpn.getPlaces();
+        this.transitions = cpn.getTransitions();
+        this.uniquePlaces = cpn.getUniquePlaces();
+        this.pages = cpn.getPages();
+        this.subPages = cpn.getSubPages();
+        this.modules = cpn.getModules();
+        this.arcs = cpn.getArcs();
+        this.placesInput = cpn.getPlacesInput();
+        this.placesOutput = cpn.getPlacesOutput();
+        this.placesIO = cpn.getPlacesIO();
     }
-    
+
     public int getPlaces() {
         return places;
     }
@@ -166,7 +165,7 @@ public class CpnStats {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final CpnStats other = (CpnStats) obj;
+        final Stats other = (Stats) obj;
         if (this.places != other.places) {
             return false;
         }
@@ -200,22 +199,22 @@ public class CpnStats {
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
-        str.append("Places: \t").append(places).append(" \n");
-        str.append("Transitions: \t").append(transitions).append("\n");
+        str.append("Places: \t\t").append(places).append(" \n");
+        str.append("Transitions: \t\t").append(transitions).append("\n");
         str.append("Arcs: \t\t").append(arcs).append("\n");
         str.append("Pages: \t\t").append(pages).append("\n");
-        str.append("Subpages: \t").append(subPages).append("\n");
-        str.append("Modules: \t").append(modules).append("\n");
-        str.append("Places Input: \t").append(placesInput).append("\n");
-        str.append("Places Output: \t").append(placesOutput).append("\n");
-        str.append("Places I/O: \t").append(placesIO).append("\n");
-        str.append("Unique Places: \t").append(uniquePlaces).append("\n");
-     
+        str.append("Subpages: \t\t").append(subPages).append("\n");
+        str.append("Modules: \t\t").append(modules).append("\n");
+        str.append("Places Input: \t\t").append(placesInput).append("\n");
+        str.append("Places Output: \t\t").append(placesOutput).append("\n");
+        str.append("Places I/O: \t\t").append(placesIO).append("\n");
+        str.append("Unique Places: \t\t").append(uniquePlaces).append("\n");
+
         return str.toString();
     }
-    
+
     @Override
-    public CpnStats clone() throws CloneNotSupportedException {
-        return new CpnStats(this);
+    public Stats clone() {
+        return new Stats(this);
     }
 }

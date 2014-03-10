@@ -9,9 +9,9 @@
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/xml/XMLBuilder.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/ConfigChannelLogTable.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/ConfigMetricsLogTable.java</file>
-            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/stats/CpnStats.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/Element.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/ConfigFields.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/gui/Main.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/ConfigTransLogTable.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/xml/XMLFactory.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/cpn/Cpn.java</file>
@@ -22,6 +22,7 @@
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/ConfigInfo.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/Field.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/ConfigPerfLogTable.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/cpn/Stats.java</file>
         </group>
     </open-files>
 </project-private>

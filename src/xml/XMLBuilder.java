@@ -45,13 +45,14 @@ public class XMLBuilder {
     }
 
     // Public Method to invoke the builder
-    public void construct(String filename) throws TransformerException {
+    public void construct(File f) throws TransformerException {
         Document doc = documentBuilder.newDocument();    
-        this.filename = filename;
+
+        this.filename = f.getName();
         
         doc = initialize(doc);
         
-        finalize(doc);
+        finalize(doc,f);
     }
     
     private Document initialize(Document doc) {
@@ -386,13 +387,13 @@ public class XMLBuilder {
         return field;
     }
     
-    private void finalize(Document doc) throws TransformerException {
+    private void finalize(Document doc,File f) throws TransformerException {
         
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         
         DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(new File(filename));
+        StreamResult result = new StreamResult(f);
         
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");

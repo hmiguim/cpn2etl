@@ -8,14 +8,17 @@ package gui;
 import cpn.Cpn;
 import cpn.Stats;
 import java.awt.Dimension;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.xml.sax.SAXException;
+import xml.XMLBuilder;
 import xml.XMLFactory;
 import xml.XMLParser;
 
@@ -25,10 +28,12 @@ import xml.XMLParser;
  */
 public class Main extends javax.swing.JFrame {
 
+    private XMLFactory xmlFactory;
+
     /**
      * Creates new form main
      */
-    public Main() {
+    public Main() throws ParserConfigurationException {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setMinimumSize(new Dimension(475, 375));
@@ -39,6 +44,8 @@ public class Main extends javax.swing.JFrame {
         this.generateButton.setEnabled(false);
 
         openFile.setAcceptAllFileFilterUsed(false);
+
+        this.xmlFactory = XMLFactory.newInstance();
     }
 
     /**
@@ -180,11 +187,9 @@ public class Main extends javax.swing.JFrame {
 
     private void openButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openButtonActionPerformed
         File f = openFile();
-        try {
-            XMLFactory xmlFactory = XMLFactory.newInstance();
-
-            if (f != null) {
-                XMLParser xmlParser = xmlFactory.newXMLParser(f);
+        if (f != null) {
+            try {
+                XMLParser xmlParser = this.xmlFactory.newXMLParser(f);
 
                 Cpn cpn = xmlParser.parse();
 
@@ -192,25 +197,32 @@ public class Main extends javax.swing.JFrame {
 
                 this.debug.append("\n");
                 this.debug.append(stats.toString());
-            } else {
-                this.debug.append("[Error] \n");
+            } catch (SAXException | IOException | XPathExpressionException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-        } catch (ParserConfigurationException | SAXException | IOException | XPathExpressionException ex) {
-            this.debug.append("\n\n");
+        } else {
+            this.debug.append("[Error] \n");
         }
 
     }//GEN-LAST:event_openButtonActionPerformed
 
     private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
-        int returnVal = saveFile.showSaveDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            String file = saveFile.getSelectedFile().getName();
+        try {
+            XMLBuilder xmlBuilder = this.xmlFactory.newXMLBuilder();
 
-            this.debug.append("[Success] File genareted successfully");
+            int returnVal = this.saveFile.showSaveDialog(this);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                xmlBuilder.construct(this.saveFile.getSelectedFile());
+                this.generateLabel.setText("Saved file: " + this.saveFile.getSelectedFile().getAbsolutePath());
+                this.debug.append("\n[Success] File generated successfully");
+            }
+
+        } catch (ParserConfigurationException | TransformerException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_generateButtonActionPerformed
-   
+
     private File openFile() {
 
         File file = null;

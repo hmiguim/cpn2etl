@@ -233,7 +233,7 @@ public class XMLBuilder {
         Element timeout_days = doc.createElement("timeout_days");
         metrics_log_table.appendChild(timeout_days);
         
-        ConfigMetricsLogTable config = configFactory.metricsLogTable();
+        ConfigMetricsLogTable config = this.configFactory.metricsLogTable();
         
         for (Field f : config.getFields()) {
             metrics_log_table.appendChild(createField(f, doc));

@@ -32,19 +32,22 @@ public class Main extends javax.swing.JFrame {
 
     /**
      * Creates new form main
+     * @throws javax.xml.parsers.ParserConfigurationException
      */
     public Main() throws ParserConfigurationException {
         initComponents();
+        
         this.setLocationRelativeTo(null);
         this.setMinimumSize(new Dimension(475, 375));
         this.generateLabel.setText("");
         this.openLabel.setText("");
+        this.debug.setText("");
         this.debug.setEditable(false);
 
-        this.generateButton.setEnabled(false);
+        this.btnGenerate.setEnabled(false);
 
         openFile.setAcceptAllFileFilterUsed(false);
-
+        
         this.xmlFactory = XMLFactory.newInstance();
     }
 
@@ -61,9 +64,9 @@ public class Main extends javax.swing.JFrame {
         openFile = new javax.swing.JFileChooser();
         openPanel = new javax.swing.JPanel();
         openLabel = new javax.swing.JLabel();
-        openButton = new javax.swing.JButton();
+        btnOpen = new javax.swing.JButton();
         generatePanel = new javax.swing.JPanel();
-        generateButton = new javax.swing.JButton();
+        btnGenerate = new javax.swing.JButton();
         generateLabel = new javax.swing.JLabel();
         outputPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -76,98 +79,87 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("cpn2etl");
 
+        openPanel.setLayout(new java.awt.GridBagLayout());
+
         openLabel.setText("sdfsd");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        openPanel.add(openLabel, gridBagConstraints);
 
-        openButton.setText("Open");
-        openButton.addActionListener(new java.awt.event.ActionListener() {
+        btnOpen.setText("Open");
+        btnOpen.setMaximumSize(new java.awt.Dimension(99, 29));
+        btnOpen.setMinimumSize(new java.awt.Dimension(99, 29));
+        btnOpen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                openButtonActionPerformed(evt);
+                btnOpenActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 23;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 12);
+        openPanel.add(btnOpen, gridBagConstraints);
 
-        javax.swing.GroupLayout openPanelLayout = new javax.swing.GroupLayout(openPanel);
-        openPanel.setLayout(openPanelLayout);
-        openPanelLayout.setHorizontalGroup(
-            openPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(openPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(openButton, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(openLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        openPanelLayout.setVerticalGroup(
-            openPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, openPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(openPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(openLabel)
-                    .addComponent(openButton)))
-        );
+        generatePanel.setLayout(new java.awt.GridBagLayout());
 
-        generateButton.setText("Generate");
-        generateButton.addActionListener(new java.awt.event.ActionListener() {
+        btnGenerate.setText("Generate");
+        btnGenerate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                generateButtonActionPerformed(evt);
+                btnGenerateActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 12);
+        generatePanel.add(btnGenerate, gridBagConstraints);
 
         generateLabel.setText("dasds");
-
-        javax.swing.GroupLayout generatePanelLayout = new javax.swing.GroupLayout(generatePanel);
-        generatePanel.setLayout(generatePanelLayout);
-        generatePanelLayout.setHorizontalGroup(
-            generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(generatePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(generateButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(generateLabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        generatePanelLayout.setVerticalGroup(
-            generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(generatePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(generatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(generateButton)
-                    .addComponent(generateLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        generatePanel.add(generateLabel, gridBagConstraints);
 
         outputPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Output"));
+        outputPanel.setLayout(new java.awt.GridBagLayout());
 
         debug.setColumns(20);
         debug.setRows(5);
         jScrollPane1.setViewportView(debug);
 
-        javax.swing.GroupLayout outputPanelLayout = new javax.swing.GroupLayout(outputPanel);
-        outputPanel.setLayout(outputPanelLayout);
-        outputPanelLayout.setHorizontalGroup(
-            outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(outputPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        outputPanelLayout.setVerticalGroup(
-            outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(outputPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 416;
+        gridBagConstraints.ipady = 61;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        outputPanel.add(jScrollPane1, gridBagConstraints);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(openPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(generatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(outputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(outputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(openPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(generatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -178,14 +170,14 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(generatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(outputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(outputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void openButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openButtonActionPerformed
+    private void btnOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenActionPerformed
         File f = openFile();
         if (f != null) {
             try {
@@ -204,9 +196,10 @@ public class Main extends javax.swing.JFrame {
             this.debug.append("[Error] \n");
         }
 
-    }//GEN-LAST:event_openButtonActionPerformed
+    }//GEN-LAST:event_btnOpenActionPerformed
 
-    private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
+    private void btnGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateActionPerformed
+        
         try {
             XMLBuilder xmlBuilder = this.xmlFactory.newXMLBuilder();
 
@@ -215,13 +208,13 @@ public class Main extends javax.swing.JFrame {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 xmlBuilder.construct(this.saveFile.getSelectedFile());
                 this.generateLabel.setText("Saved file: " + this.saveFile.getSelectedFile().getAbsolutePath());
-                this.debug.append("\n[Success] File generated successfully");
+                this.debug.append("\n[SUCCESS] File generated successfully");
             }
 
         } catch (ParserConfigurationException | TransformerException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_generateButtonActionPerformed
+    }//GEN-LAST:event_btnGenerateActionPerformed
 
     private File openFile() {
 
@@ -247,20 +240,20 @@ public class Main extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             file = openFile.getSelectedFile();
             openLabel.setText("Opened file: " + file.getAbsolutePath());
-            this.debug.append("[Success] File opened successfully!\n");
-            this.generateButton.setEnabled(true);
+            this.debug.append("[SUCCESS] File opened successfully!\n");
+            this.btnGenerate.setEnabled(true);
         }
 
         return file;
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnGenerate;
+    private javax.swing.JButton btnOpen;
     private javax.swing.JTextArea debug;
-    private javax.swing.JButton generateButton;
     private javax.swing.JLabel generateLabel;
     private javax.swing.JPanel generatePanel;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton openButton;
     private javax.swing.JFileChooser openFile;
     private javax.swing.JLabel openLabel;
     private javax.swing.JPanel openPanel;

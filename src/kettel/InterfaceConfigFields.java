@@ -13,7 +13,7 @@ import java.util.ArrayList;
  *
  * @author hmg
  */
-public interface ConfigFields {
+public interface InterfaceConfigFields {
     
     public void readConfig();
     

@@ -31,7 +31,7 @@ public class ConfigInfo {
     
     private void readConfig() {
         
-        String conf = "../configs/info";
+        String conf = "configs/info";
 
         BufferedReader bufferedReader = null;
         String line;

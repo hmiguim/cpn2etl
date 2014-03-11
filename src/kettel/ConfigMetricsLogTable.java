@@ -16,7 +16,7 @@ import java.util.ArrayList;
  *
  * @author hmg
  */
-public final class ConfigMetricsLogTable implements ConfigFields {
+public final class ConfigMetricsLogTable implements InterfaceConfigFields {
     
     private ArrayList<Field> fields;
     
@@ -27,7 +27,7 @@ public final class ConfigMetricsLogTable implements ConfigFields {
     
     @Override
     public void readConfig() {
-        String conf = "../configs/metricslogtable";
+        String conf = "configs/metricslogtable";
 
         BufferedReader bufferedReader = null;
         String line;

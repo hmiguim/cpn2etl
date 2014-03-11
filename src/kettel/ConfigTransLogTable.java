@@ -6,6 +6,7 @@
 package kettel;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  *
  * @author hmg
  */
-public final class ConfigTransLogTable implements ConfigFields {
+public final class ConfigTransLogTable implements InterfaceConfigFields {
 
     private ArrayList<Field> fields;
 
@@ -26,14 +27,16 @@ public final class ConfigTransLogTable implements ConfigFields {
 
     @Override
     public void readConfig() {
-        String conf = "../configs/translogtable";
+        String conf = "configs/translogtable";
 
         BufferedReader bufferedReader = null;
         String line;
-
+        
         try {
             bufferedReader = new BufferedReader(new FileReader(conf));
+            
             while ((line = bufferedReader.readLine()) != null) {
+            
                 String[] split = line.split(",");
 
                 Field f = new Field(split[0], split[1], split[2]);

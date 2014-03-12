@@ -333,15 +333,16 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>transformation</code> element and return it to
-     * be appended
+     * Method in charge of create a <code>transformation</code> element and
+     * return it to be appended
      *
-     * @return A {@link Element} <code>transformation</code> with all the child nodes
+     * @return A {@link Element} <code>transformation</code> with all the child
+     * nodes
      */
     private Document createTransformation() {
 
         Document doc = this.documentBuilder.newDocument();
-        
+
         // Root Element
         Element transformation = doc.createElement("transformation");
         doc.appendChild(transformation);

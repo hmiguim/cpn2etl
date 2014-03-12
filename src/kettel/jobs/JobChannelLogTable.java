@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kettel.transformation;
+package kettel.jobs;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -17,18 +17,18 @@ import kettel.InterfaceLogs;
  *
  * @author hmg
  */
-public final class TransStepLogTable implements InterfaceLogs {
+public final class JobChannelLogTable implements InterfaceLogs {
 
     private ArrayList<Field> fields;
 
-    public TransStepLogTable() {
+    public JobChannelLogTable() {
         fields = new ArrayList<>();
         readConfig();
     }
 
     @Override
     public void readConfig() {
-        String conf = "configs/transformation/steplogtable";
+        String conf = "configs/job/channellogtable";
 
         BufferedReader bufferedReader = null;
         String line;
@@ -66,4 +66,5 @@ public final class TransStepLogTable implements InterfaceLogs {
     public void overrideConfig() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
 }

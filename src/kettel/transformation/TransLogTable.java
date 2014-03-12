@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kettel;
+package kettel.transformation;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,32 +11,34 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import kettel.Field;
+import kettel.InterfaceLogs;
 
 /**
  *
  * @author hmg
  */
-public final class ConfigTransLogTable implements InterfaceConfigFields {
+public final class TransLogTable implements InterfaceLogs {
 
     private ArrayList<Field> fields;
 
-    public ConfigTransLogTable() {
+    public TransLogTable() {
         this.fields = new ArrayList<>();
         readConfig();
     }
 
     @Override
     public void readConfig() {
-        String conf = "configs/translogtable";
+        String conf = "configs/transformation/translogtable";
 
         BufferedReader bufferedReader = null;
         String line;
-        
+
         try {
             bufferedReader = new BufferedReader(new FileReader(conf));
-            
+
             while ((line = bufferedReader.readLine()) != null) {
-            
+
                 String[] split = line.split(",");
 
                 Field f = new Field(split[0], split[1], split[2]);

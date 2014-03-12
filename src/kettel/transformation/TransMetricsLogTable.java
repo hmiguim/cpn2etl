@@ -3,31 +3,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-package kettel;
+package kettel.transformation;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import kettel.Field;
+import kettel.InterfaceLogs;
 
 /**
  *
  * @author hmg
  */
-public final class ConfigMetricsLogTable implements InterfaceConfigFields {
-    
+public final class TransMetricsLogTable implements InterfaceLogs {
+
     private ArrayList<Field> fields;
-    
-    public ConfigMetricsLogTable() {
+
+    public TransMetricsLogTable() {
         fields = new ArrayList<>();
         readConfig();
     }
-    
+
     @Override
     public void readConfig() {
-        String conf = "configs/metricslogtable";
+        String conf = "configs/transformation/metricslogtable";
 
         BufferedReader bufferedReader = null;
         String line;

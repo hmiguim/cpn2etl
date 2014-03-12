@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kettel;
+package kettel.transformation;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -11,33 +11,33 @@ import javax.xml.parsers.ParserConfigurationException;
  *
  * @author hmg
  */
-public class KettelConfigsFactory {
+public class TransLogTableFactory {
 
-    public static KettelConfigsFactory newInstance() throws ParserConfigurationException {
-        return new KettelConfigsFactory();
+    public static TransLogTableFactory newInstance() throws ParserConfigurationException {
+        return new TransLogTableFactory();
     }
 
-    public ConfigTransLogTable transLogTable() {
-        return new ConfigTransLogTable();
+    public TransLogTable transLogTable() {
+        return new TransLogTable();
     }
 
-    public ConfigPerfLogTable perfLogTable() {
-        return new ConfigPerfLogTable();
+    public TransPerfLogTable perfLogTable() {
+        return new TransPerfLogTable();
     }
 
-    public ConfigChannelLogTable channelLogTable() {
-        return new ConfigChannelLogTable();
+    public TransChannelLogTable channelTransLogTable() {
+        return new TransChannelLogTable();
     }
 
-    public ConfigStepLogTable stepLogTable() {
-        return new ConfigStepLogTable();
+    public TransStepLogTable stepLogTable() {
+        return new TransStepLogTable();
     }
 
-    public ConfigMetricsLogTable metricsLogTable() {
-        return new ConfigMetricsLogTable();
+    public TransMetricsLogTable metricsLogTable() {
+        return new TransMetricsLogTable();
     }
 
-    public ConfigInfo info() {
-        return new ConfigInfo();
+    public TransInfo info() {
+        return new TransInfo();
     }
 }

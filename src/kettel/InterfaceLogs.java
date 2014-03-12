@@ -3,21 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package kettel;
 
 import java.util.ArrayList;
-
 
 /**
  *
  * @author hmg
  */
-public interface InterfaceConfigFields {
-    
+public interface InterfaceLogs {
+
     public void readConfig();
-    
+
     public ArrayList<Field> getFields();
-    
+
     public void overrideConfig();
 }

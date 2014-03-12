@@ -3,35 +3,35 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-package kettel;
+package kettel.transformation;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import kettel.Element;
 
 /**
  *
  * @author hmg
  */
-public class ConfigInfo {
-    
+public class TransInfo {
+
     private ArrayList<Element> elements;
-    
-    public ConfigInfo() {
+
+    public TransInfo() {
         elements = new ArrayList<>();
         readConfig();
     }
-    
+
     public ArrayList<Element> getElements() {
         return this.elements;
     }
-    
+
     private void readConfig() {
-        
-        String conf = "configs/info";
+
+        String conf = "configs/transformation/info";
 
         BufferedReader bufferedReader = null;
         String line;
@@ -57,7 +57,7 @@ public class ConfigInfo {
 
                 }
             }
-        }     
+        }
     }
-    
+
 }

@@ -3,31 +3,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-package kettel;
+package kettel.transformation;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import kettel.Field;
+import kettel.InterfaceLogs;
 
 /**
  *
  * @author hmg
  */
-public final class ConfigPerfLogTable implements InterfaceConfigFields {
+public final class TransPerfLogTable implements InterfaceLogs {
 
     private ArrayList<Field> fields;
-    
-    public ConfigPerfLogTable() {
+
+    public TransPerfLogTable() {
         this.fields = new ArrayList<>();
         readConfig();
     }
-    
+
     @Override
     public void readConfig() {
-        String conf = "configs/perflogtable";
+        String conf = "configs/transformation/perflogtable";
 
         BufferedReader bufferedReader = null;
         String line;
@@ -65,5 +66,5 @@ public final class ConfigPerfLogTable implements InterfaceConfigFields {
     public void overrideConfig() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

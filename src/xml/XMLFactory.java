@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package xml;
 
 import java.io.File;
@@ -19,24 +18,24 @@ import org.xml.sax.SAXException;
  * @author hmg
  */
 public class XMLFactory {
-    
+
     private final DocumentBuilderFactory builderFactory;
     private final DocumentBuilder builder;
-    
+
     public static XMLFactory newInstance() throws ParserConfigurationException {
         return new XMLFactory();
     }
-    
+
     public XMLParser newXMLParser(File file) throws FileNotFoundException, SAXException, IOException {
-        return new XMLParser(file,builder);
+        return new XMLParser(file, builder);
     }
-    
+
     public XMLBuilder newXMLBuilder() throws ParserConfigurationException {
         return new XMLBuilder(builder);
     }
-    
-    private XMLFactory() throws ParserConfigurationException { 
+
+    private XMLFactory() throws ParserConfigurationException {
         builderFactory = DocumentBuilderFactory.newInstance();
-        builder =  builderFactory.newDocumentBuilder();
+        builder = builderFactory.newDocumentBuilder();
     }
 }

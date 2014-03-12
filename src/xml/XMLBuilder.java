@@ -173,48 +173,50 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of translate each transformation in one job entry 
-     * and append it in the element <code>entries</code>
+     * Method in charge of translate each transformation in one job entry and
+     * append it in the element <code>entries</code>
+     *
      * @return A {@link Element} <code>entries</code> with all the child nodes
      */
     private Element createJobEntries() {
 
         Document doc = this.documentBuilder.newDocument();
-        
+
         // Root element
         Element entries = doc.createElement("entries");
 
         // TODO: create each one of the job entries
-        
         return entries;
     }
 
     /**
-     * Method in charge of connect each transformation
-     * and append it in the element <code>hops</code>
+     * Method in charge of connect each transformation and append it in the
+     * element <code>hops</code>
+     *
      * @return A {@link Element} <code>hops</code> with all the child nodes
      */
     private Element createJobHops() {
 
         Document doc = this.documentBuilder.newDocument();
-        
+
         // Root Element
         Element hops = doc.createElement("hops");
 
         // TODO: create hops between two job entries
-        
         return hops;
     }
 
     /**
-     * Method in charge of create a <code>job-log-table</code> element
-     * and return it to be appended
-     * @return A {@link Element} <code>job-log-table</code> with all the child nodes
+     * Method in charge of create a <code>job-log-table</code> element and
+     * return it to be appended
+     *
+     * @return A {@link Element} <code>job-log-table</code> with all the child
+     * nodes
      */
     private Element createJobLogTable() {
 
         Document doc = this.documentBuilder.newDocument();
-        
+
         // Root element
         Element jobLogTable = doc.createElement("job-log-table");
 
@@ -253,14 +255,16 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>jobentry-log-table</code> element
-     * and return it to be appended
-     * @return A {@link Element} <code>jobentry-log-table</code> with all the child nodes
+     * Method in charge of create a <code>jobentry-log-table</code> element and
+     * return it to be appended
+     *
+     * @return A {@link Element} <code>jobentry-log-table</code> with all the
+     * child nodes
      */
     private Element createJobEntryLogTable() {
 
         Document doc = this.documentBuilder.newDocument();
-        
+
         // Root element
         Element jobentryLogTable = doc.createElement("jobentry-log-table");
 
@@ -290,14 +294,16 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>channel-log-table</code> element
-     * and return it to be appended
-     * @return A {@link Element} <code>channel-log-table</code> with all the child nodes
+     * Method in charge of create a <code>channel-log-table</code> element and
+     * return it to be appended
+     *
+     * @return A {@link Element} <code>channel-log-table</code> with all the
+     * child nodes
      */
     private Element createJobChannelLogTabble() {
 
         Document doc = this.documentBuilder.newDocument();
-        
+
         // Root element
         Element channelLogTable = doc.createElement("channel-log-table");
 
@@ -326,23 +332,35 @@ public class XMLBuilder {
         return channelLogTable;
     }
 
-    private Document createTransformation(Document doc) {
+    /**
+     * Method in charge of create a <code>transformation</code> element and return it to
+     * be appended
+     *
+     * @return A {@link Element} <code>transformation</code> with all the child nodes
+     */
+    private Document createTransformation() {
 
+        Document doc = this.documentBuilder.newDocument();
+        
         // Root Element
         Element transformation = doc.createElement("transformation");
         doc.appendChild(transformation);
 
         transformation.appendChild(this.createInfo());
 
+        // notepads element
         Element notepads = doc.createElement("notepads");
         transformation.appendChild(notepads);
 
+        // step_error_handling element
         Element step_error_handling = doc.createElement("step_error_handling");
         transformation.appendChild(step_error_handling);
 
+        // slave-step-copy-partition-distribution element
         Element slave_step_copy_partition_distribution = doc.createElement("slave-step-copy-partition-distribution");
         transformation.appendChild(slave_step_copy_partition_distribution);
 
+        // slave_transformation element
         Element slave_transformation = doc.createElement("slave_transformation");
         slave_transformation.setTextContent("N");
         transformation.appendChild(slave_transformation);
@@ -350,10 +368,16 @@ public class XMLBuilder {
         return doc;
     }
 
+    /**
+     * Method in charge of create a <code>info</code> element and return it to
+     * be appended
+     *
+     * @return A {@link Element} <code>info</code> with all the child nodes
+     */
     private Element createInfo() {
-        
+
         Document doc = this.documentBuilder.newDocument();
-        
+
         // Info Element
         Element info = doc.createElement("info");
 
@@ -391,7 +415,7 @@ public class XMLBuilder {
 
         info.appendChild(this.createTransformationLog());
 
-        info.appendChild(this.createMaxDate(doc));
+        info.appendChild(this.createMaxDate());
 
         TransInfo ci = this.transLogFactory.info();
 
@@ -402,25 +426,32 @@ public class XMLBuilder {
             info.appendChild(a);
         }
 
+        // shared_objects_file element
         Element shared_objects_file = doc.createElement("shared_objects_file");
         info.appendChild(shared_objects_file);
 
+        // dependencies element
         Element dependencies = doc.createElement("dependencies");
         info.appendChild(dependencies);
 
+        // partitionschemas element
         Element partitionschemas = doc.createElement("partitionschemas");
         info.appendChild(partitionschemas);
 
+        // slaveservers element
         Element slaveservers = doc.createElement("slaveservers");
         info.appendChild(slaveservers);
 
+        // clusterschemas element
         Element clusterschemas = doc.createElement("clusterschemas");
         info.appendChild(clusterschemas);
 
+        // created_user element
         Element created_user = doc.createElement("created_user");
         created_user.setTextContent("cpn2etl");
         info.appendChild(created_user);
 
+        // created_date element
         Element created_date = doc.createElement("created_date");
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.S");
@@ -428,10 +459,12 @@ public class XMLBuilder {
         created_date.setTextContent(today);
         info.appendChild(created_date);
 
+        // modified_user element
         Element modified_user = doc.createElement("modified_user");
         modified_user.setTextContent("cpn2etl");
         info.appendChild(modified_user);
 
+        // modified_date element
         Element modified_date = doc.createElement("modified_date");
         modified_date.setTextContent(today);
         info.appendChild(modified_date);
@@ -439,7 +472,15 @@ public class XMLBuilder {
         return info;
     }
 
-    private Element createMaxDate(Document doc) {
+    /**
+     * Method in charge of create a <code>maxdate</code> element and return it
+     * to be appended
+     *
+     * @return A {@link Element} <code>maxdate</code> with all the child nodes
+     */
+    private Element createMaxDate() {
+
+        Document doc = this.documentBuilder.newDocument();
 
         // Root Element
         Element maxdate = doc.createElement("maxdate");
@@ -471,43 +512,57 @@ public class XMLBuilder {
 
     /**
      * Method in charge of create all the different child log elements
+     *
      * @return A {@link Element} with all the child nodes:
-     * <p> - <code>trans-log-table</code></p>
-     * <p> - <code>perf-log-table</code></p>
-     * <p> - <code>perf-log-table</code></p>
-     * <p> - <code>channel-log-table</code></p>
-     * <p> - <code>step-log-table</code></p>
-     * <p> - <code>metrics-log-table</code></p>
+     * <p>
+     * - <code>trans-log-table</code></p>
+     * <p>
+     * - <code>perf-log-table</code></p>
+     * <p>
+     * - <code>perf-log-table</code></p>
+     * <p>
+     * - <code>channel-log-table</code></p>
+     * <p>
+     * - <code>step-log-table</code></p>
+     * <p>
+     * - <code>metrics-log-table</code></p>
      */
     private Element createTransformationLog() {
 
         Document doc = this.documentBuilder.newDocument();
-        
+
         // Root element
         Element log = doc.createElement("log");
 
+        // trans-log-table element
         log.appendChild(this.createTransformationTransLogTable());
 
+        // perf-log-table element
         log.appendChild(this.createTransformationPerfLogTable());
 
+        // channel-log-table element
         log.appendChild(this.createTransformationChannelLogTable());
 
+        // step-log-table element
         log.appendChild(this.createTransformationStepLogTable());
 
+        // metrics-log-table element
         log.appendChild(this.createTransformationMetricsLogTable());
 
         return log;
     }
 
     /**
-     * Method in charge of create a <code>metrics-log-table</code> element
-     * and return it to be appended
-     * @return A {@link Element} <code>metrics-log-table</code> with all the child nodes
+     * Method in charge of create a <code>metrics-log-table</code> element and
+     * return it to be appended
+     *
+     * @return A {@link Element} <code>metrics-log-table</code> with all the
+     * child nodes
      */
     private Element createTransformationMetricsLogTable() {
 
         Document doc = this.documentBuilder.newDocument();
-        
+
         // Root element
         Element metrics_log_table = doc.createElement("metrics-log-table");
 
@@ -537,14 +592,16 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>step-log-table</code> element
-     * and return it to be appended
-     * @return A {@link Element} <code>step-log-table</code> with all the child nodes
+     * Method in charge of create a <code>step-log-table</code> element and
+     * return it to be appended
+     *
+     * @return A {@link Element} <code>step-log-table</code> with all the child
+     * nodes
      */
     private Element createTransformationStepLogTable() {
 
         Document doc = this.documentBuilder.newDocument();
-        
+
         // Root element
         Element step_log_table = doc.createElement("step-log-table");
 
@@ -574,14 +631,16 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>channel-log-table</code> element
-     * and return it to be appended
-     * @return A {@link Element} <code>channel-log-table</code> with all the child nodes
+     * Method in charge of create a <code>channel-log-table</code> element and
+     * return it to be appended
+     *
+     * @return A {@link Element} <code>channel-log-table</code> with all the
+     * child nodes
      */
     private Element createTransformationChannelLogTable() {
-       
+
         Document doc = this.documentBuilder.newDocument();
-        
+
         // Root element
         Element channel_log_table = doc.createElement("channel-log-table");
 
@@ -611,14 +670,16 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>perf-log-table</code> element
-     * and return it to be appended
-     * @return A {@link Element} <code>perf-log-table</code> with all the child nodes
+     * Method in charge of create a <code>perf-log-table</code> element and
+     * return it to be appended
+     *
+     * @return A {@link Element} <code>perf-log-table</code> with all the child
+     * nodes
      */
     private Element createTransformationPerfLogTable() {
 
         Document doc = this.documentBuilder.newDocument();
-        
+
         // Root element
         Element perf_log_table = doc.createElement("perf-log-table");
 
@@ -653,14 +714,16 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>trans-log-table</code> element
-     * and return it to be appended
-     * @return A {@link Element} <code>trans-log-table</code> with all the child nodes
+     * Method in charge of create a <code>trans-log-table</code> element and
+     * return it to be appended
+     *
+     * @return A {@link Element} <code>trans-log-table</code> with all the child
+     * nodes
      */
     private Element createTransformationTransLogTable() {
 
         Document doc = this.documentBuilder.newDocument();
-        
+
         // Root element
         Element trans_log_table = doc.createElement("trans-log-table");
 
@@ -699,14 +762,15 @@ public class XMLBuilder {
 
     /**
      * Method that returns a field log element according the field object
-     * @param nameField Object field with the information 
-     * obtain on the configuration files
+     *
+     * @param nameField Object field with the information obtain on the
+     * configuration files
      * @return A {@link Element} {@code field} with all the child nodes
      */
     private Element createField(Field nameField) {
 
         Document doc = this.documentBuilder.newDocument();
-        
+
         Element field = doc.createElement("field");
         Element id = doc.createElement("id");
         id.setTextContent(nameField.getId());
@@ -722,12 +786,14 @@ public class XMLBuilder {
     }
 
     /**
-     * Method that write the {@code document} parameter in the {@code file} 
-     * to be exported as a XML file
+     * Method that write the {@code document} parameter in the {@code file} to
+     * be exported as a XML file
+     *
      * @param document The XML {@link Document} to be exported
-     * @param file The destination file where the {@code document} going to be exported
-     * @throws TransformerException If an unrecoverable error occurs
-     *   during the course of the transformation.
+     * @param file The destination file where the {@code document} going to be
+     * exported
+     * @throws TransformerException If an unrecoverable error occurs during the
+     * course of the transformation.
      */
     private void finalize(Document document, File file) throws TransformerException {
 

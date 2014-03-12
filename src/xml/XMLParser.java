@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -37,25 +39,25 @@ import org.xml.sax.SAXException;
 public class XMLParser {
 
     private FileInputStream file;
-    private DocumentBuilder builder;
+    private DocumentBuilderFactory documentBuilderFactory;
+    private DocumentBuilder documentBuilder;
     private Document xmlDocument;
     private Cpn cpn;
 
     protected final ArrayList<String> ports = new ArrayList<>();
 
-    public XMLParser() { }
-
-    public XMLParser(File file, DocumentBuilder b) throws FileNotFoundException, SAXException, IOException {
+    public XMLParser(File file) throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
         this.cpn = new Cpn();
         this.file = new FileInputStream(file);
-        this.builder = b;
+        this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        this.documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
     }
 
     // Public Method to invoke the parse
     public Cpn parse() throws SAXException, IOException, XPathExpressionException {
-        this.xmlDocument = this.builder.parse(this.file);
+        this.xmlDocument = this.documentBuilder.parse(this.file);
         this.parseCPN();
-        this.builder.reset();
+        this.documentBuilder.reset();
         return cpn.clone();
     }
 

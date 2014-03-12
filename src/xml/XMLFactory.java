@@ -8,8 +8,6 @@ package xml;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -19,23 +17,17 @@ import org.xml.sax.SAXException;
  */
 public class XMLFactory {
 
-    private final DocumentBuilderFactory builderFactory;
-    private final DocumentBuilder builder;
-
-    public static XMLFactory newInstance() throws ParserConfigurationException {
+    public static XMLFactory newInstance() {
         return new XMLFactory();
     }
 
-    public XMLParser newXMLParser(File file) throws FileNotFoundException, SAXException, IOException {
-        return new XMLParser(file, builder);
+    public XMLParser newXMLParser(File file) throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
+        return new XMLParser(file);
     }
 
     public XMLBuilder newXMLBuilder() throws ParserConfigurationException {
-        return new XMLBuilder(builder);
+        return new XMLBuilder();
     }
 
-    private XMLFactory() throws ParserConfigurationException {
-        builderFactory = DocumentBuilderFactory.newInstance();
-        builder = builderFactory.newDocumentBuilder();
-    }
+    protected XMLFactory() { }
 }

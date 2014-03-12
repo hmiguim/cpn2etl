@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import kettel.Field;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -37,37 +38,51 @@ import org.w3c.dom.Element;
  */
 public class XMLBuilder {
 
+    private DocumentBuilderFactory documentBuilderFactory;
     private DocumentBuilder documentBuilder;
     private TransLogTableFactory transLogFactory;
     private JobsLogTableFactory jobLogFactory;
     private String filename;
 
-    public XMLBuilder() { }
-
-    public XMLBuilder(DocumentBuilder documentBuilder) throws ParserConfigurationException {
-        this.documentBuilder = documentBuilder;
+    /**
+     * Constructor for the XMLBuilder class
+     *
+     * @throws ParserConfigurationException Indicates a serious configuration
+     * error.
+     */
+    public XMLBuilder() throws ParserConfigurationException {
+        this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        this.documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
         this.transLogFactory = TransLogTableFactory.newInstance();
         this.jobLogFactory = JobsLogTableFactory.newInstance();
     }
 
-    // Public Method to invoke the builder
-    public void construct(File f) throws TransformerException {
-        this.filename = f.getName();
-        
-        Document job = createJob();
+    /**
+     * Public method to create the Kettle XML file
+     *
+     * @param file The file where the XML document going to be saved
+     * @throws TransformerException If an unrecoverable error occurs during the
+     * course of the transformation.
+     */
+    public void construct(File file) throws TransformerException {
+        this.filename = file.getName();
 
-        finalize(job, f);
+        Document job = this.createJob();
+
+        this.finalize(job, file);
     }
 
-    
     /**
-     * Method that returns a {@link Document} for the Job element in Kettle specification file
-     * @return A {@link Document} with the Job {@link Element} as root with all the child nodes
+     * Method that returns a {@link Document} for the Job element in Kettle
+     * specification file
+     *
+     * @return A {@link Document} with the Job {@link Element} as root with all
+     * the child nodes
      */
     private Document createJob() {
-        
+
         Document document = documentBuilder.newDocument();
-        
+
         // Root Element
         Element job = document.createElement("job");
         document.appendChild(job);
@@ -125,64 +140,85 @@ public class XMLBuilder {
         // slaveservers element
         Element slaveservers = document.createElement("slaveservers");
         job.appendChild(slaveservers);
-        
+
         // job-log-table element
-        job.appendChild(createJobLogTable(document));
-        
+        job.appendChild(this.createJobLogTable());
+
         // jobentry-log-table element
-        job.appendChild(createJobEntryLogTable(document));
-        
+        job.appendChild(this.createJobEntryLogTable());
+
         // channel-log-table
-        job.appendChild(createJobChannelLogTabble(document));
-        
+        job.appendChild(this.createJobChannelLogTabble());
+
         // pass_batchid element
         Element pass_batchid = document.createElement("pass_batchid");
         pass_batchid.setTextContent("N");
         job.appendChild(pass_batchid);
-        
+
         // shared_objects_file element
         Element shared_objects_file = document.createElement("shared_objects_file");
         job.appendChild(shared_objects_file);
-        
+
         // entries elements
-        job.appendChild(createJobEntries(document));
-        
+        job.appendChild(this.createJobEntries());
+
         // hops elements
-        job.appendChild(createJobHops(document));
-        
+        job.appendChild(this.createJobHops());
+
         // notepads elements
         Element notepads = document.createElement("notepads");
         job.appendChild(notepads);
-        
+
         return document;
     }
-    
-     
-   private Element createJobEntries(Document doc) {
+
+    /**
+     * Method in charge of translate each transformation in one job entry 
+     * and append it in the element <code>entries</code>
+     * @return A {@link Element} <code>entries</code> with all the child nodes
+     */
+    private Element createJobEntries() {
+
+        Document doc = this.documentBuilder.newDocument();
         
         // Root element
         Element entries = doc.createElement("entries");
-        
+
         // TODO: create each one of the job entries
         
         return entries;
     }
-    
-    private Element createJobHops(Document doc) {
+
+    /**
+     * Method in charge of connect each transformation
+     * and append it in the element <code>hops</code>
+     * @return A {@link Element} <code>hops</code> with all the child nodes
+     */
+    private Element createJobHops() {
+
+        Document doc = this.documentBuilder.newDocument();
         
         // Root Element
         Element hops = doc.createElement("hops");
-        
+
         // TODO: create hops between two job entries
         
-        return hops;        
+        return hops;
     }
-    
-    private Element createJobLogTable(Document doc) {
+
+    /**
+     * Method in charge of create a <code>job-log-table</code> element
+     * and return it to be appended
+     * @return A {@link Element} <code>job-log-table</code> with all the child nodes
+     */
+    private Element createJobLogTable() {
+
+        Document doc = this.documentBuilder.newDocument();
         
         // Root element
         Element jobLogTable = doc.createElement("job-log-table");
-        
+
+        // connection element
         Element connection = doc.createElement("connection");
         jobLogTable.appendChild(connection);
 
@@ -197,30 +233,37 @@ public class XMLBuilder {
         // size_limit_lines element
         Element sizeLimitLines = doc.createElement("size_limit_lines");
         jobLogTable.appendChild(sizeLimitLines);
-        
+
         // interval element
         Element interval = doc.createElement("interval");
         jobLogTable.appendChild(interval);
-        
+
         // timeout_days element
         Element timeout_days = doc.createElement("timeout_days");
         jobLogTable.appendChild(timeout_days);
-        
+
         JobLogTable logTable = this.jobLogFactory.logTable();
 
         for (Field f : logTable.getFields()) {
-            jobLogTable.appendChild(createField(f, doc));
+            jobLogTable.appendChild(this.createField(f));
         }
-        
+
         return jobLogTable;
-                
+
     }
-    
-    private Element createJobEntryLogTable(Document doc) {
+
+    /**
+     * Method in charge of create a <code>jobentry-log-table</code> element
+     * and return it to be appended
+     * @return A {@link Element} <code>jobentry-log-table</code> with all the child nodes
+     */
+    private Element createJobEntryLogTable() {
+
+        Document doc = this.documentBuilder.newDocument();
         
         // Root element
         Element jobentryLogTable = doc.createElement("jobentry-log-table");
-        
+
         // connection element
         Element connection = doc.createElement("connection");
         jobentryLogTable.appendChild(connection);
@@ -232,25 +275,32 @@ public class XMLBuilder {
         // table element
         Element table = doc.createElement("table");
         jobentryLogTable.appendChild(table);
-        
+
         // timeout_days element
         Element timeout_days = doc.createElement("timeout_days");
         jobentryLogTable.appendChild(timeout_days);
-        
+
         JobEntryLogTable entryLogTable = this.jobLogFactory.entryLogTable();
-        
-        for(Field f : entryLogTable.getFields()) {
-            jobentryLogTable.appendChild(createField(f, doc));
+
+        for (Field f : entryLogTable.getFields()) {
+            jobentryLogTable.appendChild(this.createField(f));
         }
-        
+
         return jobentryLogTable;
     }
-    
-    private Element createJobChannelLogTabble(Document doc) {
+
+    /**
+     * Method in charge of create a <code>channel-log-table</code> element
+     * and return it to be appended
+     * @return A {@link Element} <code>channel-log-table</code> with all the child nodes
+     */
+    private Element createJobChannelLogTabble() {
+
+        Document doc = this.documentBuilder.newDocument();
         
         // Root element
         Element channelLogTable = doc.createElement("channel-log-table");
-            
+
         // connection element
         Element connection = doc.createElement("connection");
         channelLogTable.appendChild(connection);
@@ -262,27 +312,27 @@ public class XMLBuilder {
         // table element
         Element table = doc.createElement("table");
         channelLogTable.appendChild(table);
-        
+
         // timeout_days element
         Element timeout_days = doc.createElement("timeout_days");
         channelLogTable.appendChild(timeout_days);
-        
+
         JobChannelLogTable channelLogTable1 = this.jobLogFactory.channelLogTable();
-        
-        for(Field f : channelLogTable1.getFields()) {
-            channelLogTable.appendChild(createField(f, doc));
+
+        for (Field f : channelLogTable1.getFields()) {
+            channelLogTable.appendChild(this.createField(f));
         }
-        
-        return channelLogTable; 
+
+        return channelLogTable;
     }
-    
+
     private Document createTransformation(Document doc) {
 
         // Root Element
         Element transformation = doc.createElement("transformation");
         doc.appendChild(transformation);
 
-        transformation.appendChild(createInfo(doc));
+        transformation.appendChild(this.createInfo());
 
         Element notepads = doc.createElement("notepads");
         transformation.appendChild(notepads);
@@ -300,7 +350,10 @@ public class XMLBuilder {
         return doc;
     }
 
-    private Element createInfo(Document doc) {
+    private Element createInfo() {
+        
+        Document doc = this.documentBuilder.newDocument();
+        
         // Info Element
         Element info = doc.createElement("info");
 
@@ -336,11 +389,11 @@ public class XMLBuilder {
         Element parameters = doc.createElement("parameters");
         info.appendChild(parameters);
 
-        info.appendChild(createLog(doc));
+        info.appendChild(this.createTransformationLog());
 
-        info.appendChild(createMaxDate(doc));
+        info.appendChild(this.createMaxDate(doc));
 
-        TransInfo ci = transLogFactory.info();
+        TransInfo ci = this.transLogFactory.info();
 
         for (kettel.Element e : ci.getElements()) {
             Element a = doc.createElement(e.getTag());
@@ -416,29 +469,49 @@ public class XMLBuilder {
         return maxdate;
     }
 
-    private Element createLog(Document doc) {
+    /**
+     * Method in charge of create all the different child log elements
+     * @return A {@link Element} with all the child nodes:
+     * <p> - <code>trans-log-table</code></p>
+     * <p> - <code>perf-log-table</code></p>
+     * <p> - <code>perf-log-table</code></p>
+     * <p> - <code>channel-log-table</code></p>
+     * <p> - <code>step-log-table</code></p>
+     * <p> - <code>metrics-log-table</code></p>
+     */
+    private Element createTransformationLog() {
 
+        Document doc = this.documentBuilder.newDocument();
+        
         // Root element
         Element log = doc.createElement("log");
 
-        log.appendChild(createTransLogTable(doc));
+        log.appendChild(this.createTransformationTransLogTable());
 
-        log.appendChild(createPerfLogTable(doc));
+        log.appendChild(this.createTransformationPerfLogTable());
 
-        log.appendChild(createChannelLogTable(doc));
+        log.appendChild(this.createTransformationChannelLogTable());
 
-        log.appendChild(createStepLogTable(doc));
+        log.appendChild(this.createTransformationStepLogTable());
 
-        log.appendChild(createMetricsLogTable(doc));
+        log.appendChild(this.createTransformationMetricsLogTable());
 
         return log;
     }
 
-    private Element createMetricsLogTable(Document doc) {
+    /**
+     * Method in charge of create a <code>metrics-log-table</code> element
+     * and return it to be appended
+     * @return A {@link Element} <code>metrics-log-table</code> with all the child nodes
+     */
+    private Element createTransformationMetricsLogTable() {
 
+        Document doc = this.documentBuilder.newDocument();
+        
         // Root element
         Element metrics_log_table = doc.createElement("metrics-log-table");
 
+        // connection element
         Element connection = doc.createElement("connection");
         metrics_log_table.appendChild(connection);
 
@@ -457,17 +530,25 @@ public class XMLBuilder {
         TransMetricsLogTable config = this.transLogFactory.metricsLogTable();
 
         for (Field f : config.getFields()) {
-            metrics_log_table.appendChild(createField(f, doc));
+            metrics_log_table.appendChild(this.createField(f));
         }
 
         return metrics_log_table;
     }
 
-    private Element createStepLogTable(Document doc) {
+    /**
+     * Method in charge of create a <code>step-log-table</code> element
+     * and return it to be appended
+     * @return A {@link Element} <code>step-log-table</code> with all the child nodes
+     */
+    private Element createTransformationStepLogTable() {
 
+        Document doc = this.documentBuilder.newDocument();
+        
         // Root element
         Element step_log_table = doc.createElement("step-log-table");
 
+        // connection element
         Element connection = doc.createElement("connection");
         step_log_table.appendChild(connection);
 
@@ -483,19 +564,28 @@ public class XMLBuilder {
         Element timeout_days = doc.createElement("timeout_days");
         step_log_table.appendChild(timeout_days);
 
-        TransStepLogTable config = transLogFactory.stepLogTable();
+        TransStepLogTable config = this.transLogFactory.stepLogTable();
 
         for (Field f : config.getFields()) {
-            step_log_table.appendChild(createField(f, doc));
+            step_log_table.appendChild(this.createField(f));
         }
 
         return step_log_table;
     }
 
-    private Element createChannelLogTable(Document doc) {
+    /**
+     * Method in charge of create a <code>channel-log-table</code> element
+     * and return it to be appended
+     * @return A {@link Element} <code>channel-log-table</code> with all the child nodes
+     */
+    private Element createTransformationChannelLogTable() {
+       
+        Document doc = this.documentBuilder.newDocument();
+        
         // Root element
         Element channel_log_table = doc.createElement("channel-log-table");
 
+        // connection element
         Element connection = doc.createElement("connection");
         channel_log_table.appendChild(connection);
 
@@ -511,20 +601,28 @@ public class XMLBuilder {
         Element timeout_days = doc.createElement("timeout_days");
         channel_log_table.appendChild(timeout_days);
 
-        TransChannelLogTable config = transLogFactory.channelTransLogTable();
+        TransChannelLogTable config = this.transLogFactory.channelTransLogTable();
 
         for (Field f : config.getFields()) {
-            channel_log_table.appendChild(createField(f, doc));
+            channel_log_table.appendChild(this.createField(f));
         }
 
         return channel_log_table;
     }
 
-    private Element createPerfLogTable(Document doc) {
+    /**
+     * Method in charge of create a <code>perf-log-table</code> element
+     * and return it to be appended
+     * @return A {@link Element} <code>perf-log-table</code> with all the child nodes
+     */
+    private Element createTransformationPerfLogTable() {
 
+        Document doc = this.documentBuilder.newDocument();
+        
         // Root element
         Element perf_log_table = doc.createElement("perf-log-table");
 
+        // connection element
         Element connection = doc.createElement("connection");
         perf_log_table.appendChild(connection);
 
@@ -544,18 +642,25 @@ public class XMLBuilder {
         Element timeout_days = doc.createElement("timeout_days");
         perf_log_table.appendChild(timeout_days);
 
-        TransPerfLogTable confs = transLogFactory.perfLogTable();
+        TransPerfLogTable confs = this.transLogFactory.perfLogTable();
 
         for (Field f : confs.getFields()) {
-            perf_log_table.appendChild(createField(f, doc));
+            perf_log_table.appendChild(this.createField(f));
         }
 
         return perf_log_table;
 
     }
 
-    private Element createTransLogTable(Document doc) {
+    /**
+     * Method in charge of create a <code>trans-log-table</code> element
+     * and return it to be appended
+     * @return A {@link Element} <code>trans-log-table</code> with all the child nodes
+     */
+    private Element createTransformationTransLogTable() {
 
+        Document doc = this.documentBuilder.newDocument();
+        
         // Root element
         Element trans_log_table = doc.createElement("trans-log-table");
 
@@ -583,38 +688,54 @@ public class XMLBuilder {
         Element timeout_days = doc.createElement("timeout_days");
         trans_log_table.appendChild(timeout_days);
 
-        TransLogTable confs = transLogFactory.transLogTable();
+        TransLogTable confs = this.transLogFactory.transLogTable();
 
         for (Field f : confs.getFields()) {
-            trans_log_table.appendChild(createField(f, doc));
+            trans_log_table.appendChild(this.createField(f));
         }
 
         return trans_log_table;
     }
 
-    private Element createField(Field f, Document doc) {
+    /**
+     * Method that returns a field log element according the field object
+     * @param nameField Object field with the information 
+     * obtain on the configuration files
+     * @return A {@link Element} {@code field} with all the child nodes
+     */
+    private Element createField(Field nameField) {
 
+        Document doc = this.documentBuilder.newDocument();
+        
         Element field = doc.createElement("field");
         Element id = doc.createElement("id");
-        id.setTextContent(f.getId());
+        id.setTextContent(nameField.getId());
         field.appendChild(id);
         Element enable = doc.createElement("enabled");
-        enable.setTextContent(f.getEnable());
+        enable.setTextContent(nameField.getEnable());
         field.appendChild(enable);
         Element name = doc.createElement("name");
-        name.setTextContent(f.getName());
+        name.setTextContent(nameField.getName());
         field.appendChild(name);
 
         return field;
     }
 
-    private void finalize(Document doc, File f) throws TransformerException {
+    /**
+     * Method that write the {@code document} parameter in the {@code file} 
+     * to be exported as a XML file
+     * @param document The XML {@link Document} to be exported
+     * @param file The destination file where the {@code document} going to be exported
+     * @throws TransformerException If an unrecoverable error occurs
+     *   during the course of the transformation.
+     */
+    private void finalize(Document document, File file) throws TransformerException {
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
 
-        DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(f);
+        DOMSource source = new DOMSource(document);
+        StreamResult result = new StreamResult(file);
 
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");

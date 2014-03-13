@@ -9,6 +9,7 @@ import cpn.Cpn;
 import cpn.Stats;
 import java.awt.Dimension;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,11 +33,12 @@ public class Main extends javax.swing.JFrame {
 
     /**
      * Creates new form main
+     *
      * @throws javax.xml.parsers.ParserConfigurationException
      */
     public Main() throws ParserConfigurationException {
         initComponents();
-        
+
         this.setLocationRelativeTo(null);
         this.setMinimumSize(new Dimension(475, 375));
         this.generateLabel.setText("");
@@ -47,7 +49,7 @@ public class Main extends javax.swing.JFrame {
         this.btnGenerate.setEnabled(false);
 
         openFile.setAcceptAllFileFilterUsed(false);
-        
+
         this.xmlFactory = XMLFactory.newInstance();
     }
 
@@ -181,7 +183,9 @@ public class Main extends javax.swing.JFrame {
         File f = openFile();
         if (f != null) {
             try {
-                XMLParser xmlParser = this.xmlFactory.newXMLParser(f);
+                XMLParser xmlParser;
+                
+                xmlParser = this.xmlFactory.newXMLParser(f);
 
                 Cpn cpn = xmlParser.parse();
 
@@ -189,7 +193,7 @@ public class Main extends javax.swing.JFrame {
 
                 this.debug.append("\n");
                 this.debug.append(stats.toString());
-            } catch (SAXException | IOException | XPathExpressionException ex) {
+            } catch (SAXException | IOException | XPathExpressionException | ParserConfigurationException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
@@ -199,7 +203,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnOpenActionPerformed
 
     private void btnGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateActionPerformed
-        
+
         try {
             XMLBuilder xmlBuilder = this.xmlFactory.newXMLBuilder();
 
@@ -246,7 +250,7 @@ public class Main extends javax.swing.JFrame {
 
         return file;
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGenerate;
     private javax.swing.JButton btnOpen;

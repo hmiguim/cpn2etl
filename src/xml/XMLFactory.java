@@ -18,17 +18,27 @@ import org.xml.sax.SAXException;
 public class XMLFactory {
 
     /**
+     * Protected constructor
+     */
+    protected XMLFactory() {
+    }
+
+    /**
+     * Obtain a new instance of a <code>XMLFactory</code>. This static method
+     * creates a new factory instance.
      *
-     * @return A new instance of the XMLFactory
+     * @return A new instance of a {@code XMLFactory}
      */
     public static XMLFactory newInstance() {
         return new XMLFactory();
     }
 
     /**
+     * Creates a new instance of a {@code XMLParser} using the currently
+     * configured parameters.
      *
      * @param file {@link File} to be parsed by the {@code XMLParser}
-     * @return A new XMLParser object for the specific {@code file}
+     * @return A new instance of a XMLParser for the specific {@code file}
      * @throws FileNotFoundException Signals that an attempt to open the file
      * denoted by a specified pathname has failed.
      * @throws SAXException This class can contain basic error or warning
@@ -47,18 +57,14 @@ public class XMLFactory {
     }
 
     /**
+     * Creates a new instance of a {@code XMLBuilder} using the currently
+     * configured parameters.
      *
-     * @return A new XMLBuilder object
+     * @return A new instance of a XMLBuilder
      * @throws ParserConfigurationException Indicates a serious configuration
      * error.
      */
     public XMLBuilder newXMLBuilder() throws ParserConfigurationException {
         return new XMLBuilder();
-    }
-
-    /**
-     *
-     */
-    protected XMLFactory() {
     }
 }

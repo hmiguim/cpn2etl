@@ -46,6 +46,22 @@ public class XMLParser {
 
     protected final ArrayList<String> ports = new ArrayList<>();
 
+    /**
+     * Constructor for the XMLBuilder class
+     *
+     * @param file {@link File} to be parsed by the {@code XMLParser}
+     * @throws FileNotFoundException
+     * @throws SAXException This class can contain basic error or warning
+     * information from either the XML parser or the application: a parser
+     * writer or application writer can subclass it to provide additional
+     * functionality. SAX handlers may throw this exception or any exception
+     * subclassed from it.
+     * @throws IOException Signals that an I/O exception of some sort has
+     * occurred. This class is the general class of exceptions produced by
+     * failed or interrupted I/O operations.
+     * @throws ParserConfigurationException Indicates a serious configuration
+     * error.
+     */
     public XMLParser(File file) throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
         this.cpn = new Cpn();
         this.file = new FileInputStream(file);
@@ -53,7 +69,21 @@ public class XMLParser {
         this.documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
     }
 
-    // Public Method to invoke the parse
+    /**
+     * Creates a new CPN according the information obtain on the parsed file
+     *
+     * @return A clone of a {@code Cpn} parsed
+     * @throws SAXException This class can contain basic error or warning
+     * information from either the XML parser or the application: a parser
+     * writer or application writer can subclass it to provide additional
+     * functionality. SAX handlers may throw this exception or any exception
+     * subclassed from it.
+     * @throws IOException Signals that an I/O exception of some sort has
+     * occurred. This class is the general class of exceptions produced by
+     * failed or interrupted I/O operations.
+     * @throws XPathExpressionException Represents an error in an XPath
+     * expression.
+     */
     public Cpn parse() throws SAXException, IOException, XPathExpressionException {
         this.xmlDocument = this.documentBuilder.parse(this.file);
         this.parseCPN();
@@ -61,7 +91,21 @@ public class XMLParser {
         return cpn.clone();
     }
 
-    // Parse the CPN File
+    /**
+     * Private method in charge of parse the distinct elements presents on the
+     * XML file
+     *
+     * @throws XPathExpressionException Represents an error in an XPath
+     * expression.
+     * @throws SAXException This class can contain basic error or warning
+     * information from either the XML parser or the application: a parser
+     * writer or application writer can subclass it to provide additional
+     * functionality. SAX handlers may throw this exception or any exception
+     * subclassed from it.
+     * @throws IOException Signals that an I/O exception of some sort has
+     * occurred. This class is the general class of exceptions produced by
+     * failed or interrupted I/O operations.
+     */
     private void parseCPN() throws XPathExpressionException, SAXException, IOException {
 
         XPath xPath = XPathFactory.newInstance().newXPath();
@@ -99,17 +143,17 @@ public class XMLParser {
                         page.setName(childs.item(j).getAttributes().getNamedItem("name").getTextContent());
                         break;
                     case "place":
-                        Place p = parsePlace(childs.item(j));
+                        Place p = this.parsePlace(childs.item(j));
                         places.put(p.getId(), p);
                         page.setPlaces(places);
                         break;
                     case "trans":
-                        Transition t = parseTransition(childs.item(j));
+                        Transition t = this.parseTransition(childs.item(j));
                         transitions.put(t.getId(), t);
                         page.setTransitions(transitions);
                         break;
                     case "arc":
-                        Arc a = parseArc(childs.item(j), page);
+                        Arc a = this.parseArc(childs.item(j), page);
                         arcs.put(a.getId(), a);
                         page.setArcs(arcs);
                 }
@@ -118,13 +162,19 @@ public class XMLParser {
             pages.put(page.getId(), page);
         }
 
-        updatePorts(pages);
-        updateSubPageInfo(pages);
+        this.updatePorts(pages);
+        this.updateSubPageInfo(pages);
 
         cpn.setPages(pages);
     }
 
-    // Return the information for each place
+    /**
+     * Creates a place with the {@code node} information
+     *
+     * @param node To be parsed
+     * @return A new {@code Place} object with the information obtain in the
+     * {@code Node}
+     */
     private Place parsePlace(Node node) {
 
         NodeList childs = node.getChildNodes();
@@ -165,7 +215,13 @@ public class XMLParser {
         return p;
     }
 
-    // Return the information for each transition
+    /**
+     * Creates a place with the {@code node} information
+     *
+     * @param node To be parsed
+     * @return A new {@code Transition} object with the information obtain in
+     * the {@code Node}
+     */
     private Transition parseTransition(Node node) {
 
         Transition t = new Transition();
@@ -189,7 +245,7 @@ public class XMLParser {
                 case "subst":
                     t.setSubpage(true);
                     t.setSubPageInfo(parseSubPages(childs.item(i)));
-                    parsePortSock(childs.item(i));
+                    this.parsePortSock(childs.item(i));
                     break;
             }
         }
@@ -197,7 +253,15 @@ public class XMLParser {
         return t;
     }
 
-    // Return the information for each arc
+    /**
+     * Creates a place with the {@code node} information
+     *
+     * @param node To be parsed
+     * @param page
+     * @return A new {@code Arc} object with the information obtain in the
+     * {@code Node}
+     * @see Page
+     */
     private Arc parseArc(Node node, Page page) {
 
         Arc a = new Arc();
@@ -236,7 +300,13 @@ public class XMLParser {
         return a;
     }
 
-    // Return the information for each subpage
+    /**
+     * Creates a subpage with the {@code node} information
+     *
+     * @param node To be parsed
+     * @return A new {@code SubPage} object with the information obtain in the
+     * {@code Node}
+     */
     private SubPage parseSubPages(Node node) {
 
         SubPage subPage = new SubPage();
@@ -257,7 +327,15 @@ public class XMLParser {
         return subPage;
     }
 
+    /**
+     * Creates a port with the {@code node} information
+     *
+     * @param node To be parsed
+     * @return A new {@code Port} object with the information obtain in the
+     * {@code Node}
+     */
     private Port parsePort(Node node) {
+
         Port p = new Port();
 
         p.setId(node.getAttributes().getNamedItem("id").getTextContent());
@@ -266,6 +344,13 @@ public class XMLParser {
         return p;
     }
 
+    /**
+     * Update the {@code SubPage} information according the {@code pages}
+     * parameter. This method can only be called after the file be successfully
+     * parsed
+     *
+     * @param pages {@link LinkedHashMap} with the pages parsed
+     */
     private void updateSubPageInfo(LinkedHashMap<String, Page> pages) {
 
         for (Entry<String, Page> entry : pages.entrySet()) {
@@ -280,10 +365,22 @@ public class XMLParser {
         }
     }
 
+    /**
+     * Add a portSock to the ports array with the {@code node} information
+     *
+     * @param node To be parsed
+     */
     private void parsePortSock(Node node) {
         ports.add(node.getAttributes().getNamedItem("portsock").getTextContent());
     }
 
+    /**
+     * Update the {@code Place} information according the {@code pages}
+     * parameter. This method can only be called after the file be successfully
+     * parsed
+     *
+     * @param pages {@link LinkedHashMap} with the pages parsed
+     */
     private void updatePorts(LinkedHashMap<String, Page> pages) {
 
         for (String str : ports) {
@@ -304,6 +401,13 @@ public class XMLParser {
 
     }
 
+    /**
+     * Auxiliary method to get the place from a set of pages by an identifier
+     *
+     * @param pages {@link LinkedHashMap} with the pages parsed
+     * @param id String identifier
+     * @return The Place with the corresponding identifier
+     */
     private Place getPlaceByID(LinkedHashMap<String, Page> pages, String id) {
         Place p = new Place();
 

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cpn;
 
 import java.util.LinkedHashMap;
@@ -111,7 +106,7 @@ public class Page {
         if (!Objects.equals(this.places, other.places)) {
             return false;
         }
-        
+
         return Objects.equals(this.transitions, other.transitions);
     }
 

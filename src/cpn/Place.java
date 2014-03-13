@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cpn;
 
 import java.util.Objects;
@@ -21,9 +16,10 @@ public class Place {
     private Port portInfo;
     private boolean port;
 
-    public Place() { }
+    public Place() {
+    }
 
-    public Place(String id, double posX, double posY, String text, String type,Port portInfo, boolean port) {
+    public Place(String id, double posX, double posY, String text, String type, Port portInfo, boolean port) {
         this.id = id;
         this.posX = posX;
         this.posY = posY;
@@ -81,19 +77,19 @@ public class Place {
     public void setType(String type) {
         this.type = type;
     }
-    
+
     public Port getPort() {
         return portInfo;
     }
-    
+
     public void setPortInfo(Port port) {
         this.portInfo = port;
-    } 
-    
+    }
+
     public boolean havePort() {
         return port;
     }
-    
+
     public void setPort(boolean port) {
         this.port = port;
     }
@@ -147,7 +143,7 @@ public class Place {
         str.append("PosX: ").append(this.posX).append(", ");
         str.append("PosY: ").append(this.posY).append(", ");
         str.append("Text: " + "\'").append(this.text).append("\', ");
-        if(this.havePort()) {
+        if (this.havePort()) {
             str.append("Type: " + "\'").append(this.type).append("\',");
             str.append("Port: {").append(this.portInfo.toString()).append("}];");
         } else {

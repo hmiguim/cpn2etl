@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package cpn;
 
 import java.util.Objects;
@@ -13,19 +7,20 @@ import java.util.Objects;
  * @author hmg
  */
 public class SubPage {
-    
+
     private String id;
     private String pageRef;
     private Page page;
 
-    public SubPage() { }
-    
+    public SubPage() {
+    }
+
     public SubPage(String id, String pageRef, Page page) {
         this.id = id;
         this.pageRef = pageRef;
         this.page = page;
     }
-    
+
     public SubPage(SubPage s) {
         this.id = s.getId();
         this.pageRef = s.getPageRef();
@@ -82,7 +77,7 @@ public class SubPage {
         }
         return Objects.equals(this.page, other.page);
     }
-    
+
     @Override
     public SubPage clone() {
         return new SubPage(this);

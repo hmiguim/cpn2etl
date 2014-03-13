@@ -1,18 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package kettel.transformation;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import kettel.Field;
 import kettel.InterfaceLogs;
+import xml.XMLBuilder;
 
 /**
  *
@@ -22,11 +17,20 @@ public final class TransLogTable implements InterfaceLogs {
 
     private ArrayList<Field> fields;
 
+    /**
+     *
+     * Constructor for the TransLogTable class. Note that implements the
+     * {@link InterfaceLogs} interface
+     *
+     */
     public TransLogTable() {
         this.fields = new ArrayList<>();
         readConfig();
     }
 
+    /**
+     * Read the configuration files to be used in the {@link XMLBuilder} class
+     */
     @Override
     public void readConfig() {
         String conf = "configs/transformation/translogtable";
@@ -60,11 +64,22 @@ public final class TransLogTable implements InterfaceLogs {
         }
     }
 
+    /**
+     * Obtain an instance of an {@link java.util.ArrayList} object of {
+     *
+     * @url Field}
+     *
+     * @return An new instance of an {@code java.util.ArrayList} of {
+     * @url Field}
+     */
     @Override
-    public ArrayList<Field> getFields() {
+    public ArrayList<Field> getT() {
         return this.fields;
     }
 
+    /**
+     * @deprecated Not supported yet
+     */
     @Override
     public void overrideConfig() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

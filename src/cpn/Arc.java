@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cpn;
 
 import java.util.Objects;
@@ -18,8 +13,9 @@ public class Arc {
     private Place placeEnd;
     private Transition transEnd;
     private String text;
-    
-    public Arc() { }
+
+    public Arc() {
+    }
 
     public Arc(String id, String orientation, Place placeEnd, Transition transEnd, String text, Port port) {
         this.id = id;

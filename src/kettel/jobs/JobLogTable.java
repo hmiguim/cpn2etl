@@ -7,18 +7,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import kettel.Field;
 import kettel.InterfaceLogs;
+import xml.XMLBuilder;
 
 /**
  *
  * @author hmg
  */
-public final class JobLogTable implements InterfaceLogs {
+public final class JobLogTable implements InterfaceLogs<Field> {
 
     private ArrayList<Field> fields;
 
     /**
      *
-     * Constructor for the JobLogTable class
+     * Constructor for the JobLogTable class. Note that implements the
+     * {@link InterfaceLogs} interface
      *
      */
     public JobLogTable() {
@@ -44,7 +46,7 @@ public final class JobLogTable implements InterfaceLogs {
                 Field f = new Field(split[0], split[1], split[2]);
 
                 this.fields.add(f);
-                
+
             }
         } catch (FileNotFoundException ex) {
 
@@ -62,12 +64,15 @@ public final class JobLogTable implements InterfaceLogs {
     }
 
     /**
-     * Obtain an instance of an {@link java.util.ArrayList} object of {@url Field}
+     * Obtain an instance of an {@link java.util.ArrayList} object of {
      *
-     * @return An new instance of an {@code java.util.ArrayList} of {@url Field}
+     * @url Field}
+     *
+     * @return An new instance of an {@code java.util.ArrayList} of {
+     * @url Field}
      */
     @Override
-    public ArrayList<Field> getFields() {
+    public ArrayList<Field> getT() {
         return this.fields;
     }
 

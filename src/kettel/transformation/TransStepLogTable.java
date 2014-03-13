@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import kettel.Field;
 import kettel.InterfaceLogs;
+import xml.XMLBuilder;
 
 /**
  *
@@ -21,11 +22,20 @@ public final class TransStepLogTable implements InterfaceLogs {
 
     private ArrayList<Field> fields;
 
+    /**
+     *
+     * Constructor for the TransStepLogTable class. Note that implements the
+     * {@link InterfaceLogs} interface
+     *
+     */
     public TransStepLogTable() {
         fields = new ArrayList<>();
         readConfig();
     }
 
+    /**
+     * Read the configuration files to be used in the {@link XMLBuilder} class
+     */
     @Override
     public void readConfig() {
         String conf = "configs/transformation/steplogtable";
@@ -57,11 +67,22 @@ public final class TransStepLogTable implements InterfaceLogs {
         }
     }
 
+    /**
+     * Obtain an instance of an {@link java.util.ArrayList} object of {
+     *
+     * @url Field}
+     *
+     * @return An new instance of an {@code java.util.ArrayList} of {
+     * @url Field}
+     */
     @Override
-    public ArrayList<Field> getFields() {
+    public ArrayList<Field> getT() {
         return this.fields;
     }
 
+    /**
+     * @deprecated Not supported yet
+     */
     @Override
     public void overrideConfig() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

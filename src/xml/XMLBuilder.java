@@ -241,7 +241,7 @@ public class XMLBuilder {
 
         JobLogTable logTable = this.jobLogFactory.logTable();
 
-        for (Field f : logTable.getFields()) {
+        for (Field f : logTable.getT()) {
             jobLogTable.appendChild(this.createField(f));
         }
 
@@ -281,7 +281,7 @@ public class XMLBuilder {
 
         JobEntryLogTable entryLogTable = this.jobLogFactory.entryLogTable();
 
-        for (Field f : entryLogTable.getFields()) {
+        for (Field f : entryLogTable.getT()) {
             jobentryLogTable.appendChild(this.createField(f));
         }
 
@@ -320,7 +320,7 @@ public class XMLBuilder {
 
         JobChannelLogTable channelLogTable1 = this.jobLogFactory.channelLogTable();
 
-        for (Field f : channelLogTable1.getFields()) {
+        for (Field f : channelLogTable1.getT()) {
             channelLogTable.appendChild(this.createField(f));
         }
 
@@ -415,7 +415,7 @@ public class XMLBuilder {
 
         TransInfo ci = this.transLogFactory.info();
 
-        for (kettel.Element e : ci.getElements()) {
+        for (kettel.Element e : ci.getT()) {
             Element a = doc.createElement(e.getTag());
             a.setTextContent(e.getContextText());
 
@@ -580,7 +580,7 @@ public class XMLBuilder {
 
         TransMetricsLogTable config = this.transLogFactory.metricsLogTable();
 
-        for (Field f : config.getFields()) {
+        for (Field f : config.getT()) {
             metrics_log_table.appendChild(this.createField(f));
         }
 
@@ -619,7 +619,7 @@ public class XMLBuilder {
 
         TransStepLogTable config = this.transLogFactory.stepLogTable();
 
-        for (Field f : config.getFields()) {
+        for (Field f : config.getT()) {
             step_log_table.appendChild(this.createField(f));
         }
 
@@ -658,7 +658,7 @@ public class XMLBuilder {
 
         TransChannelLogTable config = this.transLogFactory.channelTransLogTable();
 
-        for (Field f : config.getFields()) {
+        for (Field f : config.getT()) {
             channel_log_table.appendChild(this.createField(f));
         }
 
@@ -701,7 +701,7 @@ public class XMLBuilder {
 
         TransPerfLogTable confs = this.transLogFactory.perfLogTable();
 
-        for (Field f : confs.getFields()) {
+        for (Field f : confs.getT()) {
             perf_log_table.appendChild(this.createField(f));
         }
 
@@ -749,7 +749,7 @@ public class XMLBuilder {
 
         TransLogTable confs = this.transLogFactory.transLogTable();
 
-        for (Field f : confs.getFields()) {
+        for (Field f : confs.getT()) {
             trans_log_table.appendChild(this.createField(f));
         }
 

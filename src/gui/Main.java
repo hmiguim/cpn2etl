@@ -9,7 +9,6 @@ import cpn.Cpn;
 import cpn.Stats;
 import java.awt.Dimension;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +17,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
+import kettel.conversion.ConversionFactory;
 import org.xml.sax.SAXException;
 import xml.XMLBuilder;
 import xml.XMLFactory;
@@ -30,6 +30,7 @@ import xml.XMLParser;
 public class Main extends javax.swing.JFrame {
 
     private XMLFactory xmlFactory;
+    private Cpn cpn;
 
     /**
      * Creates new form main
@@ -51,6 +52,7 @@ public class Main extends javax.swing.JFrame {
         openFile.setAcceptAllFileFilterUsed(false);
 
         this.xmlFactory = XMLFactory.newInstance();
+        this.cpn = null;
     }
 
     /**
@@ -184,12 +186,12 @@ public class Main extends javax.swing.JFrame {
         if (f != null) {
             try {
                 XMLParser xmlParser;
-                
+
                 xmlParser = this.xmlFactory.newXMLParser(f);
 
-                Cpn cpn = xmlParser.parse();
+                this.cpn = xmlParser.parse();
 
-                Stats stats = cpn.stats();
+                Stats stats = this.cpn.stats();
 
                 this.debug.append("\n");
                 this.debug.append(stats.toString());
@@ -210,12 +212,11 @@ public class Main extends javax.swing.JFrame {
             int returnVal = this.saveFile.showSaveDialog(this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                xmlBuilder.construct(this.saveFile.getSelectedFile());
+                xmlBuilder.construct(this.saveFile.getSelectedFile(),this.cpn);
                 this.generateLabel.setText("Saved file: " + this.saveFile.getSelectedFile().getAbsolutePath());
                 this.debug.append("\n[SUCCESS] File generated successfully");
             }
-
-        } catch (ParserConfigurationException | TransformerException ex) {
+        } catch (ParserConfigurationException | TransformerException | IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnGenerateActionPerformed

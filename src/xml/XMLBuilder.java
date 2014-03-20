@@ -1,10 +1,12 @@
 package xml;
 
 import cpn.Cpn;
+import cpn.Page;
 import cpn.Transition;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import kettel.Field;
@@ -17,12 +19,15 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import kettel.mapping.Mapping;
+import kettel.mapping.MappingComponent;
 import kettel.conversion.ConversionBuilder;
 import kettel.conversion.ConversionFactory;
 import kettel.jobs.JobChannelLogTable;
 import kettel.jobs.JobEntryLogTable;
 import kettel.jobs.JobLogTable;
 import kettel.jobs.JobsLogTableFactory;
+import kettel.mapping.MappingOrder;
 import kettel.transformation.TransChannelLogTable;
 import kettel.transformation.TransInfo;
 import kettel.transformation.TransMetricsLogTable;
@@ -75,8 +80,6 @@ public class XMLBuilder {
 
         this.filename = file.getName();
         this.path = file.getParent();
-
-        System.out.println(this.path);
 
         this.cpnPages = pages.clone();
 
@@ -199,13 +202,14 @@ public class XMLBuilder {
 
         Collection<Transition> modules = this.cpnPages.getModules().values();
 
-        ConversionBuilder conversionBuilder = this.conversionFactory.newConversionBuilder();
-
         for (Transition t : modules) {
+
+            // by each one of the transition create a transformation for that
             if (t.getSubPageInfo().getPage().getName().equals("SKP")) {
+
                 entries.appendChild(this.createJobEntry(doc, t));
 
-                Document transformation = this.createTransformation(t.getSubPageInfo().getPage().getName());
+                Document transformation = this.createTransformation(t);
 
                 File f = new File(this.path + "/" + t.getSubPageInfo().getPage().getName() + ".ktr");
                 this.finalize(transformation, f);
@@ -516,7 +520,7 @@ public class XMLBuilder {
      * @return A {@link Element} <code>transformation</code> with all the child
      * nodes
      */
-    private Document createTransformation(String moduleName) {
+    private Document createTransformation(Transition t) {
 
         Document doc = this.documentBuilder.newDocument();
 
@@ -524,11 +528,22 @@ public class XMLBuilder {
         Element transformation = doc.createElement("transformation");
         doc.appendChild(transformation);
 
-        transformation.appendChild(this.createInfo(doc, moduleName));
+        transformation.appendChild(this.createTransformationInfo(doc, t));
 
         // notepads element
         Element notepads = doc.createElement("notepads");
         transformation.appendChild(notepads);
+
+        ConversionBuilder conversionBuilder = this.conversionFactory.newConversionBuilder();
+
+        
+        Mapping mapping = conversionBuilder.convertModule(t);
+
+        transformation.appendChild(this.createTransformationOrder(doc, mapping.getOrders()));
+        
+        for (MappingComponent map : mapping.getComponents()) {
+            transformation.appendChild(this.createTransformationStep(doc, map));
+        }
 
         // step_error_handling element
         Element step_error_handling = doc.createElement("step_error_handling");
@@ -553,14 +568,14 @@ public class XMLBuilder {
      * @param doc So that can be created elements to be added to the parent node
      * @return A {@link Element} <code>info</code> with all the child nodes
      */
-    private Element createInfo(Document doc, String moduleName) {
+    private Element createTransformationInfo(Document doc, Transition t) {
 
         // Info Element
         Element info = doc.createElement("info");
 
         // Name Element
         Element name = doc.createElement("name");
-        name.setTextContent(moduleName);
+        name.setTextContent(t.getSubPageInfo().getPage().getName());
         info.appendChild(name);
 
         // Description Element
@@ -591,7 +606,7 @@ public class XMLBuilder {
 
         info.appendChild(this.createTransformationLog(doc));
 
-        info.appendChild(this.createMaxDate(doc));
+        info.appendChild(this.createTransformationMaxDate(doc));
 
         TransInfo ci = this.transLogFactory.info();
 
@@ -655,7 +670,7 @@ public class XMLBuilder {
      * @param doc So that can be created elements to be added to the parent node
      * @return A {@link Element} <code>maxdate</code> with all the child nodes
      */
-    private Element createMaxDate(Document doc) {
+    private Element createTransformationMaxDate(Document doc) {
 
         // maxdate Element
         Element maxdate = doc.createElement("maxdate");
@@ -929,23 +944,46 @@ public class XMLBuilder {
         return trans_log_table;
     }
 
-    private Element createTransformationOrder(Document doc) {
+    private Element createTransformationOrder(Document doc, ArrayList<MappingOrder> orders) {
 
         Element order = doc.createElement("order");
+        
+        for (MappingOrder o : orders) {
+            order.appendChild(this.createTransformationHop(doc,o));   
+        }
 
         return order;
     }
 
-    private Element createTransformationStep(Document doc) {
+    private Element createTransformationHop(Document doc, MappingOrder order) {
+
+        Element hop = doc.createElement("hop");
+
+        Element from = doc.createElement("from");
+        from.setTextContent(order.getFrom().getCpnElement());
+        hop.appendChild(from);
+
+        Element to = doc.createElement("to");
+        to.setTextContent(order.getTo().getCpnElement());
+        hop.appendChild(to);
+
+        Element enabled = doc.createElement("enabled");
+        enabled.setTextContent("Y");
+        hop.appendChild(enabled);
+
+        return hop;
+    }
+
+    private Element createTransformationStep(Document doc, MappingComponent map) {
 
         Element step = doc.createElement("step");
 
         Element name = doc.createElement("name");
-        // TODO : Set Text Content
+        name.setTextContent(map.getCpnElement());
         step.appendChild(name);
 
         Element type = doc.createElement("type");
-        // TODO: Set Text Content
+        type.setTextContent(map.getKettleElement());
         step.appendChild(type);
 
         Element description = doc.createElement("description");
@@ -967,7 +1005,6 @@ public class XMLBuilder {
         Element connection = doc.createElement("connection");
         step.appendChild(connection);
 
-        // TODO : See the specification of each ETL component 
         Element execute_each_row = doc.createElement("execute_each_row");
         execute_each_row.setTextContent("N");
         step.appendChild(execute_each_row);
@@ -985,13 +1022,13 @@ public class XMLBuilder {
 
         step.appendChild(this.createTransformationRemoteStep(doc));
 
-        step.appendChild(this.createTransformationGUI(doc));
+        step.appendChild(this.createTransformationGUI(doc, map));
 
         return step;
     }
 
     private Element createTrasnformationPartitioning(Document doc) {
-        
+
         Element partitioning = doc.createElement("partitioning");
         Element method = doc.createElement("method");
         method.setTextContent("none");
@@ -1013,17 +1050,21 @@ public class XMLBuilder {
         return remotesteps;
     }
 
-    private Element createTransformationGUI(Document doc) {
+    private Element createTransformationGUI(Document doc, MappingComponent map) {
 
         Element gui = doc.createElement("GUI");
 
         Element xloc = doc.createElement("xloc");
-        // TOD: Set Text Content
+        xloc.setTextContent(map.getXloc());
         gui.appendChild(xloc);
 
         Element yloc = doc.createElement("yloc");
-        // TOD: Set Text Content
+        yloc.setTextContent(map.getYloc());
         gui.appendChild(yloc);
+
+        Element draw = doc.createElement("draw");
+        draw.setTextContent("Y");
+        gui.appendChild(draw);
 
         return gui;
 

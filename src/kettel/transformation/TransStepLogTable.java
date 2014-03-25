@@ -20,7 +20,7 @@ import xml.XMLBuilder;
  */
 public final class TransStepLogTable implements InterfaceLogs {
 
-    private ArrayList<Field> fields;
+    private final ArrayList<Field> fields;
 
     /**
      *

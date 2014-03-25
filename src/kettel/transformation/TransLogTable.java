@@ -15,7 +15,7 @@ import xml.XMLBuilder;
  */
 public final class TransLogTable implements InterfaceLogs {
 
-    private ArrayList<Field> fields;
+    private final ArrayList<Field> fields;
 
     /**
      *

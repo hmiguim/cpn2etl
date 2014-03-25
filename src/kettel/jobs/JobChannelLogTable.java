@@ -15,7 +15,7 @@ import xml.XMLBuilder;
  */
 public final class JobChannelLogTable implements InterfaceLogs<Field> {
 
-    private ArrayList<Field> fields;
+    private final ArrayList<Field> fields;
 
     /**
      *

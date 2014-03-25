@@ -15,7 +15,7 @@ import xml.XMLBuilder;
  */
 public final class TransInfo implements InterfaceLogs<Element> {
 
-    private ArrayList<Element> elements;
+    private final ArrayList<Element> elements;
 
     /**
      *

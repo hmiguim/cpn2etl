@@ -33,11 +33,11 @@ import org.xml.sax.SAXException;
  */
 public class XMLParser {
 
-    private FileInputStream file;
-    private DocumentBuilderFactory documentBuilderFactory;
-    private DocumentBuilder documentBuilder;
+    private final FileInputStream file;
+    private final DocumentBuilderFactory documentBuilderFactory;
+    private final DocumentBuilder documentBuilder;
     private Document xmlDocument;
-    private Cpn cpn;
+    private final Cpn cpn;
 
     protected final ArrayList<String> ports = new ArrayList<>();
 

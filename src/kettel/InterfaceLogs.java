@@ -5,6 +5,7 @@ import java.util.ArrayList;
 /**
  *
  * @author hmg
+ * @param <T>
  */
 public interface InterfaceLogs<T> {
 

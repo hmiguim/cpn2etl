@@ -15,7 +15,7 @@ import xml.XMLBuilder;
  */
 public final class TransChannelLogTable implements InterfaceLogs<Field> {
 
-    private ArrayList<Field> fields;
+    private final ArrayList<Field> fields;
 
     /**
      *

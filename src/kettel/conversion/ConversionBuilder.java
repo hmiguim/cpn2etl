@@ -4,11 +4,11 @@ import cpn.Arc;
 import cpn.Page;
 import cpn.Place;
 import cpn.Transition;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import kettel.mapping.Mapping;
 import kettel.mapping.MappingComponent;
 import kettel.mapping.MappingOrder;
+import utils.Utilities;
 
 /**
  *
@@ -16,8 +16,7 @@ import kettel.mapping.MappingOrder;
  */
 public class ConversionBuilder {
 
-    public ConversionBuilder() {
-    }
+    public ConversionBuilder() { }
 
     public Mapping convertModule(Transition module) {
 
@@ -107,50 +106,22 @@ public class ConversionBuilder {
         for (Place place : p.getPlaces().values()) {
 
             if (place.getText().toLowerCase().contains("lookup table")) {
-                map = new MappingComponent(place.getText(), "DBLookup", this.normalizeXAxis(place.getPosX()), this.normalizeYAxis(place.getPosY()));
+                String[] axis = Utilities.normalizeAxis(place.getPosX(),place.getPosY());
+                map = new MappingComponent(place.getText(), "DBLookup", axis[0], axis[1]);
                 maps.add(map);
             } else if (place.getText().toLowerCase().contains("fact records")) {
-                map = new MappingComponent(place.getText(), "TableInput", this.normalizeXAxis(place.getPosX()), this.normalizeYAxis(place.getPosY()));
+                String[] axis = Utilities.normalizeAxis(place.getPosX(),place.getPosY());
+                map = new MappingComponent(place.getText(), "TableInput", axis[0], axis[1]);
 
                 maps.add(map);
             } else if (place.getText().toLowerCase().contains("fact table")) {
-                map = new MappingComponent(place.getText(), "TableOutput", this.normalizeXAxis(place.getPosX()), this.normalizeYAxis(place.getPosY()));
+                String[] axis = Utilities.normalizeAxis(place.getPosX(),place.getPosY());
+                map = new MappingComponent(place.getText(), "TableOutput", axis[0], axis[1]);
 
                 maps.add(map);
             }
 
         }
         return maps;
-    }
-
-    private String normalizeXAxis(double x) {
-
-        String str;
-
-        if (x < 0) {
-            x *= -1;
-        } else if (x == 0) {
-            x += 60;
-        }
-
-        DecimalFormat df = new DecimalFormat("#");
-        str = df.format(x);
-
-        return str;
-
-    }
-
-    private String normalizeYAxis(double y) {
-
-        String str;
-
-        if (y < 0) {
-            y *= -1;
-        }
-
-        DecimalFormat df = new DecimalFormat("#");
-        str = df.format(y);
-
-        return str;
     }
 }

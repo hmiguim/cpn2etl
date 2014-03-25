@@ -1,15 +1,11 @@
 package xml;
 
 import cpn.Cpn;
-import cpn.Page;
 import cpn.Transition;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import kettel.Field;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,24 +15,26 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import kettel.mapping.Mapping;
-import kettel.mapping.MappingComponent;
+import kettel.Field;
 import kettel.conversion.ConversionBuilder;
 import kettel.conversion.ConversionFactory;
 import kettel.jobs.JobChannelLogTable;
 import kettel.jobs.JobEntryLogTable;
 import kettel.jobs.JobLogTable;
 import kettel.jobs.JobsLogTableFactory;
+import kettel.mapping.Mapping;
+import kettel.mapping.MappingComponent;
 import kettel.mapping.MappingOrder;
 import kettel.transformation.TransChannelLogTable;
 import kettel.transformation.TransInfo;
+import kettel.transformation.TransLogTable;
+import kettel.transformation.TransLogTableFactory;
 import kettel.transformation.TransMetricsLogTable;
 import kettel.transformation.TransPerfLogTable;
 import kettel.transformation.TransStepLogTable;
-import kettel.transformation.TransLogTable;
-import kettel.transformation.TransLogTableFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import utils.Utilities;
 
 /**
  *
@@ -44,11 +42,11 @@ import org.w3c.dom.Element;
  */
 public class XMLBuilder {
 
-    private DocumentBuilderFactory documentBuilderFactory;
-    private DocumentBuilder documentBuilder;
-    private TransLogTableFactory transLogFactory;
-    private JobsLogTableFactory jobLogFactory;
-    private ConversionFactory conversionFactory;
+    private final DocumentBuilderFactory documentBuilderFactory;
+    private final DocumentBuilder documentBuilder;
+    private final TransLogTableFactory transLogFactory;
+    private final JobsLogTableFactory jobLogFactory;
+    private final ConversionFactory conversionFactory;
     private String filename;
     private String path;
     private Cpn cpnPages;
@@ -74,7 +72,9 @@ public class XMLBuilder {
      * @param pages The CPN information parsed
      * @throws TransformerException If an unrecoverable error occurs during the
      * course of the transformation.
-     * @throws java.io.IOException
+     * @throws java.io.IOException Signals that an I/O exception of some sort
+     * has occurred. This class is the general class of exceptions produced by
+     * failed or interrupted I/O operations.
      */
     public void construct(File file, Cpn pages) throws TransformerException, IOException {
 
@@ -128,25 +128,22 @@ public class XMLBuilder {
 
         // created_user element
         Element created_user = document.createElement("created_user");
-        created_user.setTextContent("cpn2etl");
+        created_user.setTextContent(Utilities.getUser());
         job.appendChild(created_user);
 
         // created_date elememt
         Element created_date = document.createElement("created_date");
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.S");
-        String today = sdf.format(date);
-        created_date.setTextContent(today);
+        created_date.setTextContent(Utilities.today());
         job.appendChild(created_date);
 
         // modified_user element
         Element modified_user = document.createElement("modified_user");
-        modified_user.setTextContent("cpn2etl");
+        modified_user.setTextContent(Utilities.getUser());
         job.appendChild(modified_user);
 
         // modified_date element
         Element modified_date = document.createElement("modified_date");
-        modified_date.setTextContent(today);
+        modified_date.setTextContent(Utilities.today());
         job.appendChild(modified_date);
 
         // parameters element
@@ -536,11 +533,10 @@ public class XMLBuilder {
 
         ConversionBuilder conversionBuilder = this.conversionFactory.newConversionBuilder();
 
-        
         Mapping mapping = conversionBuilder.convertModule(t);
 
         transformation.appendChild(this.createTransformationOrder(doc, mapping.getOrders()));
-        
+
         for (MappingComponent map : mapping.getComponents()) {
             transformation.appendChild(this.createTransformationStep(doc, map));
         }
@@ -639,25 +635,22 @@ public class XMLBuilder {
 
         // created_user element
         Element created_user = doc.createElement("created_user");
-        created_user.setTextContent("cpn2etl");
+        created_user.setTextContent(Utilities.getUser());
         info.appendChild(created_user);
 
         // created_date element
         Element created_date = doc.createElement("created_date");
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.S");
-        String today = sdf.format(date);
-        created_date.setTextContent(today);
+        created_date.setTextContent(Utilities.today());
         info.appendChild(created_date);
 
         // modified_user element
         Element modified_user = doc.createElement("modified_user");
-        modified_user.setTextContent("cpn2etl");
+        modified_user.setTextContent(Utilities.getUser());
         info.appendChild(modified_user);
 
         // modified_date element
         Element modified_date = doc.createElement("modified_date");
-        modified_date.setTextContent(today);
+        modified_date.setTextContent(Utilities.today());
         info.appendChild(modified_date);
 
         return info;
@@ -947,14 +940,20 @@ public class XMLBuilder {
     private Element createTransformationOrder(Document doc, ArrayList<MappingOrder> orders) {
 
         Element order = doc.createElement("order");
-        
+
         for (MappingOrder o : orders) {
-            order.appendChild(this.createTransformationHop(doc,o));   
+            order.appendChild(this.createTransformationHop(doc, o));
         }
 
         return order;
     }
 
+    /**
+     *
+     * @param doc
+     * @param order
+     * @return
+     */
     private Element createTransformationHop(Document doc, MappingOrder order) {
 
         Element hop = doc.createElement("hop");
@@ -974,6 +973,14 @@ public class XMLBuilder {
         return hop;
     }
 
+    /**
+     * Method in charge of create a {@code step} element and return it to be
+     * appended
+     *
+     * @param doc Original document capable of create element to be appended
+     * @param map Mapping Component
+     * @return A {@link Element} {@code step} with all the child nodes
+     */
     private Element createTransformationStep(Document doc, MappingComponent map) {
 
         Element step = doc.createElement("step");
@@ -1027,6 +1034,14 @@ public class XMLBuilder {
         return step;
     }
 
+    /**
+     * Method in charge of create a <code>partitioning</code> element and return
+     * it to be appended
+     *
+     * @param doc Original document capable of create element to be appended
+     * @return A {@link Element} <code>partitioning</code> with all the child
+     * nodes
+     */
     private Element createTrasnformationPartitioning(Document doc) {
 
         Element partitioning = doc.createElement("partitioning");
@@ -1039,17 +1054,34 @@ public class XMLBuilder {
         return partitioning;
     }
 
+    /**
+     * Method in charge of create a <code>remotesteps</code> element and return
+     * it to be appended
+     *
+     * @param doc Original document capable of create element to be appended
+     * @return A {@link Element} <code>remotesteps</code> with all the child
+     * nodes
+     */
     private Element createTransformationRemoteStep(Document doc) {
-
         Element remotesteps = doc.createElement("remotesteps");
+
         Element input = doc.createElement("input");
-        Element output = doc.createElement("output");
         remotesteps.appendChild(input);
+
+        Element output = doc.createElement("output");
         remotesteps.appendChild(output);
 
         return remotesteps;
     }
 
+    /**
+     * Method in charge of create a <code>GUI</code> element and return it to be
+     * appended
+     *
+     * @param doc Original document capable of create element to be appended
+     * @param map Mapping Component with the axis positions
+     * @return A {@link Element} <code>GUI</code> with all the child nodes
+     */
     private Element createTransformationGUI(Document doc, MappingComponent map) {
 
         Element gui = doc.createElement("GUI");

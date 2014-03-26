@@ -1,5 +1,7 @@
 package kettel.constraints;
 
+import cpn.Page;
+
 /**
  *
  * @author hmg
@@ -25,6 +27,15 @@ public abstract class ConstraintBuilder {
 
     /**
      * Abstract method to be implemented in each specific constraint
+     * Initialize each constraint with the keywords
      */
     public abstract void buildConstraint();
+    
+    /**
+     * Abstract method to be implemented in each specific constraint
+     * Verify if the specific {@code page} is according the pattern
+     * @param page
+     * @return {@code true} or {@code false} depending if the constraint is verify or not
+     */
+    public abstract boolean verifyConstraint(Page page);
 }

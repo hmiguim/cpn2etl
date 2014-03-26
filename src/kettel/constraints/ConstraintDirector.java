@@ -1,20 +1,30 @@
 package kettel.constraints;
 
+import cpn.Page;
+
 /**
  *
  * @author hmg
  */
 public class ConstraintDirector {
-    
-    private ConstraintBuilder vb;
-    
-    public void setValidatorBuilder(ConstraintBuilder vb) { this.vb = vb; }
-    
-    public Constraint getValidator() { return this.vb.getConstraint(); }
-    
-    public void constructValidator() {
-        this.vb.createConstraint();
-        this.vb.buildConstraint();       
+
+    private ConstraintBuilder constraintBuilder;
+
+    public void setConstraintBuilder(ConstraintBuilder constraintBuilder) {
+        this.constraintBuilder = constraintBuilder;
+    }
+
+    public Constraint getConstraint() {
+        return this.constraintBuilder.getConstraint();
+    }
+
+    public void constructConstraint() {
+        this.constraintBuilder.createConstraint();
+        this.constraintBuilder.buildConstraint();
     }
     
+    public boolean verifyConstraint(Page page) {
+        return this.constraintBuilder.verifyConstraint(page);
+    }
+
 }

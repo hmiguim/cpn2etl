@@ -19,4 +19,8 @@ public class ConstraintFactory {
     public ConstraintBuilder newSKPConstraintBuilder() {
         return new SKPConstraint();
     }
+    
+    public ConstraintBuilder newCDCConstraintBuilder() {
+        return new CDC();
+    }
 }

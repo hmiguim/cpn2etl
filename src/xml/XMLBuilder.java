@@ -214,9 +214,9 @@ public class XMLBuilder {
                     break;
                 case "SCD/H 1":
                     entries.appendChild(this.createJobEntry(doc,t));
-                    f = new File(this.path + "/" + t.getSubPageInfo().getPage().getName() + ".ktr");
+                //    f = new File(this.path + "/" + t.getSubPageInfo().getPage().getName() + ".ktr");
                     
-                    this.finalize(transformation,f);
+                    //this.finalize(transformation,f);
                     break;
             }
         }

@@ -5,6 +5,9 @@ import cpn.Page;
 import cpn.Place;
 import cpn.Transition;
 import java.util.ArrayList;
+import kettel.constraints.ConstraintBuilder;
+import kettel.constraints.ConstraintDirector;
+import kettel.constraints.ConstraintFactory;
 import kettel.mapping.Mapping;
 import kettel.mapping.MappingComponent;
 import kettel.mapping.MappingOrder;
@@ -16,7 +19,13 @@ import utils.Utilities;
  */
 public class ConversionBuilder {
 
-    public ConversionBuilder() { }
+    protected ConstraintFactory constraintFactory;
+    protected ConstraintDirector constraintDirector;
+        
+    public ConversionBuilder() {
+        this.constraintFactory = ConstraintFactory.newInstance();
+        this.constraintDirector = constraintFactory.newConstraintDirector();
+    }
 
     public Mapping convertModule(Transition module) {
 
@@ -28,6 +37,14 @@ public class ConversionBuilder {
 
         switch (name) {
             case "SKP":
+                
+                ConstraintBuilder skp = this.constraintFactory.newSKPConstraintBuilder();
+                
+                this.constraintDirector.setConstraintBuilder(skp);
+                this.constraintDirector.constructConstraint();
+                
+                if (! constraintDirector.verifyConstraint(module.getSubPageInfo().getPage())) return null;
+                
                 components = this.convertComponents(module.getSubPageInfo().getPage());
                 map.setComponents(components);
                 orders = this.convertOrdersSKP(map);

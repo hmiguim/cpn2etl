@@ -8,17 +8,17 @@ import java.util.ArrayList;
  */
 public class Constraint {
     
-    private ArrayList<String> keywords;
+    private ArrayList<Keyword> keywords;
     
     public Constraint() {
         this.keywords = new ArrayList<>(); 
     }
     
-    public void setKeywords(ArrayList<String> keywords) {
+    public void setKeywords(ArrayList<Keyword> keywords) {
         this.keywords = keywords;
     }
     
-    public ArrayList<String> getKeywords() {
+    public ArrayList<Keyword> getKeywords() {
         return this.keywords;
     }
 }

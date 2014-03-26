@@ -3,9 +3,37 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/cpn/Place.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/mapping/MappingOrder.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/cpn/SubPage.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/xml/XMLBuilder.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/conversion/ConversionBuilder.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/mapping/Mapping.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/transformation/TransMetricsLogTable.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/jobs/JobLogTable.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/cpn/Port.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/transformation/TransLogTable.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/xml/XMLParser.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/transformation/TransStepLogTable.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/cpn/Page.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/cpn/Arc.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/cpn/Stats.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/transformation/TransChannelLogTable.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/transformation/TransInfo.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/utils/Utilities.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/conversion/ConversionFactory.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/Element.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/transformation/TransPerfLogTable.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/mapping/MappingComponent.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/cpn/Transition.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/transformation/TransLogTableFactory.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/xml/XMLFactory.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/cpn/Cpn.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/jobs/JobEntryLogTable.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/jobs/JobsLogTableFactory.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/Field.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/jobs/JobChannelLogTable.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/InterfaceLogs.java</file>
         </group>
     </open-files>
 </project-private>

@@ -41,39 +41,6 @@ public class Mapping {
         this.orders = order;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 67 * hash + Objects.hashCode(this.components);
-        hash = 67 * hash + Objects.hashCode(this.orders);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Mapping other = (Mapping) obj;
-        if (!Objects.equals(this.components, other.components)) {
-            return false;
-        }
-        return Objects.equals(this.orders, other.orders);
-    }
-
-    @Override
-    public String toString() {
-        return "Mapping{" + "components=" + components + ", orders=" + orders + '}';
-    }
-
-    @Override
-    public Mapping clone() {
-        return new Mapping(this);
-    }
-
     public MappingComponent findComponent(String text) {
         for (MappingComponent c : this.components) {
             if (c.getCpnElement().toLowerCase().contains(text)) {

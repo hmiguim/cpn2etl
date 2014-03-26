@@ -199,17 +199,25 @@ public class XMLBuilder {
 
         Collection<Transition> modules = this.cpnPages.getModules().values();
 
+        File f;
+        Document transformation = null;
+        
         for (Transition t : modules) {
 
             // by each one of the transition create a transformation for that
-            if (t.getSubPageInfo().getPage().getName().equals("SKP")) {
-
-                entries.appendChild(this.createJobEntry(doc, t));
-
-                Document transformation = this.createTransformation(t);
-
-                File f = new File(this.path + "/" + t.getSubPageInfo().getPage().getName() + ".ktr");
-                this.finalize(transformation, f);
+            switch (t.getSubPageInfo().getPage().getName()) {
+                case "SKP":
+                    entries.appendChild(this.createJobEntry(doc, t));
+                    transformation = this.createTransformation(t);
+                    f = new File(this.path + "/" + t.getSubPageInfo().getPage().getName() + ".ktr");
+                    this.finalize(transformation, f);
+                    break;
+                case "SCD/H 1":
+                    entries.appendChild(this.createJobEntry(doc,t));
+                    f = new File(this.path + "/" + t.getSubPageInfo().getPage().getName() + ".ktr");
+                    
+                    this.finalize(transformation,f);
+                    break;
             }
         }
 

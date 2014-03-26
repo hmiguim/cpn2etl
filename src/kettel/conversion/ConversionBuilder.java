@@ -33,7 +33,11 @@ public class ConversionBuilder {
                 orders = this.convertOrdersSKP(map);
                 map.setOrder(orders);
                 break;
+            case "SCD/H 1" :
+                System.out.println("Coiso");
+                break;
         }
+        
         return map;
     }
 

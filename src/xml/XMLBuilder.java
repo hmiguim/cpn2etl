@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Observable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -40,7 +41,7 @@ import utils.Utilities;
  *
  * @author hmg
  */
-public class XMLBuilder {
+public class XMLBuilder extends Observable {
 
     private final DocumentBuilderFactory documentBuilderFactory;
     private final DocumentBuilder documentBuilder;
@@ -543,6 +544,15 @@ public class XMLBuilder {
 
         Mapping mapping = conversionBuilder.convertModule(t);
 
+        //TODO : warning the output
+        if (mapping == null) {  
+            this.setChanged();
+            this.notifyObservers();
+        } else {
+            this.setChanged();
+            this.notifyObservers(1);
+        }
+        
         transformation.appendChild(this.createTransformationOrder(doc, mapping.getOrders()));
 
         for (MappingComponent map : mapping.getComponents()) {

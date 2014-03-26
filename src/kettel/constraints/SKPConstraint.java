@@ -4,7 +4,6 @@ import cpn.Page;
 import cpn.Place;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
  *

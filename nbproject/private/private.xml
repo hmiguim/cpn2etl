@@ -9,6 +9,9 @@
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/xml/XMLBuilder.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/conversion/ConversionBuilder.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/mapping/Mapping.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/constraints/ConstraintDirector.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/constraints/ConstraintBuilder.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/constraints/CDC.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/transformation/TransMetricsLogTable.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/jobs/JobLogTable.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/cpn/Port.java</file>
@@ -16,10 +19,13 @@
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/xml/XMLParser.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/transformation/TransStepLogTable.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/cpn/Page.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/main/Main.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/cpn/Arc.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/cpn/Stats.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/transformation/TransChannelLogTable.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/constraints/Keyword.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/transformation/TransInfo.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/constraints/Constraint.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/utils/Utilities.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/conversion/ConversionFactory.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/Element.java</file>
@@ -29,6 +35,7 @@
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/transformation/TransLogTableFactory.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/xml/XMLFactory.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/cpn/Cpn.java</file>
+            <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/constraints/SKPConstraint.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/jobs/JobEntryLogTable.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/jobs/JobsLogTableFactory.java</file>
             <file>file:/Users/hmg/Documents/Universidade/MSc%20Dissertation/Files/cpn2etl/src/kettel/Field.java</file>

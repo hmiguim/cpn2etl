@@ -5,6 +5,7 @@ import cpn.Page;
 import cpn.Place;
 import cpn.Transition;
 import java.util.ArrayList;
+import java.util.Observable;
 import kettel.constraints.ConstraintBuilder;
 import kettel.constraints.ConstraintDirector;
 import kettel.constraints.ConstraintFactory;
@@ -21,7 +22,7 @@ public class ConversionBuilder {
 
     protected ConstraintFactory constraintFactory;
     protected ConstraintDirector constraintDirector;
-        
+
     public ConversionBuilder() {
         this.constraintFactory = ConstraintFactory.newInstance();
         this.constraintDirector = constraintFactory.newConstraintDirector();
@@ -37,24 +38,27 @@ public class ConversionBuilder {
 
         switch (name) {
             case "SKP":
-                
+
                 ConstraintBuilder skp = this.constraintFactory.newSKPConstraintBuilder();
-                
+
                 this.constraintDirector.setConstraintBuilder(skp);
                 this.constraintDirector.constructConstraint();
-                
-                if (! constraintDirector.verifyConstraint(module.getSubPageInfo().getPage())) return null;
-                
+
+                if (!constraintDirector.verifyConstraint(module.getSubPageInfo().getPage())) {
+                    return null;
+                }
+
                 components = this.convertComponents(module.getSubPageInfo().getPage());
                 map.setComponents(components);
                 orders = this.convertOrdersSKP(map);
                 map.setOrder(orders);
+
                 break;
-            case "SCD/H 1" :
+            case "SCD/H 1":
                 System.out.println("Coiso");
                 break;
         }
-        
+
         return map;
     }
 
@@ -127,16 +131,16 @@ public class ConversionBuilder {
         for (Place place : p.getPlaces().values()) {
 
             if (place.getText().toLowerCase().contains("lookup table")) {
-                String[] axis = Utilities.normalizeAxis(place.getPosX(),place.getPosY());
+                String[] axis = Utilities.normalizeAxis(place.getPosX(), place.getPosY());
                 map = new MappingComponent(place.getText(), "DBLookup", axis[0], axis[1]);
                 maps.add(map);
             } else if (place.getText().toLowerCase().contains("fact records")) {
-                String[] axis = Utilities.normalizeAxis(place.getPosX(),place.getPosY());
+                String[] axis = Utilities.normalizeAxis(place.getPosX(), place.getPosY());
                 map = new MappingComponent(place.getText(), "TableInput", axis[0], axis[1]);
 
                 maps.add(map);
             } else if (place.getText().toLowerCase().contains("fact table")) {
-                String[] axis = Utilities.normalizeAxis(place.getPosX(),place.getPosY());
+                String[] axis = Utilities.normalizeAxis(place.getPosX(), place.getPosY());
                 map = new MappingComponent(place.getText(), "TableOutput", axis[0], axis[1]);
 
                 maps.add(map);

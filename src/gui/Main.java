@@ -10,6 +10,8 @@ import cpn.Stats;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -17,7 +19,6 @@ import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
-import kettel.conversion.ConversionFactory;
 import org.xml.sax.SAXException;
 import xml.XMLBuilder;
 import xml.XMLFactory;
@@ -27,9 +28,9 @@ import xml.XMLParser;
  *
  * @author hmg
  */
-public class Main extends javax.swing.JFrame {
+public class Main extends javax.swing.JFrame implements Observer {
 
-    private XMLFactory xmlFactory;
+    private final XMLFactory xmlFactory;
     private Cpn cpn;
 
     /**
@@ -188,7 +189,7 @@ public class Main extends javax.swing.JFrame {
                 XMLParser xmlParser;
 
                 xmlParser = this.xmlFactory.newXMLParser(f);
-
+                
                 this.cpn = xmlParser.parse();
 
                 Stats stats = this.cpn.stats();
@@ -209,6 +210,8 @@ public class Main extends javax.swing.JFrame {
         try {
             XMLBuilder xmlBuilder = this.xmlFactory.newXMLBuilder();
 
+            xmlBuilder.addObserver(this);
+            
             int returnVal = this.saveFile.showSaveDialog(this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -265,4 +268,16 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel outputPanel;
     private javax.swing.JFileChooser saveFile;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update(Observable o, Object arg) {
+        int option = (int) arg;
+        switch(option) {
+            case 1 : 
+                this.debug.append("\n[INFO] Pattern detected\n");
+                this.debug.append("[INFO] Pattern decoding\n");
+                break;
+        }
+        
+    }
 }

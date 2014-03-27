@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * @author hmg
  * @param <T>
  */
-public interface InterfaceLogs<T> {
+public interface InterfaceConfiguration<T> {
 
     public void readConfig();
 

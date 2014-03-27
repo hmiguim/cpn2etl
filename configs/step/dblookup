@@ -1,0 +1,6 @@
+connection,empty
+cache,N
+cache_load_all,N
+cache_size,0
+lookup,empty
+cluster_schema,empty

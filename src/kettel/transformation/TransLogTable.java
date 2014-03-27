@@ -6,21 +6,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import kettel.Field;
-import kettel.InterfaceLogs;
+import kettel.InterfaceConfiguration;
 import xml.XMLBuilder;
 
 /**
  *
  * @author hmg
  */
-public final class TransLogTable implements InterfaceLogs {
+public final class TransLogTable implements InterfaceConfiguration<Field> {
 
     private final ArrayList<Field> fields;
 
     /**
      *
-     * Constructor for the TransLogTable class. Note that implements the
-     * {@link InterfaceLogs} interface
+     * Constructor for the TransLogTable class. Note that implements InterfaceConfigurationlink InterfaceLogs} interface
      *
      */
     public TransLogTable() {

@@ -4,12 +4,12 @@ package kettel.jobs;
  *
  * @author hmg
  */
-public class JobsLogTableFactory {
+public class JobsLogFactory {
 
     /**
      * Protected constructor
      */
-    protected JobsLogTableFactory() {
+    protected JobsLogFactory() {
     }
 
     /**
@@ -18,18 +18,22 @@ public class JobsLogTableFactory {
      *
      * @return A new instance of a {@code JobsLogTableFactory}
      */
-    public static JobsLogTableFactory newInstance() {
-        return new JobsLogTableFactory();
+    public static JobsLogFactory newInstance() {
+        return new JobsLogFactory();
     }
 
+    public JobLogDirector newJobLogDirector() {
+        return new JobLogDirector();
+    }
+    
     /**
      * Creates a new instance of a {@code JobLogTable} using the currently
      * configured parameters.
      *
      * @return A new instance of a JobLogTable
      */
-    public JobLogTable logTable() {
-        return new JobLogTable();
+    public JobLogConfiguration logTable() {
+        return new JobLogConfiguration();
     }
 
     /**
@@ -38,8 +42,8 @@ public class JobsLogTableFactory {
      *
      * @return A new instance of a JobEntryLogTable
      */
-    public JobEntryLogTable entryLogTable() {
-        return new JobEntryLogTable();
+    public JobEntryLogConfiguration entryLogTable() {
+        return new JobEntryLogConfiguration();
     }
 
     /**
@@ -48,7 +52,7 @@ public class JobsLogTableFactory {
      *
      * @return A new instance of a JobChannelLogTable
      */
-    public JobChannelLogTable channelLogTable() {
-        return new JobChannelLogTable();
+    public JobChannelLogConfiguration channelLogTable() {
+        return new JobChannelLogConfiguration();
     }
 }

@@ -5,7 +5,6 @@ import cpn.Page;
 import cpn.Place;
 import cpn.Transition;
 import java.util.ArrayList;
-import java.util.Observable;
 import kettel.constraints.ConstraintBuilder;
 import kettel.constraints.ConstraintDirector;
 import kettel.constraints.ConstraintFactory;
@@ -135,14 +134,10 @@ public class ConversionBuilder {
                 map = new MappingComponent(place.getText(), "DBLookup", axis[0], axis[1]);
                 maps.add(map);
             } else if (place.getText().toLowerCase().contains("fact records")) {
-                String[] axis = Utilities.normalizeAxis(place.getPosX(), place.getPosY());
-                map = new MappingComponent(place.getText(), "TableInput", axis[0], axis[1]);
-
+                map = new MappingComponent(place.getText(), "TableInput", "30", "223");
                 maps.add(map);
             } else if (place.getText().toLowerCase().contains("fact table")) {
-                String[] axis = Utilities.normalizeAxis(place.getPosX(), place.getPosY());
-                map = new MappingComponent(place.getText(), "TableOutput", axis[0], axis[1]);
-
+                map = new MappingComponent(place.getText(), "TableOutput", "461", "11");
                 maps.add(map);
             }
 

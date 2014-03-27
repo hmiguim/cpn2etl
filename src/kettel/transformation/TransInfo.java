@@ -6,14 +6,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import kettel.Element;
-import kettel.InterfaceLogs;
+import kettel.InterfaceConfiguration;
 import xml.XMLBuilder;
 
 /**
  *
  * @author hmg
  */
-public final class TransInfo implements InterfaceLogs<Element> {
+public final class TransInfo implements InterfaceConfiguration<Element> {
 
     private final ArrayList<Element> elements;
 

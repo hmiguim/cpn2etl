@@ -1,0 +1,8 @@
+connection,empty
+sql,empty
+limit,empty
+lookup,empty
+execute_each_row,N
+variables_active,N
+lazy_conversion_active,N
+cluster_schema,empty

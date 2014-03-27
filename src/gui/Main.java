@@ -273,7 +273,7 @@ public class Main extends javax.swing.JFrame implements Observer {
     public void update(Observable o, Object arg) {
         int option = (int) arg;
         switch(option) {
-            case 1 : 
+            case 2 : 
                 this.debug.append("\n[INFO] Pattern detected\n");
                 this.debug.append("[INFO] Pattern decoding\n");
                 break;

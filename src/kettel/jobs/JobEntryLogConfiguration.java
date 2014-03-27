@@ -6,81 +6,52 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import kettel.Field;
-import kettel.InterfaceLogs;
 import xml.XMLBuilder;
 
 /**
  *
  * @author hmg
  */
-public final class JobEntryLogTable implements InterfaceLogs<Field> {
-
-    private final ArrayList<Field> fields;
-
-    /**
-     *
-     * Constructor for the JobEntryLogTable class. Note that implements the
-     * {@link InterfaceLogs} interface
-     *
-     */
-    public JobEntryLogTable() {
-        fields = new ArrayList<>();
-        readConfig();
+public class JobEntryLogConfiguration extends JobLogBuilder {
+    
+    @Override
+    public void buildJobLog() {
+        this.joblog.setLog(this.readConfig());
     }
 
     /**
      * Read the configuration files to be used in the {@link XMLBuilder} class
      */
-    @Override
-    public void readConfig() {
+    private ArrayList<Field> readConfig() {
         String conf = "configs/job/jobentrylogtable";
-
+        
         BufferedReader bufferedReader = null;
         String line;
-
+        
+        ArrayList<Field> fields = new ArrayList<>();
+        
         try {
             bufferedReader = new BufferedReader(new FileReader(conf));
             while ((line = bufferedReader.readLine()) != null) {
                 String[] split = line.split(",");
-
+                
                 Field f = new Field(split[0], split[1], split[2]);
-
-                this.fields.add(f);
+                
+                fields.add(f);
             }
         } catch (FileNotFoundException ex) {
-
+            
         } catch (IOException ex) {
-
+            
         } finally {
             if (bufferedReader != null) {
                 try {
                     bufferedReader.close();
                 } catch (IOException ex) {
-
+                    
                 }
             }
         }
+        return fields;
     }
-
-    /**
-     * Obtain an instance of an {@link java.util.ArrayList} object of {
-     *
-     * @url Field}
-     *
-     * @return An new instance of an {@code java.util.ArrayList} of {
-     * @url Field}
-     */
-    @Override
-    public ArrayList<Field> getT() {
-        return this.fields;
-    }
-
-    /**
-     * @deprecated Not supported yet.
-     */
-    @Override
-    public void overrideConfig() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }

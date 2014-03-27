@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import kettel.Field;
+import kettel.xml.Field;
 import xml.XMLBuilder;
 
 /**

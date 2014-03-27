@@ -4,12 +4,12 @@ package kettel.transformation;
  *
  * @author hmg
  */
-public class TransLogTableFactory {
+public class TransformationFactory {
 
     /**
      * Protected constructor
      */
-    protected TransLogTableFactory() {
+    protected TransformationFactory() {
 
     }
 
@@ -19,8 +19,16 @@ public class TransLogTableFactory {
      *
      * @return A new instance of a {@code TransLogTableFactory}
      */
-    public static TransLogTableFactory newInstance() {
-        return new TransLogTableFactory();
+    public static TransformationFactory newInstance() {
+        return new TransformationFactory();
+    }
+    
+    public TransLogDirector newTransLogDirector() {
+        return new TransLogDirector();
+    }
+    
+    public TransInfoDirector newTransInfoDirector() {
+        return new TransInfoDirector();
     }
 
     /**
@@ -29,8 +37,8 @@ public class TransLogTableFactory {
      *
      * @return A new instance of a transLogTable
      */
-    public TransLogTable transLogTable() {
-        return new TransLogTable();
+    public TransLogConfiguration transLogConfiguration() {
+        return new TransLogConfiguration();
     }
 
     /**
@@ -39,8 +47,8 @@ public class TransLogTableFactory {
      *
      * @return A new instance of a perfLogTable
      */
-    public TransPerfLogTable perfLogTable() {
-        return new TransPerfLogTable();
+    public TransPerfLogConfiguration perfLogConfiguration() {
+        return new TransPerfLogConfiguration();
     }
 
     /**
@@ -49,8 +57,8 @@ public class TransLogTableFactory {
      *
      * @return A new instance of a channelTransLogTable
      */
-    public TransChannelLogTable channelTransLogTable() {
-        return new TransChannelLogTable();
+    public TransChannelLogConfiguration channelTransLogConfiguration() {
+        return new TransChannelLogConfiguration();
     }
 
     /**
@@ -59,8 +67,8 @@ public class TransLogTableFactory {
      *
      * @return A new instance of a stepLogTable
      */
-    public TransStepLogTable stepLogTable() {
-        return new TransStepLogTable();
+    public TransStepLogConfiguration stepLogConfiguration() {
+        return new TransStepLogConfiguration();
     }
 
     /**
@@ -69,17 +77,11 @@ public class TransLogTableFactory {
      *
      * @return A new instance of a metricsLogTable
      */
-    public TransMetricsLogTable metricsLogTable() {
-        return new TransMetricsLogTable();
+    public TransMetricsLogConfiguration metricsLogConfiguration() {
+        return new TransMetricsLogConfiguration();
     }
-
-    /**
-     * Creates a new instance of a {@code info} using the currently configured
-     * parameters.
-     *
-     * @return A new instance of a info
-     */
-    public TransInfo info() {
-        return new TransInfo();
+    
+    public TransInfoConfiguration transInfoConfiguration() {
+        return new TransInfoConfiguration();
     }
 }

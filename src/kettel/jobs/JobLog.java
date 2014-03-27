@@ -1,7 +1,7 @@
 package kettel.jobs;
 
 import java.util.ArrayList;
-import kettel.Field;
+import kettel.xml.Field;
 
 /**
  *

@@ -1,7 +1,7 @@
 package kettel.step;
 
 import java.util.ArrayList;
-import kettel.Element;
+import kettel.xml.Element;
 
 /**
  *

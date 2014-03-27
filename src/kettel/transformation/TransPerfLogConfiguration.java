@@ -1,4 +1,4 @@
-package kettel.jobs;
+package kettel.transformation;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -12,18 +12,18 @@ import xml.XMLBuilder;
  *
  * @author hmg
  */
-public class JobLogConfiguration extends JobLogBuilder {
-    
-    @Override
-    public void buildJobLog() {
-        this.joblog.setLog(this.readConfig());
-    }
+public class TransPerfLogConfiguration extends TransLogBuilder {
 
+    @Override
+    public void buildTransLog() {
+        this.transLog.setFields(this.readConfig());
+    }
+    
     /**
      * Read the configuration files to be used in the {@link XMLBuilder} class
      */
     private ArrayList<Field> readConfig() {
-        String conf = "configs/job/joblogtable";
+        String conf = "configs/transformation/perflogtable";
 
         BufferedReader bufferedReader = null;
         String line;
@@ -38,7 +38,6 @@ public class JobLogConfiguration extends JobLogBuilder {
                 Field f = new Field(split[0], split[1], split[2]);
 
                 fields.add(f);
-
             }
         } catch (FileNotFoundException ex) {
 
@@ -53,7 +52,6 @@ public class JobLogConfiguration extends JobLogBuilder {
                 }
             }
         }
-        
         return fields;
     }
 }

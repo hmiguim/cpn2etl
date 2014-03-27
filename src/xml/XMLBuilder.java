@@ -16,7 +16,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import kettel.Field;
 import kettel.conversion.ConversionBuilder;
 import kettel.conversion.ConversionFactory;
 import kettel.jobs.JobChannelLogConfiguration;
@@ -31,13 +30,17 @@ import kettel.mapping.MappingOrder;
 import kettel.step.Step;
 import kettel.step.StepDirector;
 import kettel.step.StepFactory;
-import kettel.transformation.TransChannelLogTable;
+import kettel.transformation.TransChannelLogConfiguration;
 import kettel.transformation.TransInfo;
-import kettel.transformation.TransLogTable;
-import kettel.transformation.TransLogTableFactory;
-import kettel.transformation.TransMetricsLogTable;
-import kettel.transformation.TransPerfLogTable;
-import kettel.transformation.TransStepLogTable;
+import kettel.transformation.TransInfoDirector;
+import kettel.transformation.TransLog;
+import kettel.transformation.TransLogConfiguration;
+import kettel.transformation.TransLogDirector;
+import kettel.transformation.TransMetricsLogConfiguration;
+import kettel.transformation.TransPerfLogConfiguration;
+import kettel.transformation.TransStepLogConfiguration;
+import kettel.transformation.TransformationFactory;
+import kettel.xml.Field;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Utilities;
@@ -50,11 +53,13 @@ public class XMLBuilder extends Observable {
 
     private final DocumentBuilderFactory documentBuilderFactory;
     private final DocumentBuilder documentBuilder;
-    private final TransLogTableFactory transLogFactory;
+    private final TransformationFactory transLogFactory;
     private final JobsLogFactory jobLogFactory;
     private final ConversionFactory conversionFactory;
     private final StepFactory stepFactory;
     private final JobLogDirector jobLogDirector;
+    private final TransLogDirector transLogDirector;
+    private final TransInfoDirector transInfoDirector;
     private String filename;
     private String path;
     private Cpn cpnPages;
@@ -68,11 +73,13 @@ public class XMLBuilder extends Observable {
     public XMLBuilder() throws ParserConfigurationException {
         this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
         this.documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
-        this.transLogFactory = TransLogTableFactory.newInstance();
+        this.transLogFactory = TransformationFactory.newInstance();
         this.jobLogFactory = JobsLogFactory.newInstance();
         this.conversionFactory = ConversionFactory.newInstance();
         this.stepFactory = StepFactory.newInstance();
         this.jobLogDirector = jobLogFactory.newJobLogDirector();
+        this.transLogDirector = transLogFactory.newTransLogDirector();
+        this.transInfoDirector = this.transLogFactory.newTransInfoDirector();
     }
 
     /**
@@ -645,9 +652,13 @@ public class XMLBuilder extends Observable {
 
         info.appendChild(this.createTransformationMaxDate(doc));
 
-        TransInfo ci = this.transLogFactory.info();
-
-        for (kettel.Element e : ci.getT()) {
+        this.transInfoDirector.setTransLogBuilder(this.transLogFactory.transInfoConfiguration());
+        
+        this.transInfoDirector.constructTransInfo();
+        
+        TransInfo transInfo = this.transInfoDirector.getTransInfo();
+        
+        for (kettel.xml.Element e : transInfo.getElement()) {
             Element a = doc.createElement(e.getTag());
             a.setTextContent(e.getContextText());
 
@@ -804,9 +815,14 @@ public class XMLBuilder extends Observable {
         Element timeout_days = doc.createElement("timeout_days");
         metrics_log_table.appendChild(timeout_days);
 
-        TransMetricsLogTable config = this.transLogFactory.metricsLogTable();
-
-        for (Field f : config.getT()) {
+        TransMetricsLogConfiguration metricsLogConfiguration = this.transLogFactory.metricsLogConfiguration();
+        
+        this.transLogDirector.setTransLogBuilder(metricsLogConfiguration);
+        this.transLogDirector.constructTransLog();
+        
+        TransLog transLog = this.transLogDirector.getTransLog();
+        
+        for (Field f : transLog.getFields()) {
             metrics_log_table.appendChild(this.createField(f, doc));
         }
 
@@ -842,9 +858,14 @@ public class XMLBuilder extends Observable {
         Element timeout_days = doc.createElement("timeout_days");
         step_log_table.appendChild(timeout_days);
 
-        TransStepLogTable config = this.transLogFactory.stepLogTable();
-
-        for (Field f : config.getT()) {
+        TransStepLogConfiguration stepLogConfiguration = this.transLogFactory.stepLogConfiguration();
+        
+        this.transLogDirector.setTransLogBuilder(stepLogConfiguration);
+        this.transLogDirector.constructTransLog();
+        
+        TransLog transLog = this.transLogDirector.getTransLog();
+        
+        for (Field f : transLog.getFields()) {
             step_log_table.appendChild(this.createField(f, doc));
         }
 
@@ -880,9 +901,14 @@ public class XMLBuilder extends Observable {
         Element timeout_days = doc.createElement("timeout_days");
         channel_log_table.appendChild(timeout_days);
 
-        TransChannelLogTable config = this.transLogFactory.channelTransLogTable();
+        TransChannelLogConfiguration channelTransLogConfiguration = this.transLogFactory.channelTransLogConfiguration();
+        
+        this.transLogDirector.setTransLogBuilder(channelTransLogConfiguration);
+        this.transLogDirector.constructTransLog();
+        
+        TransLog transLog = this.transLogDirector.getTransLog();
 
-        for (Field f : config.getT()) {
+        for (Field f : transLog.getFields()) {
             channel_log_table.appendChild(this.createField(f, doc));
         }
 
@@ -922,9 +948,14 @@ public class XMLBuilder extends Observable {
         Element timeout_days = doc.createElement("timeout_days");
         perf_log_table.appendChild(timeout_days);
 
-        TransPerfLogTable confs = this.transLogFactory.perfLogTable();
+        TransPerfLogConfiguration perfLogConfiguration = this.transLogFactory.perfLogConfiguration();
+        
+        this.transLogDirector.setTransLogBuilder(perfLogConfiguration);
+        this.transLogDirector.constructTransLog();
+        
+        TransLog transLog = this.transLogDirector.getTransLog();
 
-        for (Field f : confs.getT()) {
+        for (Field f : transLog.getFields()) {
             perf_log_table.appendChild(this.createField(f, doc));
         }
 
@@ -969,9 +1000,14 @@ public class XMLBuilder extends Observable {
         Element timeout_days = doc.createElement("timeout_days");
         trans_log_table.appendChild(timeout_days);
 
-        TransLogTable confs = this.transLogFactory.transLogTable();
+        TransLogConfiguration transLogConfiguration = this.transLogFactory.transLogConfiguration();
+        
+        this.transLogDirector.setTransLogBuilder(transLogConfiguration);
+        this.transLogDirector.constructTransLog();
+        
+        TransLog transLog = this.transLogDirector.getTransLog();
 
-        for (Field f : confs.getT()) {
+        for (Field f : transLog.getFields()) {
             trans_log_table.appendChild(this.createField(f, doc));
         }
 
@@ -1057,7 +1093,7 @@ public class XMLBuilder extends Observable {
         stepDirector.constructStep();
         Step stepConfiguration = stepDirector.getStep();
         
-        for (kettel.Element e : stepConfiguration.getElements()) {
+        for (kettel.xml.Element e : stepConfiguration.getElements()) {
             Element a = doc.createElement(e.getTag());
             a.setTextContent(e.getContextText());
 

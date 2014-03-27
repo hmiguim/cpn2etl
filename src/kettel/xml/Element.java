@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package kettel;
+package kettel.xml;
 
 import java.util.Objects;
 

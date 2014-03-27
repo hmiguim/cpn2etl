@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Observable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -17,6 +16,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import kettel.conversion.ConversionBuilder;
+import kettel.conversion.ConversionDirector;
 import kettel.conversion.ConversionFactory;
 import kettel.jobs.JobChannelLogConfiguration;
 import kettel.jobs.JobEntryLogConfiguration;
@@ -49,13 +49,14 @@ import utils.Utilities;
  *
  * @author hmg
  */
-public class XMLBuilder extends Observable {
+public class XMLBuilder {
 
     private final DocumentBuilderFactory documentBuilderFactory;
     private final DocumentBuilder documentBuilder;
     private final TransformationFactory transLogFactory;
     private final JobsLogFactory jobLogFactory;
     private final ConversionFactory conversionFactory;
+    private final ConversionDirector conversionDirector;
     private final StepFactory stepFactory;
     private final JobLogDirector jobLogDirector;
     private final TransLogDirector transLogDirector;
@@ -76,6 +77,7 @@ public class XMLBuilder extends Observable {
         this.transLogFactory = TransformationFactory.newInstance();
         this.jobLogFactory = JobsLogFactory.newInstance();
         this.conversionFactory = ConversionFactory.newInstance();
+        this.conversionDirector = conversionFactory.newConversionDirector();
         this.stepFactory = StepFactory.newInstance();
         this.jobLogDirector = jobLogFactory.newJobLogDirector();
         this.transLogDirector = transLogFactory.newTransLogDirector();
@@ -450,9 +452,9 @@ public class XMLBuilder extends Observable {
 
         JobLogConfiguration jobLogConfiguration = this.jobLogFactory.logTable();
         this.jobLogDirector.setJobLogBuilder(jobLogConfiguration);
-        
+
         this.jobLogDirector.constructJobLog();
-        
+
         JobLog jobLog = this.jobLogDirector.getJobLog();
 
         for (Field f : jobLog.getLog()) {
@@ -491,14 +493,14 @@ public class XMLBuilder extends Observable {
         // timeout_days element
         Element timeout_days = doc.createElement("timeout_days");
         jobentryLogTable.appendChild(timeout_days);
-        
+
         JobEntryLogConfiguration entryLogConfiguration = this.jobLogFactory.entryLogTable();
         this.jobLogDirector.setJobLogBuilder(entryLogConfiguration);
-        
+
         this.jobLogDirector.constructJobLog();
-        
+
         JobLog jobLog = this.jobLogDirector.getJobLog();
-        
+
         for (Field f : jobLog.getLog()) {
             jobentryLogTable.appendChild(this.createField(f, doc));
         }
@@ -534,12 +536,12 @@ public class XMLBuilder extends Observable {
         // timeout_days element
         Element timeout_days = doc.createElement("timeout_days");
         channelLogTable.appendChild(timeout_days);
-        
+
         JobChannelLogConfiguration channelLogConfiguration = this.jobLogFactory.channelLogTable();
         this.jobLogDirector.setJobLogBuilder(channelLogConfiguration);
-        
+
         this.jobLogDirector.constructJobLog();
-        
+
         JobLog jobLog = this.jobLogDirector.getJobLog();
 
         for (Field f : jobLog.getLog()) {
@@ -571,17 +573,14 @@ public class XMLBuilder extends Observable {
         Element notepads = doc.createElement("notepads");
         transformation.appendChild(notepads);
 
-        ConversionBuilder conversionBuilder = this.conversionFactory.newConversionBuilder();
+        this.conversionDirector.setConversionBuilder(this.conversionFactory.newConversionBuilder(t.getSubPageInfo().getPage().getName()));
 
-        Mapping mapping = conversionBuilder.convertModule(t);
+        boolean valid = this.conversionDirector.constructConversion(t);
 
         //TODO : warning the output
-        if (mapping == null) {
-            this.setChanged();
-            this.notifyObservers(1);
-        } else {
-            this.setChanged();
-            this.notifyObservers(2);
+        if (valid) {
+            Mapping mapping = this.conversionDirector.getMapping();
+
             transformation.appendChild(this.createTransformationOrder(doc, mapping.getOrders()));
 
             for (MappingComponent map : mapping.getComponents()) {
@@ -653,11 +652,11 @@ public class XMLBuilder extends Observable {
         info.appendChild(this.createTransformationMaxDate(doc));
 
         this.transInfoDirector.setTransLogBuilder(this.transLogFactory.transInfoConfiguration());
-        
+
         this.transInfoDirector.constructTransInfo();
-        
+
         TransInfo transInfo = this.transInfoDirector.getTransInfo();
-        
+
         for (kettel.xml.Element e : transInfo.getElement()) {
             Element a = doc.createElement(e.getTag());
             a.setTextContent(e.getContextText());
@@ -816,12 +815,12 @@ public class XMLBuilder extends Observable {
         metrics_log_table.appendChild(timeout_days);
 
         TransMetricsLogConfiguration metricsLogConfiguration = this.transLogFactory.metricsLogConfiguration();
-        
+
         this.transLogDirector.setTransLogBuilder(metricsLogConfiguration);
         this.transLogDirector.constructTransLog();
-        
+
         TransLog transLog = this.transLogDirector.getTransLog();
-        
+
         for (Field f : transLog.getFields()) {
             metrics_log_table.appendChild(this.createField(f, doc));
         }
@@ -859,12 +858,12 @@ public class XMLBuilder extends Observable {
         step_log_table.appendChild(timeout_days);
 
         TransStepLogConfiguration stepLogConfiguration = this.transLogFactory.stepLogConfiguration();
-        
+
         this.transLogDirector.setTransLogBuilder(stepLogConfiguration);
         this.transLogDirector.constructTransLog();
-        
+
         TransLog transLog = this.transLogDirector.getTransLog();
-        
+
         for (Field f : transLog.getFields()) {
             step_log_table.appendChild(this.createField(f, doc));
         }
@@ -902,10 +901,10 @@ public class XMLBuilder extends Observable {
         channel_log_table.appendChild(timeout_days);
 
         TransChannelLogConfiguration channelTransLogConfiguration = this.transLogFactory.channelTransLogConfiguration();
-        
+
         this.transLogDirector.setTransLogBuilder(channelTransLogConfiguration);
         this.transLogDirector.constructTransLog();
-        
+
         TransLog transLog = this.transLogDirector.getTransLog();
 
         for (Field f : transLog.getFields()) {
@@ -949,10 +948,10 @@ public class XMLBuilder extends Observable {
         perf_log_table.appendChild(timeout_days);
 
         TransPerfLogConfiguration perfLogConfiguration = this.transLogFactory.perfLogConfiguration();
-        
+
         this.transLogDirector.setTransLogBuilder(perfLogConfiguration);
         this.transLogDirector.constructTransLog();
-        
+
         TransLog transLog = this.transLogDirector.getTransLog();
 
         for (Field f : transLog.getFields()) {
@@ -1001,10 +1000,10 @@ public class XMLBuilder extends Observable {
         trans_log_table.appendChild(timeout_days);
 
         TransLogConfiguration transLogConfiguration = this.transLogFactory.transLogConfiguration();
-        
+
         this.transLogDirector.setTransLogBuilder(transLogConfiguration);
         this.transLogDirector.constructTransLog();
-        
+
         TransLog transLog = this.transLogDirector.getTransLog();
 
         for (Field f : transLog.getFields()) {
@@ -1085,21 +1084,21 @@ public class XMLBuilder extends Observable {
         step.appendChild(copies);
 
         step.appendChild(this.createTrasnformationPartitioning(doc));
-        
+
         // TODO: STEP CONFIGURATION
         StepDirector stepDirector = this.stepFactory.newStepDirector();
-        
+
         stepDirector.setStepBuilder(this.stepFactory.newStepConfiguration(map.getKettleElement()));
         stepDirector.constructStep();
         Step stepConfiguration = stepDirector.getStep();
-        
+
         for (kettel.xml.Element e : stepConfiguration.getElements()) {
             Element a = doc.createElement(e.getTag());
             a.setTextContent(e.getContextText());
 
             step.appendChild(a);
         }
-        
+
         Element connection = doc.createElement("connection");
         step.appendChild(connection);
 

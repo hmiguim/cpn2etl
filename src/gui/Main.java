@@ -10,7 +10,6 @@ import cpn.Stats;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
-import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +27,7 @@ import xml.XMLParser;
  *
  * @author hmg
  */
-public class Main extends javax.swing.JFrame implements Observer {
+public class Main extends javax.swing.JFrame {
 
     private final XMLFactory xmlFactory;
     private Cpn cpn;
@@ -209,8 +208,6 @@ public class Main extends javax.swing.JFrame implements Observer {
 
         try {
             XMLBuilder xmlBuilder = this.xmlFactory.newXMLBuilder();
-
-            xmlBuilder.addObserver(this);
             
             int returnVal = this.saveFile.showSaveDialog(this);
 
@@ -268,16 +265,4 @@ public class Main extends javax.swing.JFrame implements Observer {
     private javax.swing.JPanel outputPanel;
     private javax.swing.JFileChooser saveFile;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void update(Observable o, Object arg) {
-        int option = (int) arg;
-        switch(option) {
-            case 2 : 
-                this.debug.append("\n[INFO] Pattern detected\n");
-                this.debug.append("[INFO] Pattern decoding\n");
-                break;
-        }
-        
-    }
 }

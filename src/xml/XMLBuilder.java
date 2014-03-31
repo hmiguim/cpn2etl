@@ -216,7 +216,7 @@ public class XMLBuilder {
         // Root element
         Element entries = doc.createElement("entries");
 
-        Collection<Transition> modules = this.cpnPages.getModulesMainPage();
+        Collection<Transition> modules = this.cpnPages.getPatternsMainPage();
 
         File f;
         Document transformation;

@@ -56,12 +56,12 @@ public class Cpn {
 
     /**
      * Method that produces a Collection of {@code Transition} from the main
-     * page given all the modules that page have. In case of the inexistence of
-     * modules on that page this method returns a 0-length HashMap.
+     * page given all the patterns that page have. In case of the inexistence of
+     * patterns on that page this method returns a 0-length HashMap.
      *
      * @return A Collection with the results of the dissection
      */
-    public Collection<Transition> getModulesMainPage() {
+    public Collection<Transition> getPatternsMainPage() {
 
         ArrayList<Transition> results = new ArrayList<>();
 
@@ -133,7 +133,7 @@ public class Cpn {
         }
 
         cpnStats.setArcs(count_arcs);
-        cpnStats.setModules(this.getModulesMainPage().size());
+        cpnStats.setModules(this.getPatternsMainPage().size());
         cpnStats.setPlaces(count_places);
         cpnStats.setPlacesIO(count_places_io);
         cpnStats.setPlacesInput(count_places_in);

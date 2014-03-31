@@ -7,10 +7,10 @@ package gui;
 
 import cpn.Cpn;
 import cpn.Stats;
+import cpn.Transition;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
-import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -195,6 +195,8 @@ public class Main extends javax.swing.JFrame {
 
                 this.debug.append("\n");
                 this.debug.append(stats.toString());
+               
+                
             } catch (SAXException | IOException | XPathExpressionException | ParserConfigurationException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }

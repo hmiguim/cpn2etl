@@ -12,7 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map.Entry;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -109,24 +109,24 @@ public class XMLParser {
 
         Page page;
 
-        // Linked Hash with the pages from the CPN file
-        LinkedHashMap<String, Page> pages = new LinkedHashMap<>();
+        // HashMap with the pages from the CPN file
+        HashMap<String, Page> pages = new HashMap<>();
 
-        // Linked Hash with the places from a page
-        LinkedHashMap<String, Place> places;
+        // HashMap with the places from a page
+        HashMap<String, Place> places;
 
-        // Linked Hash with the transitions from a page
-        LinkedHashMap<String, Transition> transitions;
+        // HashMap with the transitions from a page
+        HashMap<String, Transition> transitions;
 
-        // Linked Hash with the arcs from a page
-        LinkedHashMap<String, Arc> arcs;
+        // HashMap with the arcs from a page
+        HashMap<String, Arc> arcs;
 
         for (int i = 0; i < nodes.getLength(); i++) {
 
             page = new Page();
-            places = new LinkedHashMap<>();
-            transitions = new LinkedHashMap<>();
-            arcs = new LinkedHashMap<>();
+            places = new HashMap<>();
+            transitions = new HashMap<>();
+            arcs = new HashMap<>();
 
             page.setId(nodes.item(i).getAttributes().getNamedItem("id").getTextContent());
 
@@ -344,12 +344,12 @@ public class XMLParser {
      * parameter. This method can only be called after the file be successfully
      * parsed
      *
-     * @param pages {@link LinkedHashMap} with the pages parsed
+     * @param pages {@link HashMap} with the pages parsed
      */
-    private void updateSubPageInfo(LinkedHashMap<String, Page> pages) {
+    private void updateSubPageInfo(HashMap<String, Page> pages) {
 
         for (Entry<String, Page> entry : pages.entrySet()) {
-            LinkedHashMap<String, Transition> transitions = entry.getValue().getTransitions();
+            HashMap<String, Transition> transitions = entry.getValue().getTransitions();
 
             for (Entry<String, Transition> trans_entry : transitions.entrySet()) {
                 Transition t = trans_entry.getValue();
@@ -376,7 +376,7 @@ public class XMLParser {
      *
      * @param pages {@link LinkedHashMap} with the pages parsed
      */
-    private void updatePorts(LinkedHashMap<String, Page> pages) {
+    private void updatePorts(HashMap<String, Page> pages) {
 
         for (String str : ports) {
             str = str.replaceAll("[(]", "");
@@ -403,11 +403,11 @@ public class XMLParser {
      * @param id String identifier
      * @return The Place with the corresponding identifier
      */
-    private Place getPlaceByID(LinkedHashMap<String, Page> pages, String id) {
+    private Place getPlaceByID(HashMap<String, Page> pages, String id) {
         Place p = new Place();
 
         for (Entry<String, Page> entry : pages.entrySet()) {
-            LinkedHashMap<String, Place> places = entry.getValue().getPlaces();
+            HashMap<String, Place> places = entry.getValue().getPlaces();
 
             if (places.containsKey(id)) {
                 p = places.get(id);

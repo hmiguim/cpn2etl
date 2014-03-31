@@ -2,8 +2,7 @@ package cpn;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -12,12 +11,12 @@ import java.util.Objects;
  */
 public class Cpn {
 
-    private LinkedHashMap<String, Page> pages;
+    private HashMap<String, Page> pages;
 
     public Cpn() {
     }
 
-    public Cpn(LinkedHashMap<String, Page> pages) {
+    public Cpn(HashMap<String, Page> pages) {
         this.pages = pages;
     }
 
@@ -25,24 +24,53 @@ public class Cpn {
         this.pages = cpn.getPages();
     }
 
-    public LinkedHashMap<String, Page> getPages() {
+    public HashMap<String, Page> getPages() {
         return pages;
     }
 
-    public void setPages(LinkedHashMap<String, Page> pages) {
+    public void setPages(HashMap<String, Page> pages) {
         this.pages = pages;
     }
 
-    public LinkedHashMap<String, Transition> getModules() {
+    /**
+     * Method that produces a HashMap with the pair {@code <String,Transition>}
+     * from the {@link Page} {@code p} parameter, given all the modules that
+     * page have. In case of the inexistence of modules on that page this method
+     * returns a 0-length HashMap.
+     *
+     * @param p Page to be dissected to obtain the modules
+     * @return A HashMap with the results of the dissection
+     */
+    public HashMap<String, Transition> getModulesPerPage(Page p) {
 
-        LinkedHashMap<String, Transition> results = new LinkedHashMap<>();
+        HashMap<String, Transition> results = new HashMap<>();
 
-        for (Entry<String, Page> entry : pages.entrySet()) {
-            LinkedHashMap<String, Transition> trans = entry.getValue().getTransitions();
+        for (Transition t : p.getTransitions().values()) {
+            if (t.haveSubPage()) {
+                results.put(t.getId(), t);
+            }
+        }
 
-            for (Entry<String, Transition> entry_trans : trans.entrySet()) {
-                if (entry_trans.getValue().haveSubPage()) {
-                    results.put(entry_trans.getValue().getId(), entry_trans.getValue());
+        return results;
+    }
+
+    /**
+     * Method that produces a Collection of {@code Transition} from the main
+     * page given all the modules that page have. In case of the inexistence of
+     * modules on that page this method returns a 0-length HashMap.
+     *
+     * @return A Collection with the results of the dissection
+     */
+    public Collection<Transition> getModulesMainPage() {
+
+        ArrayList<Transition> results = new ArrayList<>();
+
+        Collection<Page> pagesCollection = this.pages.values();
+
+        for (Page p : pagesCollection) {
+            if (p.getName().toLowerCase().equals("etl")) {
+                for (Transition t : p.getTransitions().values()) {
+                    results.add(t);
                 }
             }
         }
@@ -105,7 +133,7 @@ public class Cpn {
         }
 
         cpnStats.setArcs(count_arcs);
-        cpnStats.setModules(this.getModules().size());
+        cpnStats.setModules(this.getModulesMainPage().size());
         cpnStats.setPlaces(count_places);
         cpnStats.setPlacesIO(count_places_io);
         cpnStats.setPlacesInput(count_places_in);

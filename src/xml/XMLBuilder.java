@@ -216,10 +216,10 @@ public class XMLBuilder {
         // Root element
         Element entries = doc.createElement("entries");
 
-        Collection<Transition> modules = this.cpnPages.getModules().values();
+        Collection<Transition> modules = this.cpnPages.getModulesMainPage();
 
         File f;
-        Document transformation = null;
+        Document transformation;
 
         for (Transition t : modules) {
 

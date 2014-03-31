@@ -1,6 +1,6 @@
 package cpn;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -11,14 +11,14 @@ public class Page {
 
     private String id;
     private String name;
-    private LinkedHashMap<String, Arc> arcs;
-    private LinkedHashMap<String, Place> places;
-    private LinkedHashMap<String, Transition> transitions;
+    private HashMap<String, Arc> arcs;
+    private HashMap<String, Place> places;
+    private HashMap<String, Transition> transitions;
 
     public Page() {
     }
 
-    public Page(String id, String name, LinkedHashMap<String, Arc> arcs, LinkedHashMap<String, Place> places, LinkedHashMap<String, Transition> transitions) {
+    public Page(String id, String name, HashMap<String, Arc> arcs, HashMap<String, Place> places, HashMap<String, Transition> transitions) {
         this.id = id;
         this.name = name;
         this.arcs = arcs;
@@ -50,27 +50,27 @@ public class Page {
         this.name = name;
     }
 
-    public LinkedHashMap<String, Arc> getArcs() {
+    public HashMap<String, Arc> getArcs() {
         return arcs;
     }
 
-    public void setArcs(LinkedHashMap<String, Arc> arcs) {
+    public void setArcs(HashMap<String, Arc> arcs) {
         this.arcs = arcs;
     }
 
-    public LinkedHashMap<String, Place> getPlaces() {
+    public HashMap<String, Place> getPlaces() {
         return places;
     }
 
-    public void setPlaces(LinkedHashMap<String, Place> places) {
+    public void setPlaces(HashMap<String, Place> places) {
         this.places = places;
     }
 
-    public LinkedHashMap<String, Transition> getTransitions() {
+    public HashMap<String, Transition> getTransitions() {
         return transitions;
     }
 
-    public void setTransitions(LinkedHashMap<String, Transition> transitions) {
+    public void setTransitions(HashMap<String, Transition> transitions) {
         this.transitions = transitions;
     }
 

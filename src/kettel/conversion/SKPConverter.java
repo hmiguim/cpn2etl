@@ -13,13 +13,19 @@ import utils.Utilities;
  */
 public class SKPConverter extends ConversionBuilder {
 
+    /**
+     * Map various elements from the CPN model to Kettle This in particular
+     * correspond to the Surrogate Key Pipelining
+     *
+     * @return An ArrayList of {@link MappingComponent}
+     */
     @Override
     protected ArrayList<MappingComponent> convertComponents() {
         MappingComponent map;
 
         ArrayList<MappingComponent> maps = new ArrayList<>();
 
-        for (Place place : this.module.getSubPageInfo().getPage().getPlaces().values()) {
+        for (Place place : this.pattern.getSubPageInfo().getPage().getPlaces().values()) {
 
             if (place.getText().toLowerCase().contains("lookup table")) {
                 String[] axis = Utilities.normalizeAxis(place.getPosX(), place.getPosY());
@@ -37,9 +43,15 @@ public class SKPConverter extends ConversionBuilder {
         return maps;
     }
 
+    /**
+     * Map the various connections between the kettle elements mapped from the
+     * CPN pattern This in particular correspond to the Surrogate Key Pipelining
+     *
+     * @return An ArrayList of {@link MappingOrder}
+     */
     @Override
     protected ArrayList<MappingOrder> convertOrders() {
-        
+
         ArrayList<MappingOrder> orders = new ArrayList<>();
         ArrayList<MappingComponent> components = this.mapping.getComponents();
 
@@ -64,6 +76,15 @@ public class SKPConverter extends ConversionBuilder {
         return orders;
     }
 
+    /**
+     * Method that calls the methods {@code convertComponents} and
+     * {@code convertOrders}, but first verify if the pattern is in fact a SKP
+     * pattern. In case it be convert the components and the connections
+     * otherwise don't convert and returns {@code false}
+     *
+     * @return {@code true} or {@code false} depending if the pattern can be
+     * converted
+     */
     @Override
     public boolean convert() {
 
@@ -71,14 +92,14 @@ public class SKPConverter extends ConversionBuilder {
 
         this.constraintDirector.setConstraintBuilder(skp);
         this.constraintDirector.constructConstraint();
-        
-        if (!constraintDirector.verifyConstraint(this.module.getSubPageInfo().getPage())) {
+
+        if (!constraintDirector.verifyConstraint(this.pattern.getSubPageInfo().getPage())) {
             return false;
-        } 
-        
+        }
+
         this.mapping.setComponents(this.convertComponents());
         this.mapping.setOrder(this.convertOrders());
-        
+
         return true;
     }
 

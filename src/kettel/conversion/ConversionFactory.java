@@ -32,16 +32,19 @@ public class ConversionFactory {
         return new ConversionDirector();
     }
 
-    public ConversionBuilder newConversionBuilder(String name) {
-        switch (name) {
+    /**
+     * Returns a ConversionBuilder for the specific {@code type}
+     *
+     * @param type The type of the various ETL patterns
+     * @return The {@code ConversionBuilder} for the ETL pattern that match the
+     * {@code type} parameter
+     */
+    public ConversionBuilder newConversionBuilder(String type) {
+        switch (type) {
             case "SKP":
-                return this.newSKPConverter();
+                return new SKPConverter();
         }
 
         return null;
-    }
-
-    private SKPConverter newSKPConverter() {
-        return new SKPConverter();
     }
 }

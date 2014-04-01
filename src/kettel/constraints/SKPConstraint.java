@@ -11,6 +11,9 @@ import java.util.Collection;
  */
 public class SKPConstraint extends ConstraintBuilder {
 
+    /**
+     * Initialize the Surrogate Key Pipelining constraint with the keywords corresponding
+     */
     @Override
     public void buildConstraint() {
 
@@ -23,6 +26,12 @@ public class SKPConstraint extends ConstraintBuilder {
         this.constraint.setKeywords(keywords);
     }
 
+    
+    /**
+     * Verify if the {code page} have the elements presents in a Surrogate Key Pipelining
+     * @param page The page to be verified
+     * @return {@code true} or {@code false} depending if the constraint is verify or not
+     */
     @Override
     public boolean verifyConstraint(Page page) {
 

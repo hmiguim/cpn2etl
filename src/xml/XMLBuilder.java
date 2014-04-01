@@ -15,7 +15,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import kettel.conversion.ConversionBuilder;
 import kettel.conversion.ConversionDirector;
 import kettel.conversion.ConversionFactory;
 import kettel.jobs.JobChannelLogConfiguration;
@@ -1013,6 +1012,14 @@ public class XMLBuilder {
         return trans_log_table;
     }
 
+    /**
+     * Method in charge of create a {@code order} element and return it to be
+     * appended
+     *
+     * @param doc So that can be created elements to be added to the parent node
+     * @param orders An ArrayList of {@code MappingOrder} with the connections between every Kettle ETL component
+     * @return A {@link Element} {@code order} with all the child nodes
+     */
     private Element createTransformationOrder(Document doc, ArrayList<MappingOrder> orders) {
 
         Element order = doc.createElement("order");
@@ -1025,10 +1032,11 @@ public class XMLBuilder {
     }
 
     /**
-     *
-     * @param doc
-     * @param order
-     * @return
+     * Method in charge of create a {@code hop} element and return it to be
+     * appended
+     * @param doc So that can be created elements to be added to the parent node
+     * @param order One specific connection between two kettle elements
+     * @return A {@link Element} {@code hop} with all the child nodes
      */
     private Element createTransformationHop(Document doc, MappingOrder order) {
 
@@ -1054,7 +1062,7 @@ public class XMLBuilder {
      * appended
      *
      * @param doc Original document capable of create element to be appended
-     * @param map Mapping Component
+     * @param map MappingComponent with the Kettle ETL components mapped from the CPN Pattern
      * @return A {@link Element} {@code step} with all the child nodes
      */
     private Element createTransformationStep(Document doc, MappingComponent map) {
@@ -1085,7 +1093,6 @@ public class XMLBuilder {
 
         step.appendChild(this.createTrasnformationPartitioning(doc));
 
-        // TODO: STEP CONFIGURATION
         StepDirector stepDirector = this.stepFactory.newStepDirector();
 
         stepDirector.setStepBuilder(this.stepFactory.newStepConfiguration(map.getKettleElement()));
@@ -1125,11 +1132,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>partitioning</code> element and return
+     * Method in charge of create a {@code partitioning} element and return
      * it to be appended
      *
      * @param doc Original document capable of create element to be appended
-     * @return A {@link Element} <code>partitioning</code> with all the child
+     * @return A {@link Element} {@code partitioning} with all the child
      * nodes
      */
     private Element createTrasnformationPartitioning(Document doc) {
@@ -1145,11 +1152,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>remotesteps</code> element and return
+     * Method in charge of create a {@code remotesteps} element and return
      * it to be appended
      *
      * @param doc Original document capable of create element to be appended
-     * @return A {@link Element} <code>remotesteps</code> with all the child
+     * @return A {@link Element} {@code remotesteps} with all the child
      * nodes
      */
     private Element createTransformationRemoteStep(Document doc) {
@@ -1165,12 +1172,12 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>GUI</code> element and return it to be
+     * Method in charge of create a {@code GUI} element and return it to be
      * appended
      *
      * @param doc Original document capable of create element to be appended
-     * @param map Mapping Component with the axis positions
-     * @return A {@link Element} <code>GUI</code> with all the child nodes
+     * @param map MappingComponent with the axis positions
+     * @return A {@link Element} {@code GUI} with all the child nodes
      */
     private Element createTransformationGUI(Document doc, MappingComponent map) {
 

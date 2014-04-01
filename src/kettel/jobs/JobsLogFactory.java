@@ -22,10 +22,16 @@ public class JobsLogFactory {
         return new JobsLogFactory();
     }
 
+    /**
+     * Creates a new instance of a {@code JobLogDirector} using the currently
+     * configured parameters.
+     *
+     * @return A new instance of a JobLogDirector
+     */
     public JobLogDirector newJobLogDirector() {
         return new JobLogDirector();
     }
-    
+
     /**
      * Creates a new instance of a {@code JobLogTable} using the currently
      * configured parameters.

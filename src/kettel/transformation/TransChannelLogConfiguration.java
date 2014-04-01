@@ -23,7 +23,7 @@ public class TransChannelLogConfiguration extends TransLogBuilder {
     }
 
     /**
-     * Private method that read the configuration files to be used in the {@link XMLBuilder} class
+     * Private method that read the configuration files
      */
     private ArrayList<Field> readConfig() {
         String conf = "configs/transformation/channellogtable";

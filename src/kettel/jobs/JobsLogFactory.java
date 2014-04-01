@@ -33,30 +33,30 @@ public class JobsLogFactory {
     }
 
     /**
-     * Creates a new instance of a {@code JobLogTable} using the currently
+     * Creates a new instance of a {@code JobLogConfiguration} using the currently
      * configured parameters.
      *
-     * @return A new instance of a JobLogTable
+     * @return A new instance of a JobLogConfiguration
      */
     public JobLogConfiguration logTable() {
         return new JobLogConfiguration();
     }
 
     /**
-     * Creates a new instance of a {@code JobEntryLogTable} using the currently
+     * Creates a new instance of a {@code JobEntryLogConfiguration} using the currently
      * configured parameters.
      *
-     * @return A new instance of a JobEntryLogTable
+     * @return A new instance of a JobEntryLogConfiguration
      */
     public JobEntryLogConfiguration entryLogTable() {
         return new JobEntryLogConfiguration();
     }
 
     /**
-     * Creates a new instance of a {@code JobChannelLogTable} using the
+     * Creates a new instance of a {@code JobChannelLogConfiguration} using the
      * currently configured parameters.
      *
-     * @return A new instance of a JobChannelLogTable
+     * @return A new instance of a JobChannelLogConfiguration
      */
     public JobChannelLogConfiguration channelLogTable() {
         return new JobChannelLogConfiguration();

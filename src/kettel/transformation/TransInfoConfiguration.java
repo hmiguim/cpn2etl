@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import kettel.xml.Element;
-import xml.XMLBuilder;
 
 /**
  *
@@ -14,13 +13,16 @@ import xml.XMLBuilder;
  */
 public class TransInfoConfiguration extends TransInfoBuilder {
 
+    /**
+     * Build the TransLog with the fields read from the configuration files
+     */
     @Override
     public void buildTransInfo() {
         this.transInfo.setElement(this.readConfig());
     }
 
     /**
-     * Read the configuration files to be used in the {@link XMLBuilder} class
+     * Private method that reads the configuration files
      */
     private ArrayList<Element> readConfig() {
         String conf = "configs/transformation/info";

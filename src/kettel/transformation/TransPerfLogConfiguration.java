@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import kettel.xml.Field;
-import xml.XMLBuilder;
 
 /**
  *
@@ -14,20 +13,23 @@ import xml.XMLBuilder;
  */
 public class TransPerfLogConfiguration extends TransLogBuilder {
 
+    /**
+     * Build the TransLog with the fields read from the configuration files
+     */
     @Override
     public void buildTransLog() {
         this.transLog.setFields(this.readConfig());
     }
-    
+
     /**
-     * Read the configuration files to be used in the {@link XMLBuilder} class
+     * Private method that reads the configuration files
      */
     private ArrayList<Field> readConfig() {
         String conf = "configs/transformation/perflogtable";
 
         BufferedReader bufferedReader = null;
         String line;
-        
+
         ArrayList<Field> fields = new ArrayList<>();
 
         try {

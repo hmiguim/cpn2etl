@@ -9,17 +9,30 @@ import kettel.xml.Element;
  */
 public class TransInfo {
 
-    private ArrayList<Element> element;
+    private ArrayList<Element> elements;
 
+    /**
+     * Public constructor
+     */
     public TransInfo() {
-        this.element = new ArrayList<>();
+        this.elements = new ArrayList<>();
     }
 
+    /**
+     * Gets the elements
+     *
+     * @return An ArrayList of {@link Element}
+     */
     public ArrayList<Element> getElement() {
-        return element;
+        return elements;
     }
 
-    public void setElement(ArrayList<Element> element) {
-        this.element = element;
+    /**
+     * Sets the {@code elements}
+     *
+     * @param elements the elements to set
+     */
+    public void setElement(ArrayList<Element> elements) {
+        this.elements = elements;
     }
 }

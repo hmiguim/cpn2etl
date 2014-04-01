@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import kettel.xml.Field;
-import xml.XMLBuilder;
 
 /**
  *
@@ -23,7 +22,7 @@ public class JobChannelLogConfiguration extends JobLogBuilder {
     }
 
     /**
-     * Private method that reads the configuration files to be used in the {@link XMLBuilder} class
+     * Private method that reads the configuration
      */
     private ArrayList<Field> readConfig() {
         String conf = "configs/job/channellogtable";

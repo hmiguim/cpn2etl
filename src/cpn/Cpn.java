@@ -3,7 +3,6 @@ package cpn;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Objects;
 
 /**
  *
@@ -59,7 +58,7 @@ public class Cpn {
      * page given all the patterns that page have. In case of the inexistence of
      * patterns on that page this method returns a 0-length HashMap.
      *
-     * @return A Collection with the results of the dissection
+     * @return A Collection with the results of the main page dissection
      */
     public Collection<Transition> getPatternsMainPage() {
 
@@ -78,6 +77,12 @@ public class Cpn {
         return results;
     }
 
+    /**
+     * Give all the important statistics about the CPN Page, like number of
+     * places, number of arcs, number of transitions, among others counters
+     *
+     * @return A {@link Stats} class for the current CPN Page 
+     */
     public Stats stats() {
 
         Stats cpnStats = new Stats();
@@ -143,25 +148,6 @@ public class Cpn {
         cpnStats.setUniquePlaces(count_unique_places);
 
         return cpnStats;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 53 * hash + Objects.hashCode(this.pages);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Cpn other = (Cpn) obj;
-        return Objects.equals(this.pages, other.pages);
     }
 
     @Override

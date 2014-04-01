@@ -25,7 +25,7 @@ public abstract class JobLogBuilder {
     
     /**
      * Abstract method to be implemented in each specific JobLog type
-     * Initialize each constraint with the fields
+     * Build the JobLog with the fields
      */
     public abstract void buildJobLog();
 }

@@ -14,13 +14,16 @@ import xml.XMLBuilder;
  */
 public class JobEntryLogConfiguration extends JobLogBuilder {
     
+    /**
+     * Build the JobLog with the fields read from the configuration files
+     */
     @Override
     public void buildJobLog() {
         this.joblog.setLog(this.readConfig());
     }
 
     /**
-     * Read the configuration files to be used in the {@link XMLBuilder} class
+     * Private method that reads the configuration files to be used in the {@link XMLBuilder} class
      */
     private ArrayList<Field> readConfig() {
         String conf = "configs/job/jobentrylogtable";

@@ -13,11 +13,18 @@ import kettel.xml.Element;
  */
 public class DBLookupConfiguration extends StepBuilder {
 
+    /**
+     * Build the Step Configuration with the XML tags for the DBLookup Kettle
+     * element
+     */
     @Override
     public void buildStep() {
         this.step.setElements(this.readConfig());
     }
 
+    /**
+     * Private method that reads the configuration files
+     */
     private ArrayList<Element> readConfig() {
         String conf = "configs/step/dblookup";
 
@@ -30,9 +37,11 @@ public class DBLookupConfiguration extends StepBuilder {
             bufferedReader = new BufferedReader(new FileReader(conf));
             while ((line = bufferedReader.readLine()) != null) {
                 String[] split = line.split(",");
-                
-                if (split[1].equals("empty")) split[1] = "";
-                
+
+                if (split[1].equals("empty")) {
+                    split[1] = "";
+                }
+
                 Element e = new Element(split[0], split[1]);
 
                 elements.add(e);
@@ -53,5 +62,5 @@ public class DBLookupConfiguration extends StepBuilder {
 
         return elements;
     }
-    
+
 }

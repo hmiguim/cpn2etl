@@ -40,6 +40,13 @@ public class Mapping {
         this.orders = order;
     }
 
+    /**
+     * Find the specific component for the {@code text} parameter
+     *
+     * @param text text to be search
+     * @return The MappingComponent that contains the {@code text} parameter. In
+     * case of none matching returns null
+     */
     public MappingComponent findComponent(String text) {
         for (MappingComponent c : this.components) {
             if (c.getCpnElement().toLowerCase().contains(text)) {

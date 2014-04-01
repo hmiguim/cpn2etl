@@ -13,11 +13,18 @@ import kettel.xml.Element;
  */
 public class TableOutputConfiguration extends StepBuilder {
 
+    /**
+     * Build the Step Configuration with the XML tags for the TableInput Kettle
+     * element
+     */
     @Override
     public void buildStep() {
         this.step.setElements(this.readConfig());
     }
-    
+
+    /**
+     * Private method that reads the configuration files
+     */
     private ArrayList<Element> readConfig() {
         String conf = "configs/step/tableOutput";
 
@@ -31,8 +38,10 @@ public class TableOutputConfiguration extends StepBuilder {
             while ((line = bufferedReader.readLine()) != null) {
                 String[] split = line.split(",");
 
-                if (split[1].equals("empty")) split[1] = "";
-                
+                if (split[1].equals("empty")) {
+                    split[1] = "";
+                }
+
                 Element e = new Element(split[0], split[1]);
 
                 elements.add(e);

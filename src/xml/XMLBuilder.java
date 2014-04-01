@@ -206,10 +206,10 @@ public class XMLBuilder {
 
     /**
      * Method in charge of translate each transformation in one job entry and
-     * append it in the element <code>entries</code>
+     * append it in the element {@code entries}
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} <code>entries</code> with all the child nodes
+     * @return A {@link Element} {@code entries} with all the child nodes
      */
     private Element createJobEntries(Document doc) throws TransformerException {
 
@@ -245,11 +245,11 @@ public class XMLBuilder {
 
     /**
      * Method in charge of translate each transformation in one job entry and
-     * append it in the element <code>entry</code>
+     * append it in the element {@code entry}
      *
      * @param doc So that can be created elements to be added to the parent node
      * @param trans
-     * @return A {@link Element} <code>entry</code> with all the child nodes
+     * @return A {@link Element} {@code entry} with all the child nodes
      */
     private Element createJobEntry(Document doc, Transition trans) {
 
@@ -399,10 +399,10 @@ public class XMLBuilder {
 
     /**
      * Method in charge of connect each transformation and append it in the
-     * element <code>hops</code>
+     * element {@code hops}
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} <code>hops</code> with all the child nodes
+     * @return A {@link Element} {@code hops} with all the child nodes
      */
     private Element createJobHops(Document doc) {
 
@@ -414,12 +414,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>job-log-table</code> element and
-     * return it to be appended
+     * Method in charge of create a {@code job-log-table} element and return it
+     * to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} <code>job-log-table</code> with all the child
-     * nodes
+     * @return A {@link Element} {@code job-log-table} with all the child nodes
      */
     private Element createJobLogTable(Document doc) {
 
@@ -466,12 +465,12 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>jobentry-log-table</code> element and
+     * Method in charge of create a {@code jobentry-log-table} element and
      * return it to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} <code>jobentry-log-table</code> with all the
-     * child nodes
+     * @return A {@link Element}  {@code jobentry-log-table} with all the child
+     * nodes
      */
     private Element createJobEntryLogTable(Document doc) {
 
@@ -509,11 +508,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>channel-log-table</code> element and
+     * Method in charge of create a {@code channel-log-table} element and
      * return it to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} <code>channel-log-table</code> with all the
+     * @return A {@link Element} {@code channel-log-table} with all the
      * child nodes
      */
     private Element createJobChannelLogTabble(Document doc) {
@@ -552,11 +551,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>transformation</code> element and
+     * Method in charge of create a {@code transformation} element and
      * return it to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} <code>transformation</code> with all the child
+     * @return A {@link Element} {@code transformation} with all the child
      * nodes
      */
     private Document createTransformation(Transition t, Mapping mapping) {
@@ -596,11 +595,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>info</code> element and return it to
+     * Method in charge of create a {@code info} element and return it to
      * be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} <code>info</code> with all the child nodes
+     * @return A {@link Element} {@code info} with all the child nodes
      */
     private Element createTransformationInfo(Document doc, Transition t) {
 
@@ -699,11 +698,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>maxdate</code> element and return it
+     * Method in charge of create a {@code maxdate} element and return it
      * to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} <code>maxdate</code> with all the child nodes
+     * @return A {@link Element} {@cde maxdate} with all the child nodes
      */
     private Element createTransformationMaxDate(Document doc) {
 
@@ -741,17 +740,17 @@ public class XMLBuilder {
      * @param doc So that can be created elements to be added to the parent node
      * @return A {@link Element} with all the child nodes:
      * <p>
-     * - <code>trans-log-table</code></p>
+     * - {@code trans-log-table}</p>
      * <p>
-     * - <code>perf-log-table</code></p>
+     * - {@code perf-log-table}</p>
      * <p>
-     * - <code>perf-log-table</code></p>
+     * - {@code perf-log-table}</p>
      * <p>
-     * - <code>channel-log-table</code></p>
+     * - {@code channel-log-table}</p>
      * <p>
-     * - <code>step-log-table</code></p>
+     * - {@code step-log-table}</p>
      * <p>
-     * - <code>metrics-log-table</code></p>
+     * - {@code metrics-log-table}</p>
      */
     private Element createTransformationLog(Document doc) {
 
@@ -777,11 +776,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>metrics-log-table</code> element and
+     * Method in charge of create a {@codemetrics-log-table} element and
      * return it to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} <code>metrics-log-table</code> with all the
+     * @return A {@link Element} {@code metrics-log-table} with all the
      * child nodes
      */
     private Element createTransformationMetricsLogTable(Document doc) {
@@ -820,11 +819,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>step-log-table</code> element and
+     * Method in charge of create a {@code step-log-table} element and
      * return it to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} <code>step-log-table</code> with all the child
+     * @return A {@link Element} {@code step-log-table} with all the child
      * nodes
      */
     private Element createTransformationStepLogTable(Document doc) {
@@ -863,11 +862,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>channel-log-table</code> element and
+     * Method in charge of create a {@code channel-log-table} element and
      * return it to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} <code>channel-log-table</code> with all the
+     * @return A {@link Element} {@code channel-log-table} with all the
      * child nodes
      */
     private Element createTransformationChannelLogTable(Document doc) {
@@ -906,11 +905,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>perf-log-table</code> element and
+     * Method in charge of create a {@code perf-log-table} element and
      * return it to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} <code>perf-log-table</code> with all the child
+     * @return A {@link Element} {@code perf-log-table} with all the child
      * nodes
      */
     private Element createTransformationPerfLogTable(Document doc) {
@@ -954,11 +953,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a <code>trans-log-table</code> element and
+     * Method in charge of create a {@code trans-log-table} element and
      * return it to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} <code>trans-log-table</code> with all the child
+     * @return A {@link Element} {@code trans-log-table} with all the child
      * nodes
      */
     private Element createTransformationTransLogTable(Document doc) {

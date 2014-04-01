@@ -15,6 +15,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import kettel.conversion.ConversionBuilder;
 import kettel.conversion.ConversionDirector;
 import kettel.conversion.ConversionFactory;
 import kettel.jobs.JobChannelLogConfiguration;
@@ -215,27 +216,27 @@ public class XMLBuilder {
         // Root element
         Element entries = doc.createElement("entries");
 
-        Collection<Transition> modules = this.cpnPages.getPatternsMainPage();
+        Collection<Transition> patterns = this.cpnPages.getPatternsMainPage();
 
         File f;
         Document transformation;
 
-        for (Transition t : modules) {
+        for (Transition pattern : patterns) {
 
-            // by each one of the transition create a transformation for that
-            switch (t.getSubPageInfo().getPage().getName()) {
-                case "SKP":
-                    entries.appendChild(this.createJobEntry(doc, t));
-                    transformation = this.createTransformation(t);
-                    f = new File(this.path + "/" + t.getSubPageInfo().getPage().getName() + ".ktr");
+            ConversionBuilder conversionBuilder = this.conversionFactory.newConversionBuilder(pattern.getSubPageInfo().getPage().getName());
+
+            if (conversionBuilder != null) {
+                this.conversionDirector.setConversionBuilder(conversionBuilder);
+
+                boolean valid = this.conversionDirector.constructConversion(pattern);
+
+                if (valid) {
+                    entries.appendChild(this.createJobEntry(doc, pattern));
+                    transformation = this.createTransformation(pattern, this.conversionDirector.getMapping());
+
+                    f = new File(this.path + "/" + pattern.getSubPageInfo().getPage().getName() + ".ktr");
                     this.finalize(transformation, f);
-                    break;
-                case "SCD/H 1":
-                    entries.appendChild(this.createJobEntry(doc, t));
-                //    f = new File(this.path + "/" + t.getSubPageInfo().getPage().getName() + ".ktr");
-
-                    //this.finalize(transformation,f);
-                    break;
+                }
             }
         }
 
@@ -558,7 +559,7 @@ public class XMLBuilder {
      * @return A {@link Element} <code>transformation</code> with all the child
      * nodes
      */
-    private Document createTransformation(Transition t) {
+    private Document createTransformation(Transition t, Mapping mapping) {
 
         Document doc = this.documentBuilder.newDocument();
 
@@ -572,19 +573,10 @@ public class XMLBuilder {
         Element notepads = doc.createElement("notepads");
         transformation.appendChild(notepads);
 
-        this.conversionDirector.setConversionBuilder(this.conversionFactory.newConversionBuilder(t.getSubPageInfo().getPage().getName()));
+        transformation.appendChild(this.createTransformationOrder(doc, mapping.getOrders()));
 
-        boolean valid = this.conversionDirector.constructConversion(t);
-
-        //TODO : warning the output
-        if (valid) {
-            Mapping mapping = this.conversionDirector.getMapping();
-
-            transformation.appendChild(this.createTransformationOrder(doc, mapping.getOrders()));
-
-            for (MappingComponent map : mapping.getComponents()) {
-                transformation.appendChild(this.createTransformationStep(doc, map));
-            }
+        for (MappingComponent map : mapping.getComponents()) {
+            transformation.appendChild(this.createTransformationStep(doc, map));
         }
 
         // step_error_handling element
@@ -1017,7 +1009,8 @@ public class XMLBuilder {
      * appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @param orders An ArrayList of {@code MappingOrder} with the connections between every Kettle ETL component
+     * @param orders An ArrayList of {@code MappingOrder} with the connections
+     * between every Kettle ETL component
      * @return A {@link Element} {@code order} with all the child nodes
      */
     private Element createTransformationOrder(Document doc, ArrayList<MappingOrder> orders) {
@@ -1034,6 +1027,7 @@ public class XMLBuilder {
     /**
      * Method in charge of create a {@code hop} element and return it to be
      * appended
+     *
      * @param doc So that can be created elements to be added to the parent node
      * @param order One specific connection between two kettle elements
      * @return A {@link Element} {@code hop} with all the child nodes
@@ -1062,7 +1056,8 @@ public class XMLBuilder {
      * appended
      *
      * @param doc Original document capable of create element to be appended
-     * @param map MappingComponent with the Kettle ETL components mapped from the CPN Pattern
+     * @param map MappingComponent with the Kettle ETL components mapped from
+     * the CPN Pattern
      * @return A {@link Element} {@code step} with all the child nodes
      */
     private Element createTransformationStep(Document doc, MappingComponent map) {
@@ -1132,12 +1127,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a {@code partitioning} element and return
-     * it to be appended
+     * Method in charge of create a {@code partitioning} element and return it
+     * to be appended
      *
      * @param doc Original document capable of create element to be appended
-     * @return A {@link Element} {@code partitioning} with all the child
-     * nodes
+     * @return A {@link Element} {@code partitioning} with all the child nodes
      */
     private Element createTrasnformationPartitioning(Document doc) {
 
@@ -1152,12 +1146,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a {@code remotesteps} element and return
-     * it to be appended
+     * Method in charge of create a {@code remotesteps} element and return it to
+     * be appended
      *
      * @param doc Original document capable of create element to be appended
-     * @return A {@link Element} {@code remotesteps} with all the child
-     * nodes
+     * @return A {@link Element} {@code remotesteps} with all the child nodes
      */
     private Element createTransformationRemoteStep(Document doc) {
         Element remotesteps = doc.createElement("remotesteps");

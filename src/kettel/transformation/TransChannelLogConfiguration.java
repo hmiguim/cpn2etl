@@ -14,14 +14,16 @@ import xml.XMLBuilder;
  */
 public class TransChannelLogConfiguration extends TransLogBuilder {
 
-    
+    /**
+     * Build the TransLog with the fields read from the configuration files
+     */
     @Override
     public void buildTransLog() {
         this.transLog.setFields(this.readConfig());
     }
 
     /**
-     * Read the configuration files to be used in the {@link XMLBuilder} class
+     * Private method that read the configuration files to be used in the {@link XMLBuilder} class
      */
     private ArrayList<Field> readConfig() {
         String conf = "configs/transformation/channellogtable";

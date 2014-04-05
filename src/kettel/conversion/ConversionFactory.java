@@ -43,6 +43,11 @@ public class ConversionFactory {
         switch (type) {
             case "SKP":
                 return new SKPConverter();
+            default: 
+                if (type.toLowerCase().contains("scd/h")) {
+                    return new SCDHConverter();
+                }
+            break;
         }
 
         return null;

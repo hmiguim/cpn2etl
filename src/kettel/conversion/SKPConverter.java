@@ -21,6 +21,7 @@ public class SKPConverter extends ConversionBuilder {
      */
     @Override
     protected ArrayList<MappingComponent> convertComponents() {
+        
         MappingComponent map;
 
         ArrayList<MappingComponent> maps = new ArrayList<>();

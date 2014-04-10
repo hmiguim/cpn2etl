@@ -36,7 +36,7 @@ public class ConstraintFactory {
      * @return A new instance of a {@code SKPConstraint}
      */
     public ConstraintBuilder newSKPConstraintBuilder() {
-        return new SKPConstraint();
+        return new Constraint_SKP();
     }
     
     /**
@@ -45,6 +45,6 @@ public class ConstraintFactory {
      * @return A new instance of a {@code ConstraintBuilder}
      */
     public ConstraintBuilder newCDCConstraintBuilder() {
-        return new CDCConstraint();
+        return new Constraint_CDC();
     }
 }

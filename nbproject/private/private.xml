@@ -5,6 +5,7 @@
         <group>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/kettel/constraints/CDCConstraint.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/kettel/constraints/SKPConstraint.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/kettel/constraints/ConstraintDirector.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/kettel/constraints/Constraint.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/kettel/constraints/ConstraintBuilder.java</file>
         </group>

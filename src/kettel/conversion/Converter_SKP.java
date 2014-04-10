@@ -11,7 +11,7 @@ import utils.Utilities;
  *
  * @author hmg
  */
-public class SKPConverter extends ConversionBuilder {
+public class Converter_SKP extends ConversionBuilder {
 
     /**
      * Map various elements from the CPN model to Kettle This in particular

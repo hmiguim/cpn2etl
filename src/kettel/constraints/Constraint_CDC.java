@@ -12,7 +12,7 @@ import cpn.Page;
  *
  * @author hmg
  */
-public class CDCConstraint extends ConstraintBuilder {
+public class Constraint_CDC extends ConstraintBuilder {
 
     /**
      * Initialize the Change Data Capture constraint with the keywords corresponding

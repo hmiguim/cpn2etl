@@ -9,7 +9,7 @@ import java.util.Collection;
  *
  * @author hmg
  */
-public class SKPConstraint extends ConstraintBuilder {
+public class Constraint_SKP extends ConstraintBuilder {
 
     /**
      * Initialize the Surrogate Key Pipelining constraint with the keywords corresponding

@@ -42,10 +42,10 @@ public class ConversionFactory {
     public ConversionBuilder newConversionBuilder(String type) {
         switch (type) {
             case "SKP":
-                return new SKPConverter();
+                return new Converter_SKP();
             default: 
                 if (type.toLowerCase().contains("scd/h")) {
-                    return new SCDHConverter();
+                    return new Converter_SCDH();
                 }
             break;
         }

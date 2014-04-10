@@ -9,7 +9,7 @@ import cpn.Page;
 public class ConstraintDirector {
 
     private ConstraintBuilder constraintBuilder;
-
+    
     /**
      * Sets the constraintBuilder
      * @param constraintBuilder The constraintBuilder to be set

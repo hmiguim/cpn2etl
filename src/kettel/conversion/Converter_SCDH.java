@@ -1,6 +1,7 @@
 package kettel.conversion;
 
 import cpn.Place;
+import cpn.Transition;
 import java.util.ArrayList;
 import java.util.Collection;
 import kettel.mapping.MappingComponent;
@@ -10,7 +11,7 @@ import kettel.mapping.MappingOrder;
  *
  * @author hmg
  */
-public class SCDHConverter extends ConversionBuilder {
+public class Converter_SCDH extends ConversionBuilder {
 
     /**
      * Map various elements from the CPN model to Kettle This in particular
@@ -24,15 +25,18 @@ public class SCDHConverter extends ConversionBuilder {
 
         ArrayList<MappingComponent> maps = new ArrayList<>();
         
-        Collection<Place> values = this.pattern.getSubPageInfo().getPage().getPlaces().values();
-        
+        Collection<Place> places = this.pattern.getSubPageInfo().getPage().getPlaces().values();
+        Collection<Transition> trans = this.pattern.getSubPageInfo().getPage().getTransitions().values();
         // Get the port place
-        for (Place p : values) {
+        for (Place p : places) {
             if (p.havePort()) {
-                System.out.println(p.getPort().getPlace().getText());
+                System.out.println("Type: " + p.getPort().getType() + "\nPort Place: " + p.getPort().getPlace().getText());
             }
-            
-            
+        }
+        for (Transition t : trans) {
+            if (t.haveSubPage()) {
+                System.out.println(t.getText());
+            }
         }
         System.exit(0);
         return maps;

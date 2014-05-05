@@ -14,7 +14,7 @@ public class Transition {
     private String text;
     private boolean subPage;
     private SubPage subPageInfo;
-
+    
     public Transition() {
     }
 
@@ -91,7 +91,7 @@ public class Transition {
     public void setSubPageInfo(SubPage subPageInfo) {
         this.subPageInfo = subPageInfo;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 5;
@@ -145,5 +145,4 @@ public class Transition {
     public Transition clone() {
         return new Transition(this);
     }
-
 }

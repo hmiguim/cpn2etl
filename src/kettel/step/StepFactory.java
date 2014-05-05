@@ -53,6 +53,9 @@ public class StepFactory {
             case "DBLookup":
                 sb = new DBLookupConfiguration();
                 break;
+            case "TransExecutor":
+                sb = new TransExecutorConfiguration();
+                break;
         }
         return sb;
     }

@@ -1,11 +1,13 @@
 package kettel.conversion;
 
-import cpn.Place;
+import cpn.Arc;
 import cpn.Transition;
+import cpn.graph.Graph;
 import java.util.ArrayList;
 import java.util.Collection;
 import kettel.mapping.MappingComponent;
 import kettel.mapping.MappingOrder;
+import utils.Utilities;
 
 /**
  *
@@ -14,7 +16,7 @@ import kettel.mapping.MappingOrder;
 public class Converter_SCDH extends ConversionBuilder {
 
     /**
-     * Map various elements from the CPN model to Kettle This in particular
+     * Map various elements from the CPN model to Kettle. This one in particular
      * correspond to the Slow Changing Dimension with History
      *
      * @return An ArrayList of {@link MappingComponent}
@@ -24,33 +26,62 @@ public class Converter_SCDH extends ConversionBuilder {
         MappingComponent map;
 
         ArrayList<MappingComponent> maps = new ArrayList<>();
-        
-        Collection<Place> places = this.pattern.getSubPageInfo().getPage().getPlaces().values();
+
         Collection<Transition> trans = this.pattern.getSubPageInfo().getPage().getTransitions().values();
-        // Get the port place
-        for (Place p : places) {
-            if (p.havePort()) {
-                System.out.println("Type: " + p.getPort().getType() + "\nPort Place: " + p.getPort().getPlace().getText());
-            }
-        }
+
         for (Transition t : trans) {
             if (t.haveSubPage()) {
-                System.out.println(t.getText());
+                String[] normalizeAxis = Utilities.normalizeAxis(t.getPosX(), t.getPosY());
+                map = new MappingComponent(t.getText(), "TransExecutor", normalizeAxis[0], normalizeAxis[1]);
+                maps.add(map);
             }
         }
-        System.exit(0);
+
         return maps;
     }
 
     /**
      * Map the various connections between the kettle elements mapped from the
-     * CPN pattern This in particular correspond to the Slow Changing Dimension with History
+     * CPN pattern This in particular correspond to the Slow Changing Dimension
+     * with History
      *
      * @return An ArrayList of {@link MappingOrder}
      */
     @Override
     protected ArrayList<MappingOrder> convertOrders() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<MappingOrder> orders = new ArrayList<>();
+        ArrayList<MappingComponent> components = this.mapping.getComponents();
+
+        Collection<Arc> arcs = this.pattern.getSubPageInfo().getPage().getArcs().values();
+
+        Graph graph = new Graph();
+
+        graph.construct(this.pattern.getSubPageInfo().getPage());
+
+        this.pattern.getSubPageInfo().getPage().setGraph(graph);
+
+        for (MappingComponent i : components) {
+            for (MappingComponent j : components) {
+
+                if (!i.getCpnElement().equals(j.getCpnElement())) {
+
+                    boolean connected = this.pattern.getSubPageInfo().getPage().connected(i.getCpnElement(), j.getCpnElement());
+
+                    if (connected) {
+                        MappingOrder order = new MappingOrder(i, j);
+                        orders.add(order);
+                    }
+                }
+            }
+        }
+
+        for (MappingOrder o : orders) {
+            System.out.println("From: " + o.getFrom().getCpnElement() + " To: " + o.getTo().getCpnElement());
+        }
+
+        System.exit(0);
+
+        return orders;
     }
 
     /**
@@ -64,10 +95,12 @@ public class Converter_SCDH extends ConversionBuilder {
      */
     @Override
     public boolean convert() {
-        
-        this.convertComponents();
-        
+
+        this.mapping.setComponents(this.convertComponents());
+
+        this.convertOrders();
+
         return true;
     }
-    
+
 }

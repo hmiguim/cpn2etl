@@ -30,29 +30,7 @@ public class Cpn {
     public void setPages(HashMap<String, Page> pages) {
         this.pages = pages;
     }
-
-    /**
-     * Method that produces a HashMap with the pair {@code <String,Transition>}
-     * from the {@link Page} {@code p} parameter, given all the modules that
-     * page have. In case of the inexistence of modules on that page this method
-     * returns a 0-length HashMap.
-     *
-     * @param p Page to be dissected to obtain the modules
-     * @return A HashMap with the results of the dissection
-     */
-    public HashMap<String, Transition> getModulesPerPage(Page p) {
-
-        HashMap<String, Transition> results = new HashMap<>();
-
-        for (Transition t : p.getTransitions().values()) {
-            if (t.haveSubPage()) {
-                results.put(t.getId(), t);
-            }
-        }
-
-        return results;
-    }
-
+    
     /**
      * Method that produces a Collection of {@code Transition} from the main
      * page given all the patterns that page have. In case of the inexistence of

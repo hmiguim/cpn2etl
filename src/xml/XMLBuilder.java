@@ -77,10 +77,10 @@ public class XMLBuilder {
         this.transLogFactory = TransformationFactory.newInstance();
         this.jobLogFactory = JobsLogFactory.newInstance();
         this.conversionFactory = ConversionFactory.newInstance();
-        this.conversionDirector = conversionFactory.newConversionDirector();
+        this.conversionDirector = this.conversionFactory.newConversionDirector();
         this.stepFactory = StepFactory.newInstance();
-        this.jobLogDirector = jobLogFactory.newJobLogDirector();
-        this.transLogDirector = transLogFactory.newTransLogDirector();
+        this.jobLogDirector = this.jobLogFactory.newJobLogDirector();
+        this.transLogDirector = this.transLogFactory.newTransLogDirector();
         this.transInfoDirector = this.transLogFactory.newTransInfoDirector();
     }
 
@@ -235,7 +235,7 @@ public class XMLBuilder {
                     transformation = this.createTransformation(pattern, this.conversionDirector.getMapping());
 
                     f = new File(this.path + "/" + pattern.getSubPageInfo().getPage().getName() + ".ktr");
-                    this.finalize(transformation, f);
+//                    this.finalize(transformation, f);
                 }
             }
         }
@@ -508,12 +508,12 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a {@code channel-log-table} element and
-     * return it to be appended
+     * Method in charge of create a {@code channel-log-table} element and return
+     * it to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} {@code channel-log-table} with all the
-     * child nodes
+     * @return A {@link Element} {@code channel-log-table} with all the child
+     * nodes
      */
     private Element createJobChannelLogTabble(Document doc) {
 
@@ -551,12 +551,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a {@code transformation} element and
-     * return it to be appended
+     * Method in charge of create a {@code transformation} element and return it
+     * to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} {@code transformation} with all the child
-     * nodes
+     * @return A {@link Element} {@code transformation} with all the child nodes
      */
     private Document createTransformation(Transition t, Mapping mapping) {
 
@@ -595,8 +594,8 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a {@code info} element and return it to
-     * be appended
+     * Method in charge of create a {@code info} element and return it to be
+     * appended
      *
      * @param doc So that can be created elements to be added to the parent node
      * @return A {@link Element} {@code info} with all the child nodes
@@ -698,8 +697,8 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a {@code maxdate} element and return it
-     * to be appended
+     * Method in charge of create a {@code maxdate} element and return it to be
+     * appended
      *
      * @param doc So that can be created elements to be added to the parent node
      * @return A {@link Element} {@cde maxdate} with all the child nodes
@@ -776,12 +775,13 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a {@codemetrics-log-table} element and
-     * return it to be appended
+     * Method in charge of create a {
+     *
+     * @codemetrics-log-table} element and return it to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} {@code metrics-log-table} with all the
-     * child nodes
+     * @return A {@link Element} {@code metrics-log-table} with all the child
+     * nodes
      */
     private Element createTransformationMetricsLogTable(Document doc) {
 
@@ -819,12 +819,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a {@code step-log-table} element and
-     * return it to be appended
+     * Method in charge of create a {@code step-log-table} element and return it
+     * to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} {@code step-log-table} with all the child
-     * nodes
+     * @return A {@link Element} {@code step-log-table} with all the child nodes
      */
     private Element createTransformationStepLogTable(Document doc) {
 
@@ -862,12 +861,12 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a {@code channel-log-table} element and
-     * return it to be appended
+     * Method in charge of create a {@code channel-log-table} element and return
+     * it to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} {@code channel-log-table} with all the
-     * child nodes
+     * @return A {@link Element} {@code channel-log-table} with all the child
+     * nodes
      */
     private Element createTransformationChannelLogTable(Document doc) {
 
@@ -905,12 +904,11 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a {@code perf-log-table} element and
-     * return it to be appended
+     * Method in charge of create a {@code perf-log-table} element and return it
+     * to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
-     * @return A {@link Element} {@code perf-log-table} with all the child
-     * nodes
+     * @return A {@link Element} {@code perf-log-table} with all the child nodes
      */
     private Element createTransformationPerfLogTable(Document doc) {
 
@@ -953,8 +951,8 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a {@code trans-log-table} element and
-     * return it to be appended
+     * Method in charge of create a {@code trans-log-table} element and return
+     * it to be appended
      *
      * @param doc So that can be created elements to be added to the parent node
      * @return A {@link Element} {@code trans-log-table} with all the child
@@ -1016,10 +1014,13 @@ public class XMLBuilder {
 
         Element order = doc.createElement("order");
 
-        for (MappingOrder o : orders) {
-            order.appendChild(this.createTransformationHop(doc, o));
-        }
+        if (orders == null) {
 
+        } else {
+            for (MappingOrder o : orders) {
+                //       order.appendChild(this.createTransformationHop(doc, o));
+            }
+        }
         return order;
     }
 
@@ -1071,22 +1072,6 @@ public class XMLBuilder {
         type.setTextContent(map.getKettleElement());
         step.appendChild(type);
 
-        Element description = doc.createElement("description");
-        step.appendChild(description);
-
-        Element distribute = doc.createElement("distribute");
-        distribute.setTextContent("Y");
-        step.appendChild(distribute);
-
-        Element custom_distribution = doc.createElement("custom_distribution");
-        step.appendChild(custom_distribution);
-
-        Element copies = doc.createElement("copies");
-        copies.setTextContent("1");
-        step.appendChild(copies);
-
-        step.appendChild(this.createTrasnformationPartitioning(doc));
-
         StepDirector stepDirector = this.stepFactory.newStepDirector();
 
         stepDirector.setStepBuilder(this.stepFactory.newStepConfiguration(map.getKettleElement()));
@@ -1099,26 +1084,6 @@ public class XMLBuilder {
 
             step.appendChild(a);
         }
-
-        Element connection = doc.createElement("connection");
-        step.appendChild(connection);
-
-        Element execute_each_row = doc.createElement("execute_each_row");
-        execute_each_row.setTextContent("N");
-        step.appendChild(execute_each_row);
-
-        Element variables_active = doc.createElement("variables_active");
-        variables_active.setTextContent("N");
-        step.appendChild(variables_active);
-
-        Element lazy_conversion_active = doc.createElement("lazy_conversion_active");
-        lazy_conversion_active.setTextContent("N");
-        step.appendChild(lazy_conversion_active);
-
-        Element cluster_schema = doc.createElement("cluster_schema");
-        step.appendChild(cluster_schema);
-
-        step.appendChild(this.createTransformationRemoteStep(doc));
 
         step.appendChild(this.createTransformationGUI(doc, map));
 

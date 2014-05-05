@@ -262,6 +262,7 @@ public class XMLParser {
         Arc a = new Arc();
 
         a.setId(node.getAttributes().getNamedItem("id").getTextContent());
+        a.setOrientation(node.getAttributes().getNamedItem("orientation").getTextContent());
 
         NodeList childs = node.getChildNodes();
 

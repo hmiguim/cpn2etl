@@ -15,7 +15,7 @@ public class Place {
     private String type;
     private Port portInfo;
     private boolean port;
-
+    
     public Place() {
     }
 

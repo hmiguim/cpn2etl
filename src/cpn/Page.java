@@ -1,7 +1,11 @@
 package cpn;
 
+import cpn.graph.Graph;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
+import org.jgrapht.alg.BellmanFordShortestPath;
 
 /**
  *
@@ -14,8 +18,10 @@ public class Page {
     private HashMap<String, Arc> arcs;
     private HashMap<String, Place> places;
     private HashMap<String, Transition> transitions;
+    private Graph graph;
 
     public Page() {
+        this.graph = new Graph();
     }
 
     public Page(String id, String name, HashMap<String, Arc> arcs, HashMap<String, Place> places, HashMap<String, Transition> transitions) {
@@ -73,6 +79,14 @@ public class Page {
     public void setTransitions(HashMap<String, Transition> transitions) {
         this.transitions = transitions;
     }
+    
+    public Graph getGraph() {
+        return this.graph;
+    }
+    
+    public void setGraph(Graph graph) {
+        this.graph = graph;
+    }
 
     @Override
     public int hashCode() {
@@ -82,6 +96,7 @@ public class Page {
         hash = 13 * hash + Objects.hashCode(this.arcs);
         hash = 13 * hash + Objects.hashCode(this.places);
         hash = 13 * hash + Objects.hashCode(this.transitions);
+        hash = 13 * hash + Objects.hashCode(this.graph);
         return hash;
     }
 
@@ -106,6 +121,9 @@ public class Page {
         if (!Objects.equals(this.places, other.places)) {
             return false;
         }
+        if (!Objects.equals(this.graph, other.graph)) {
+            return false;
+        }
 
         return Objects.equals(this.transitions, other.transitions);
     }
@@ -120,5 +138,37 @@ public class Page {
     @Override
     public Page clone() throws CloneNotSupportedException {
         return new Page(this);
+    }
+
+    /**
+     * Method that produces a HashMap with the pair {@code <String,Transition>}
+     * from the {@link Page} {@code p} parameter, given all the modules that
+     * page have. In case of the inexistence of modules on that page this method
+     * returns a 0-length HashMap.
+     *
+     * @return A HashMap with the results of the dissection
+     */
+    public ArrayList<Transition> getModulesPerPage() {
+
+        ArrayList<Transition> results = new ArrayList<>();
+
+        for (Transition t : this.getTransitions().values()) {
+            if (t.haveSubPage()) {
+                results.add(t);
+            }
+        }
+
+        return results;
+    }
+
+    public boolean connected(String a, String b) {
+        
+        List findPathBetween = BellmanFordShortestPath.findPathBetween(this.graph.getGraph(), a, b);
+        
+        if (findPathBetween == null) return false;
+        else {
+            return !findPathBetween.isEmpty();
+        }
+        
     }
 }

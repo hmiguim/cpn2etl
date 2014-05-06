@@ -1,34 +1,34 @@
-description: [],
-distribute: Y,
-custom_distribution: [],
-copies: 1,
-partitioning: { method; none, schema_name; [] },
-specification_method: filename,
-trans_object_id: [],
-trans_name: [],
-filename: [],
-directory_path: [],
-group_size: 1,
-group_field: [],
-group_time: [],
-parameters: { inherit_all_vars; Y },
-execution_result_target_step: [],
-execution_time_field: ExecutionTime,
-execution_result_field: ExecutionResult,
-execution_errors_field: ExecutionNrErrors,
-execution_lines_read_field: ExecutionLinesRead,
-execution_lines_written_field: ExecutionLinesWritten,
-execution_lines_input_field: ExecutionLinesInput,
-execution_lines_output_field: ExecutionLinesOutput,
-execution_lines_rejected_field: ExecutionLinesRejected,
-execution_lines_updated_field: ExecutionLinesUpdated,
-execution_lines_deleted_field: ExecutionLinesDeleted,
-execution_files_retrieved_field: ExecutionFilesRetrieved,
-execution_exit_status_field: ExecutionExitStatus,
-execution_log_text_field: ExecutionLogText,
-execution_log_channelid_field: ExecutionLogChannelId,
-result_rows_target_step: [],
-result_files_target_step: [],
-result_files_file_name_field: FileName,
-cluster_schema: [],
+description: []
+distribute: Y
+custom_distribution: []
+copies: 1
+partitioning: { method; none, schema_name; [] }
+specification_method: filename
+trans_object_id: []
+trans_name: []
+filename: []
+directory_path: []
+group_size: 1
+group_field: []
+group_time: []
+parameters: { inherit_all_vars; Y }
+execution_result_target_step: []
+execution_time_field: ExecutionTime
+execution_result_field: ExecutionResult
+execution_errors_field: ExecutionNrErrors
+execution_lines_read_field: ExecutionLinesRead
+execution_lines_written_field: ExecutionLinesWritten
+execution_lines_input_field: ExecutionLinesInput
+execution_lines_output_field: ExecutionLinesOutput
+execution_lines_rejected_field: ExecutionLinesRejected
+execution_lines_updated_field: ExecutionLinesUpdated
+execution_lines_deleted_field: ExecutionLinesDeleted
+execution_files_retrieved_field: ExecutionFilesRetrieved
+execution_exit_status_field: ExecutionExitStatus
+execution_log_text_field: ExecutionLogText
+execution_log_channelid_field: ExecutionLogChannelId
+result_rows_target_step: []
+result_files_target_step: []
+result_files_file_name_field: FileName
+cluster_schema: []
 remotesteps: { input; [], output; [] }

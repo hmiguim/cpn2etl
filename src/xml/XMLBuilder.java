@@ -234,7 +234,6 @@ public class XMLBuilder {
                     entries.appendChild(this.createJobEntry(doc, pattern));
                     transformation = this.createTransformation(pattern, this.conversionDirector.getMapping());
 
-                    
                     f = new File(this.path + "/" + Utilities.normalize(pattern.getSubPageInfo().getPage().getName()) + ".ktr");
                     this.finalize(transformation, f);
                 }
@@ -1019,7 +1018,7 @@ public class XMLBuilder {
 
         } else {
             for (MappingOrder o : orders) {
-                //       order.appendChild(this.createTransformationHop(doc, o));
+                order.appendChild(this.createTransformationHop(doc, o));
             }
         }
         return order;

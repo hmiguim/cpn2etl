@@ -16,6 +16,14 @@ public class Utilities {
         return Utilities._USER;
     }
 
+    public static String normalize(String str) {
+        
+        str = str.replace("/", "_");
+        str = str.replace(" ", "_");
+        
+        return str; 
+    }
+    
     public static String today() {
 
         Date date = new Date();

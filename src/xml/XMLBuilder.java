@@ -234,8 +234,9 @@ public class XMLBuilder {
                     entries.appendChild(this.createJobEntry(doc, pattern));
                     transformation = this.createTransformation(pattern, this.conversionDirector.getMapping());
 
-                    f = new File(this.path + "/" + pattern.getSubPageInfo().getPage().getName() + ".ktr");
-//                    this.finalize(transformation, f);
+                    
+                    f = new File(this.path + "/" + Utilities.normalize(pattern.getSubPageInfo().getPage().getName()) + ".ktr");
+                    this.finalize(transformation, f);
                 }
             }
         }
@@ -281,7 +282,7 @@ public class XMLBuilder {
 
         // filename element
         Element filename_element = doc.createElement("filename");
-        filename_element.setTextContent(this.path + "/" + trans.getSubPageInfo().getPage().getName() + ".ktr");
+        filename_element.setTextContent(this.path + "/" + Utilities.normalize(trans.getSubPageInfo().getPage().getName()) + ".ktr");
         entry.appendChild(filename_element);
 
         // transname element
@@ -607,7 +608,7 @@ public class XMLBuilder {
 
         // Name Element
         Element name = doc.createElement("name");
-        name.setTextContent(t.getSubPageInfo().getPage().getName());
+        name.setTextContent(Utilities.normalize(t.getSubPageInfo().getPage().getName()));
         info.appendChild(name);
 
         // Description Element

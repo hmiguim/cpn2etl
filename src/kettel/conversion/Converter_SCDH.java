@@ -1,6 +1,5 @@
 package kettel.conversion;
 
-import cpn.Arc;
 import cpn.Transition;
 import cpn.graph.Graph;
 import java.util.ArrayList;
@@ -52,8 +51,6 @@ public class Converter_SCDH extends ConversionBuilder {
         ArrayList<MappingOrder> orders = new ArrayList<>();
         ArrayList<MappingComponent> components = this.mapping.getComponents();
 
-        Collection<Arc> arcs = this.pattern.getSubPageInfo().getPage().getArcs().values();
-
         Graph graph = new Graph();
 
         graph.construct(this.pattern.getSubPageInfo().getPage());
@@ -75,12 +72,6 @@ public class Converter_SCDH extends ConversionBuilder {
             }
         }
 
-        for (MappingOrder o : orders) {
-            System.out.println("From: " + o.getFrom().getCpnElement() + " To: " + o.getTo().getCpnElement());
-        }
-
-        System.exit(0);
-
         return orders;
     }
 
@@ -98,7 +89,7 @@ public class Converter_SCDH extends ConversionBuilder {
 
         this.mapping.setComponents(this.convertComponents());
 
-        this.convertOrders();
+        this.mapping.setOrder(this.convertOrders());
 
         return true;
     }

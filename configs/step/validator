@@ -1,0 +1,12 @@
+name: Data Validator
+type: Validator
+description: []
+distribute: Y
+custom_distribution: []
+copies: 1
+partitioning: { method; none, schema_name; [] }
+validate_all: N
+concat_errors: N
+concat_separator: |
+cluster_schema: []
+remotesteps: { input; [], output; [] }

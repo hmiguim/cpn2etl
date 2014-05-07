@@ -5,7 +5,6 @@ import cpn.Transition;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,34 +17,37 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import kettel.conversion.ConversionBuilder;
-import kettel.conversion.ConversionDirector;
-import kettel.conversion.ConversionFactory;
-import kettel.jobs.JobChannelLogConfiguration;
-import kettel.jobs.JobEntryLogConfiguration;
-import kettel.jobs.JobLog;
-import kettel.jobs.JobLogConfiguration;
-import kettel.jobs.JobLogDirector;
-import kettel.jobs.JobsLogFactory;
-import kettel.mapping.Mapping;
-import kettel.mapping.MappingComponent;
-import kettel.mapping.MappingOrder;
-import kettel.step.Step;
-import kettel.step.StepDirector;
-import kettel.step.StepFactory;
-import kettel.transformation.TransChannelLogConfiguration;
-import kettel.transformation.TransInfo;
-import kettel.transformation.TransInfoDirector;
-import kettel.transformation.TransLog;
-import kettel.transformation.TransLogConfiguration;
-import kettel.transformation.TransLogDirector;
-import kettel.transformation.TransMetricsLogConfiguration;
-import kettel.transformation.TransPerfLogConfiguration;
-import kettel.transformation.TransStepLogConfiguration;
-import kettel.transformation.TransformationFactory;
-import kettel.xml.Field;
+import pdi.jobs.JobChannelLogConfiguration;
+import pdi.jobs.JobEntryLogConfiguration;
+import pdi.jobs.JobLog;
+import pdi.jobs.JobLogConfiguration;
+import pdi.jobs.JobLogDirector;
+import pdi.jobs.JobsLogFactory;
+import pdi.mapping.Mapping;
+import pdi.mapping.MappingComponent;
+import pdi.mapping.MappingOrder;
+import pdi.pattern.PatternBuilder;
+import pdi.pattern.PatternDirector;
+import pdi.pattern.PatternFactory;
+import pdi.step.Step;
+import pdi.step.StepDirector;
+import pdi.step.StepFactory;
+import pdi.transformation.TransChannelLogConfiguration;
+import pdi.transformation.TransInfo;
+import pdi.transformation.TransInfoDirector;
+import pdi.transformation.TransLog;
+import pdi.transformation.TransLogConfiguration;
+import pdi.transformation.TransLogDirector;
+import pdi.transformation.TransMetricsLogConfiguration;
+import pdi.transformation.TransPerfLogConfiguration;
+import pdi.transformation.TransStepLogConfiguration;
+import pdi.transformation.TransformationFactory;
+import pdi.xml.Field;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import pdi.pattern.activity.PatternActivityBuilder;
+import pdi.pattern.activity.PatternActivityDirector;
+import pdi.pattern.activity.PatternActivityFactory;
 import utils.Utilities;
 
 /**
@@ -58,12 +60,16 @@ public class XMLBuilder {
     private final DocumentBuilder documentBuilder;
     private final TransformationFactory transLogFactory;
     private final JobsLogFactory jobLogFactory;
-    private final ConversionFactory conversionFactory;
-    private final ConversionDirector conversionDirector;
+    private final PatternFactory patternFactory;
+    private final PatternDirector patternDirector;
     private final StepFactory stepFactory;
     private final JobLogDirector jobLogDirector;
     private final TransLogDirector transLogDirector;
     private final TransInfoDirector transInfoDirector;
+    
+    private final PatternActivityFactory patternActivityFactory;
+    private final PatternActivityDirector patternActivityDirector;
+    
     private String filename;
     private String path;
     private Cpn cpnPages;
@@ -79,12 +85,16 @@ public class XMLBuilder {
         this.documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
         this.transLogFactory = TransformationFactory.newInstance();
         this.jobLogFactory = JobsLogFactory.newInstance();
-        this.conversionFactory = ConversionFactory.newInstance();
-        this.conversionDirector = this.conversionFactory.newConversionDirector();
+        this.patternFactory = PatternFactory.newInstance();
+        this.patternDirector = this.patternFactory.newPatternDirector();
         this.stepFactory = StepFactory.newInstance();
         this.jobLogDirector = this.jobLogFactory.newJobLogDirector();
         this.transLogDirector = this.transLogFactory.newTransLogDirector();
         this.transInfoDirector = this.transLogFactory.newTransInfoDirector();
+        
+        
+        this.patternActivityFactory = PatternActivityFactory.newInstance();
+        this.patternActivityDirector = this.patternActivityFactory.newPatternActivityDirector();
     }
 
     /**
@@ -223,19 +233,20 @@ public class XMLBuilder {
 
         File f;
         Document transformation;
+        Document activityTransformation;
 
         for (Transition pattern : patterns) {
 
-            ConversionBuilder conversionBuilder = this.conversionFactory.newConversionBuilder(pattern.getSubPageInfo().getPage().getName());
+            PatternBuilder patternBuilder = this.patternFactory.newPatternBuilder(pattern.getSubPageInfo().getPage().getName());
 
-            if (conversionBuilder != null) {
-                this.conversionDirector.setConversionBuilder(conversionBuilder);
+            if (patternBuilder != null) {
+                this.patternDirector.setPatternBuilder(patternBuilder);
 
-                boolean valid = this.conversionDirector.constructConversion(pattern);
+                boolean valid = this.patternDirector.constructPattern(pattern);
 
                 if (valid) {
                     entries.appendChild(this.createJobEntry(doc, pattern));
-                    transformation = this.createTransformation(pattern, this.conversionDirector.getMapping());
+                    transformation = this.createTransformation(pattern, this.patternDirector.getMapping());
 
                     f = new File(this.path + "/" + Utilities.normalize(pattern.getSubPageInfo().getPage().getName()) + ".ktr");
                     this.finalize(transformation, f);
@@ -243,10 +254,19 @@ public class XMLBuilder {
                     if (pattern.getSubPageInfo().getPage().getName().equals("SCD/H 3")) {
                         ArrayList<Transition> modulesPerPage = pattern.getSubPageInfo().getPage().getModulesPerPage();
                         for (Transition t : modulesPerPage) {
-                            try (PrintWriter writer = new PrintWriter(this.path + "/" + Utilities.normalize(t.getSubPageInfo().getName()) + ".ktr", "UTF-8")) {
-                                writer.println("The first line");
-                                writer.println("The second line");
-                            }
+                           PatternActivityBuilder patternActivityBuilder = this.patternActivityFactory.newPatternActivityBuilder(t.getText());
+                           
+                           if (patternActivityBuilder != null) {
+                               this.patternActivityDirector.setPatternActivityBuilder(patternActivityBuilder);
+                               
+                               boolean activity = this.patternActivityDirector.constructPatternActivity(t);
+                               
+                               if (activity) {
+                                   activityTransformation = this.createTransformation(t, this.patternActivityDirector.getMapping());
+                                   File file = new File(this.path + "/" + Utilities.normalize(t.getSubPageInfo().getName()) + ".ktr");
+                                   this.finalize(activityTransformation,file);
+                               }
+                           }
                         }
                     }
                 }
@@ -659,7 +679,7 @@ public class XMLBuilder {
 
         TransInfo transInfo = this.transInfoDirector.getTransInfo();
 
-        for (kettel.xml.Element e : transInfo.getElement()) {
+        for (pdi.xml.Element e : transInfo.getElement()) {
             Element a = doc.createElement(e.getTag());
             a.setTextContent(e.getContextText());
 
@@ -1089,7 +1109,7 @@ public class XMLBuilder {
         stepDirector.constructStep();
         Step stepConfiguration = stepDirector.getStep();
 
-        for (kettel.xml.Element e : stepConfiguration.getElements()) {
+        for (pdi.xml.Element e : stepConfiguration.getElements()) {
             Element a = doc.createElement(e.getTag());
             a.setTextContent(e.getContextText());
 

@@ -316,6 +316,8 @@ public class XMLParser {
                 case "subpageinfo":
                     String id = childs.item(i).getAttributes().getNamedItem("id").getTextContent();
                     subPage.setId(id);
+                    String name = childs.item(i).getAttributes().getNamedItem("name").getTextContent();
+                    subPage.setName(name);
                     break;
             }
         }

@@ -3,7 +3,10 @@ package xml;
 import cpn.Cpn;
 import cpn.Transition;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.xml.parsers.DocumentBuilder;
@@ -114,7 +117,7 @@ public class XMLBuilder {
      * @return A {@link Document} with the Job {@link Element} as root with all
      * the child nodes
      */
-    private Document createJob() throws TransformerException {
+    private Document createJob() throws TransformerException, FileNotFoundException, UnsupportedEncodingException {
 
         Document document = documentBuilder.newDocument();
 
@@ -211,7 +214,7 @@ public class XMLBuilder {
      * @param doc So that can be created elements to be added to the parent node
      * @return A {@link Element} {@code entries} with all the child nodes
      */
-    private Element createJobEntries(Document doc) throws TransformerException {
+    private Element createJobEntries(Document doc) throws TransformerException, FileNotFoundException, UnsupportedEncodingException {
 
         // Root element
         Element entries = doc.createElement("entries");
@@ -236,13 +239,16 @@ public class XMLBuilder {
 
                     f = new File(this.path + "/" + Utilities.normalize(pattern.getSubPageInfo().getPage().getName()) + ".ktr");
                     this.finalize(transformation, f);
-                }
-            }
-            
-            ArrayList<Transition> modulesPerPage = pattern.getSubPageInfo().getPage().getModulesPerPage();
-            if (pattern.getSubPageInfo().getPage().getName().equals("SCD/H 3")) {
-                for (Transition t : modulesPerPage) {
-                    System.out.println(t.getText());
+
+                    if (pattern.getSubPageInfo().getPage().getName().equals("SCD/H 3")) {
+                        ArrayList<Transition> modulesPerPage = pattern.getSubPageInfo().getPage().getModulesPerPage();
+                        for (Transition t : modulesPerPage) {
+                            try (PrintWriter writer = new PrintWriter(this.path + "/" + Utilities.normalize(t.getSubPageInfo().getName()) + ".ktr", "UTF-8")) {
+                                writer.println("The first line");
+                                writer.println("The second line");
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -1024,7 +1030,7 @@ public class XMLBuilder {
         if (orders != null) {
             for (MappingOrder o : orders) {
                 order.appendChild(this.createTransformationHop(doc, o));
-            }  
+            }
         }
         return order;
     }

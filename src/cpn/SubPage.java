@@ -9,20 +9,23 @@ import java.util.Objects;
 public class SubPage {
 
     private String id;
+    private String name;
     private String pageRef;
     private Page page;
 
     public SubPage() {
     }
 
-    public SubPage(String id, String pageRef, Page page) {
+    public SubPage(String id, String name, String pageRef, Page page) {
         this.id = id;
+        this.name = name;
         this.pageRef = pageRef;
         this.page = page;
     }
 
     public SubPage(SubPage s) {
         this.id = s.getId();
+        this.name = s.getName();
         this.pageRef = s.getPageRef();
         this.page = s.getPage();
     }
@@ -35,6 +38,14 @@ public class SubPage {
         this.id = id;
     }
 
+    public String getName() {
+        return this.name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     public String getPageRef() {
         return pageRef;
     }
@@ -53,10 +64,11 @@ public class SubPage {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 29 * hash + Objects.hashCode(this.id);
-        hash = 29 * hash + Objects.hashCode(this.pageRef);
-        hash = 29 * hash + Objects.hashCode(this.page);
+        int hash = 7;
+        hash = 67 * hash + Objects.hashCode(this.id);
+        hash = 67 * hash + Objects.hashCode(this.name);
+        hash = 67 * hash + Objects.hashCode(this.pageRef);
+        hash = 67 * hash + Objects.hashCode(this.page);
         return hash;
     }
 
@@ -70,6 +82,9 @@ public class SubPage {
         }
         final SubPage other = (SubPage) obj;
         if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
             return false;
         }
         if (!Objects.equals(this.pageRef, other.pageRef)) {

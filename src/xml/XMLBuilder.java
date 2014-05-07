@@ -238,6 +238,13 @@ public class XMLBuilder {
                     this.finalize(transformation, f);
                 }
             }
+            
+            ArrayList<Transition> modulesPerPage = pattern.getSubPageInfo().getPage().getModulesPerPage();
+            if (pattern.getSubPageInfo().getPage().getName().equals("SCD/H 3")) {
+                for (Transition t : modulesPerPage) {
+                    System.out.println(t.getText());
+                }
+            }
         }
 
         return entries;
@@ -1014,12 +1021,10 @@ public class XMLBuilder {
 
         Element order = doc.createElement("order");
 
-        if (orders == null) {
-
-        } else {
+        if (orders != null) {
             for (MappingOrder o : orders) {
                 order.appendChild(this.createTransformationHop(doc, o));
-            }
+            }  
         }
         return order;
     }

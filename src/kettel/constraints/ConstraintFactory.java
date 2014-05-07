@@ -47,4 +47,13 @@ public class ConstraintFactory {
     public ConstraintBuilder newCDCConstraintBuilder() {
         return new Constraint_CDC();
     }
+    
+    /**
+     * Creates a new instance of a {@code ConstraintBuilder} using the currently
+     * configured parameters.
+     * @return A new instance of a {@code ConstraintBuilder}
+     */
+    public ConstraintBuilder newSCDHConstraintBuilder() {
+        return new Constraint_SCDH();
+    }
 }

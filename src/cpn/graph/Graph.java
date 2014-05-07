@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cpn.graph;
 
 import cpn.Arc;
@@ -56,6 +51,7 @@ public class Graph {
         return Objects.equals(this.graph, other.graph);
     }
 
+    @Override
     public Graph clone() {
         return new Graph(this);
     }

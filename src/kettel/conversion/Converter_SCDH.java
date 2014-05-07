@@ -4,6 +4,7 @@ import cpn.Transition;
 import cpn.graph.Graph;
 import java.util.ArrayList;
 import java.util.Collection;
+import kettel.constraints.ConstraintBuilder;
 import kettel.mapping.MappingComponent;
 import kettel.mapping.MappingOrder;
 import utils.Utilities;
@@ -86,9 +87,17 @@ public class Converter_SCDH extends ConversionBuilder {
      */
     @Override
     public boolean convert() {
+        
+        ConstraintBuilder scd = this.constraintFactory.newSCDHConstraintBuilder();
+
+        this.constraintDirector.setConstraintBuilder(scd);
+        this.constraintDirector.constructConstraint();
+
+        if (!constraintDirector.verifyConstraint(this.pattern.getSubPageInfo().getPage())) {
+            return false;
+        }
 
         this.mapping.setComponents(this.convertComponents());
-
         this.mapping.setOrder(this.convertOrders());
 
         return true;

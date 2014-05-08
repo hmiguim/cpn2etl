@@ -4,6 +4,7 @@ import cpn.Transition;
 import cpn.graph.Graph;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import pdi.pattern_constraints.PatternConstraintBuilder;
 import pdi.mapping.MappingComponent;
 import pdi.mapping.MappingOrder;
@@ -30,7 +31,7 @@ public class SCDH_Pattern extends PatternBuilder {
         Collection<Transition> trans = this.pattern.getSubPageInfo().getPage().getTransitions().values();
 
         for (Transition t : trans) {
-            if (t.haveSubPage()) {
+            if (t.isSubPage()) {
                 String[] normalizeAxis = Utilities.normalizeAxis(t.getPosX(), t.getPosY());
                 map = new MappingComponent(t.getText(), "TransExecutor", normalizeAxis[0], normalizeAxis[1]);
                 maps.add(map);
@@ -63,9 +64,9 @@ public class SCDH_Pattern extends PatternBuilder {
 
                 if (!i.getCpnElement().equals(j.getCpnElement())) {
 
-                    boolean connected = this.pattern.getSubPageInfo().getPage().connected(i.getCpnElement(), j.getCpnElement());
+                    List connected = this.pattern.getSubPageInfo().getPage().connected(i.getCpnElement(), j.getCpnElement());
 
-                    if (connected) {
+                    if (connected != null) {
                         MappingOrder order = new MappingOrder(i, j);
                         orders.add(order);
                     }

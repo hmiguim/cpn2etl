@@ -86,7 +86,7 @@ public class Cpn {
             Collection<Transition> transitions = p.getTransitions().values();
 
             for (Transition t : transitions) {
-                if (t.haveSubPage()) {
+                if (t.isSubPage()) {
                     if (!pageRefs.contains(t.getSubPageInfo().getPageRef())) {
                         pageRefs.add(t.getSubPageInfo().getPageRef());
                     }

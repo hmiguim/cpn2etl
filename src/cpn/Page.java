@@ -153,7 +153,7 @@ public class Page {
         ArrayList<Transition> results = new ArrayList<>();
 
         for (Transition t : this.getTransitions().values()) {
-            if (t.haveSubPage()) {
+            if (t.isSubPage()) {
                 results.add(t);
             }
         }
@@ -161,14 +161,7 @@ public class Page {
         return results;
     }
 
-    public boolean connected(String a, String b) {
-        
-        List findPathBetween = BellmanFordShortestPath.findPathBetween(this.graph.getGraph(), a, b);
-        
-        if (findPathBetween == null) return false;
-        else {
-            return !findPathBetween.isEmpty();
-        }
-        
+    public List connected(String a, String b) {
+        return BellmanFordShortestPath.findPathBetween(this.graph.getGraph(), a, b);
     }
 }

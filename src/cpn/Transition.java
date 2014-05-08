@@ -40,7 +40,7 @@ public class Transition {
         this.posX = t.getPosX();
         this.posY = t.getPosY();
         this.text = t.getText();
-        this.subPage = t.haveSubPage();
+        this.subPage = t.isSubPage();
         this.subPageInfo = t.getSubPageInfo();
     }
 
@@ -76,11 +76,11 @@ public class Transition {
         this.text = text;
     }
 
-    public boolean haveSubPage() {
+    public boolean isSubPage() {
         return subPage;
     }
 
-    public void setSubpage(boolean subPage) {
+    public void setSubPage(boolean subPage) {
         this.subPage = subPage;
     }
 

@@ -2,8 +2,10 @@ package pdi.pattern.activity;
 
 import cpn.Place;
 import cpn.Transition;
+import cpn.graph.Graph;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import pdi.mapping.MappingComponent;
 import pdi.mapping.MappingOrder;
 import utils.Utilities;
@@ -23,34 +25,48 @@ public class AuditDataVerificationPatternActivity extends PatternActivityBuilder
         Collection<Place> places = this.activity.getSubPageInfo().getPage().getPlaces().values();
         Collection<Transition> transitions = this.activity.getSubPageInfo().getPage().getTransitions().values();
 
+        places = Utilities.normalizePlaces(places);        
+      
         for (Place p : places) {
-            if (p.getText().toLowerCase().contains("audit records")) {
-                String[] axis = Utilities.normalizeAxis(p.getPosX(), p.getPosY());
-                map = new MappingComponent(p.getText(),"TableInput",axis[0],axis[1]);
-                maps.add(map);
-            } else if (p.getText().toLowerCase().contains("error log")) {
-                String[] axis = Utilities.normalizeAxis(p.getPosX(), p.getPosY());
-                map = new MappingComponent(p.getText(), "TableOutput", axis[0], axis[1]);
-                maps.add(map);
-            } else if (p.getText().toLowerCase().contains("quarantine table")) {
-                String[] axis = Utilities.normalizeAxis(p.getPosX(), p.getPosY());
-                map = new MappingComponent(p.getText(), "TableOutput", axis[0],axis[1]);
-                maps.add(map);
-            } else if (p.getText().toLowerCase().contains("etl log")) {
-                String[] axis = Utilities.normalizeAxis(p.getPosX(), p.getPosY());
-                map = new MappingComponent(p.getText(), "TableOutput", axis[0],axis[1]);
-                maps.add(map);
-            } else if (p.getText().toLowerCase().contains("verified audit records")) {
-                String[] axis = Utilities.normalizeAxis(p.getPosX(), p.getPosY());
-                map = new MappingComponent(p.getText(), "TableOutput", axis[0],axis[1]);
-                maps.add(map);
+            switch (p.getText().toLowerCase()) {
+                case "audit records":
+                    {
+                        map = new MappingComponent(p.getText(),"TableInput",Utilities.removePointZero(p.getPosX()),Utilities.removePointZero(p.getPosY()));
+                        maps.add(map);
+                        break;
+                    }
+                case "error log":
+                    {
+                        map = new MappingComponent(p.getText(),"TableOutput",Utilities.removePointZero(p.getPosX()),Utilities.removePointZero(p.getPosY()));
+                        maps.add(map);
+                        break;
+                    }
+                case "quarantine table":
+                    {
+                        map = new MappingComponent(p.getText(),"TableOutput",Utilities.removePointZero(p.getPosX()),Utilities.removePointZero(p.getPosY()));
+                        maps.add(map);
+                        break;
+                    }
+                case "etl log":
+                    {
+                        map = new MappingComponent(p.getText(),"TableOutput",Utilities.removePointZero(p.getPosX()),Utilities.removePointZero(p.getPosY()));
+                        maps.add(map);
+                        break;
+                    }
+                case "verified audit records":
+                    {
+                        map = new MappingComponent(p.getText(),"TableOutput",Utilities.removePointZero(p.getPosX()),Utilities.removePointZero(p.getPosY()));
+                        maps.add(map);
+                        break;
+                    }
             }
         }
 
+        transitions = Utilities.normalizeTransitions(transitions);
+        
         for (Transition t : transitions) {
-            if (t.getText().toLowerCase().contains("audit data verification")) {
-                String[] axis = Utilities.normalizeAxis(t.getPosX(), t.getPosY());
-                map = new MappingComponent(t.getText(), "Validator", axis[0],axis[1]);
+            if (t.getText().toLowerCase().equals("audit data verification")) {
+                map = new MappingComponent(t.getText(), "Validator",Utilities.removePointZero(t.getPosX()),Utilities.removePointZero(t.getPosY()));
                 maps.add(map);
             }
         }
@@ -60,7 +76,32 @@ public class AuditDataVerificationPatternActivity extends PatternActivityBuilder
 
     @Override
     protected ArrayList<MappingOrder> convertOrders() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<MappingOrder> orders = new ArrayList<>();
+        ArrayList<MappingComponent> components = this.mapping.getComponents();
+
+        Graph graph = new Graph();
+        
+        graph.construct(this.activity.getSubPageInfo().getPage());
+        
+        this.activity.getSubPageInfo().getPage().setGraph(graph);
+        
+        for (MappingComponent i : components) {
+            for (MappingComponent j : components) {
+                if (!i.getCpnElement().equals(j.getCpnElement())) {
+                    List connected = this.activity.getSubPageInfo().getPage().connected(i.getCpnElement(), j.getCpnElement());
+                   
+                    if (connected != null) {
+                        if (connected.size() == 1) {
+                            MappingOrder order = new MappingOrder(i, j);
+                            orders.add(order);
+                        }
+                    }
+                    
+                }
+            }
+        }
+        
+        return orders;
     }
 
     @Override
@@ -68,6 +109,7 @@ public class AuditDataVerificationPatternActivity extends PatternActivityBuilder
     
         this.mapping.setComponents(this.convertComponents());
         
+        this.mapping.setOrder(this.convertOrders());
         return true;
     }
     

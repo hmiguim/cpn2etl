@@ -238,7 +238,7 @@ public class XMLParser {
                     t.setText(text.replaceAll("\n", " "));
                     break;
                 case "subst":
-                    t.setSubpage(true);
+                    t.setSubPage(true);
                     t.setSubPageInfo(parseSubPages(childs.item(i)));
                     this.parsePortSock(childs.item(i));
                     break;
@@ -356,7 +356,7 @@ public class XMLParser {
 
             for (Entry<String, Transition> trans_entry : transitions.entrySet()) {
                 Transition t = trans_entry.getValue();
-                if (t.haveSubPage()) {
+                if (t.isSubPage()) {
                     t.getSubPageInfo().setPage(pages.get(t.getSubPageInfo().getPageRef()));
                 }
             }

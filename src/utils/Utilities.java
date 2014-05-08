@@ -1,7 +1,10 @@
 package utils;
 
+import cpn.Place;
+import cpn.Transition;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -54,18 +57,94 @@ public class Utilities {
 
         return str;
     }
+    
+    public static String removePointZero(double number) {
+        
+        String str;
+        
+        DecimalFormat df = new DecimalFormat("#");
+        str = df.format(number);
+
+        return str;
+    }
 
     private static String normalizeY(double axis) {
         String str;
 
         if (axis < 0) {
             axis *= -1;
+        } else {
+            axis += 100;
         }
 
         DecimalFormat df = new DecimalFormat("#");
         str = df.format(axis);
 
         return str;
+    }
+    
+    public static Collection<Place> normalizePlaces(Collection<Place> places) {
+        double great_negative_y = 0;
+        double great_negative_x = 0;
+        double great_positive_y = 0;
+        
+        for (Place p : places) {
+            if (p.getPosY() < great_negative_y) {
+                great_negative_y = p.getPosY();
+            }
+            if (p.getPosX() < great_negative_x) {
+                great_negative_x = p.getPosX();
+            }
+        }
+        
+        if (great_negative_x < 0 || great_negative_y < 0) {
+            for (Place p : places) {
+                p.setPosX(p.getPosX() + great_negative_x);
+                p.setPosY(p.getPosY() + (great_negative_y * -1));
+                
+                if (p.getPosY() > great_positive_y) {
+                    great_positive_y = p.getPosY();
+                }
+            }
+        } 
+        
+        for (Place p : places) {
+            p.setPosY(Math.abs(p.getPosY()-great_positive_y));
+        }
+        
+        return places;
+    }
+    
+    public static Collection<Transition> normalizeTransitions(Collection<Transition> transitions) {
+        double great_negative_y = 0;
+        double great_negative_x = 0;
+        double great_positive_y = 0;
+        
+        for (Transition t : transitions) {
+            if (t.getPosY() < great_negative_y) {
+                great_negative_y = t.getPosY();
+            }
+            if (t.getPosX() < great_negative_x) {
+                great_negative_x = t.getPosX();
+            }
+        }
+        
+        if (great_negative_x < 0 || great_negative_y < 0) {
+            for (Transition t : transitions) {
+                t.setPosX(t.getPosX() + great_negative_x);
+                t.setPosY(t.getPosY() + (great_negative_y * -1));
+                
+                if (t.getPosY() > great_positive_y) {
+                    great_positive_y = t.getPosY();
+                }
+            }
+        } 
+        
+        for (Transition t : transitions) {
+            t.setPosY(Math.abs(t.getPosY()-great_positive_y));
+        }
+        
+        return transitions;
     }
 
 }

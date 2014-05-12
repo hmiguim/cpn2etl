@@ -17,37 +17,38 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import pdi.jobs.JobChannelLogConfiguration;
-import pdi.jobs.JobEntryLogConfiguration;
-import pdi.jobs.JobLog;
-import pdi.jobs.JobLogConfiguration;
-import pdi.jobs.JobLogDirector;
-import pdi.jobs.JobsLogFactory;
-import pdi.mapping.Mapping;
-import pdi.mapping.MappingComponent;
-import pdi.mapping.MappingOrder;
-import pdi.pattern.PatternBuilder;
-import pdi.pattern.PatternDirector;
-import pdi.pattern.PatternFactory;
-import pdi.step.Step;
-import pdi.step.StepDirector;
-import pdi.step.StepFactory;
-import pdi.transformation.TransChannelLogConfiguration;
-import pdi.transformation.TransInfo;
-import pdi.transformation.TransInfoDirector;
-import pdi.transformation.TransLog;
-import pdi.transformation.TransLogConfiguration;
-import pdi.transformation.TransLogDirector;
-import pdi.transformation.TransMetricsLogConfiguration;
-import pdi.transformation.TransPerfLogConfiguration;
-import pdi.transformation.TransStepLogConfiguration;
-import pdi.transformation.TransformationFactory;
-import pdi.xml.Field;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import pdi.pattern.activity.PatternActivityBuilder;
-import pdi.pattern.activity.PatternActivityDirector;
-import pdi.pattern.activity.PatternActivityFactory;
+import pdi.components.info.TransInfo;
+import pdi.components.info.TransInfoDirector;
+import pdi.components.job.JobChannelLogConfiguration;
+import pdi.components.job.JobEntryLogConfiguration;
+import pdi.components.job.JobLog;
+import pdi.components.job.JobLogConfiguration;
+import pdi.components.job.JobLogDirector;
+import pdi.components.job.JobsLogFactory;
+import pdi.components.log.TransChannelLogConfiguration;
+import pdi.components.log.TransLog;
+import pdi.components.log.TransLogConfiguration;
+import pdi.components.log.TransLogDirector;
+import pdi.components.log.TransMetricsLogConfiguration;
+import pdi.components.log.TransPerfLogConfiguration;
+import pdi.components.log.TransStepLogConfiguration;
+import pdi.components.log.TransformationFactory;
+import pdi.components.notepad.Notepad;
+import pdi.components.step.Step;
+import pdi.components.step.StepDirector;
+import pdi.components.step.StepFactory;
+import pdi.components.xml.Field;
+import transformation.mapping.Mapping;
+import transformation.mapping.MappingComponent;
+import transformation.mapping.MappingOrder;
+import transformation.pattern.PatternBuilder;
+import transformation.pattern.PatternDirector;
+import transformation.pattern.PatternFactory;
+import transformation.pattern.activity.PatternActivityBuilder;
+import transformation.pattern.activity.PatternActivityDirector;
+import transformation.pattern.activity.PatternActivityFactory;
 import utils.Utilities;
 
 /**
@@ -246,7 +247,7 @@ public class XMLBuilder {
 
                 if (valid) {
                     entries.appendChild(this.createJobEntry(doc, pattern));
-                    transformation = this.createTransformation(pattern, this.patternDirector.getMapping());
+                    transformation = this.createTransformation(pattern, this.patternDirector.getMapping(),null);
 
                     f = new File(this.path + "/" + Utilities.normalize(pattern.getSubPageInfo().getPage().getName()) + ".ktr");
                     this.finalize(transformation, f);
@@ -262,7 +263,7 @@ public class XMLBuilder {
                                boolean activity = this.patternActivityDirector.constructPatternActivity(t);
                                
                                if (activity) {
-                                   activityTransformation = this.createTransformation(t, this.patternActivityDirector.getMapping());
+                                   activityTransformation = this.createTransformation(t, this.patternActivityDirector.getMapping(),this.patternActivityDirector.getNotepads());
                                    File file = new File(this.path + "/" + Utilities.normalize(t.getSubPageInfo().getName()) + ".ktr");
                                    this.finalize(activityTransformation,file);
                                }
@@ -590,7 +591,7 @@ public class XMLBuilder {
      * @param doc So that can be created elements to be added to the parent node
      * @return A {@link Element} {@code transformation} with all the child nodes
      */
-    private Document createTransformation(Transition t, Mapping mapping) {
+    private Document createTransformation(Transition t, Mapping mapping, ArrayList<Notepad> notepads) {
 
         Document doc = this.documentBuilder.newDocument();
 
@@ -601,8 +602,7 @@ public class XMLBuilder {
         transformation.appendChild(this.createTransformationInfo(doc, t));
 
         // notepads element
-        Element notepads = doc.createElement("notepads");
-        transformation.appendChild(notepads);
+        transformation.appendChild(this.createTransformationNotepads(doc, notepads));
 
         transformation.appendChild(this.createTransformationOrder(doc, mapping.getOrders()));
 
@@ -679,7 +679,7 @@ public class XMLBuilder {
 
         TransInfo transInfo = this.transInfoDirector.getTransInfo();
 
-        for (pdi.xml.Element e : transInfo.getElement()) {
+        for (pdi.components.xml.Element e : transInfo.getElement()) {
             Element a = doc.createElement(e.getTag());
             a.setTextContent(e.getContextText());
 
@@ -727,6 +727,45 @@ public class XMLBuilder {
         info.appendChild(modified_date);
 
         return info;
+    }
+    
+    private Element createTransformationNotepads(Document doc, ArrayList<Notepad> npdas) {
+        
+        // Notepads Element
+        Element notepads = doc.createElement("notepads");
+        
+        if (npdas == null) {
+            return notepads;
+        }
+        
+        for (Notepad n : npdas) {
+            
+            Element notepad = doc.createElement("notepad");
+            
+            Element note = doc.createElement("note");
+            note.setTextContent(n.getNote());
+            notepad.appendChild(note);
+            
+            Element xloc = doc.createElement("xloc");
+            xloc.setTextContent(n.getXloc());
+            notepad.appendChild(xloc);
+            
+            Element yloc = doc.createElement("yloc");
+            yloc.setTextContent(n.getYloc());
+            notepad.appendChild(yloc);
+            
+            for (pdi.components.xml.Element e : n.getElements()) {
+                Element a = doc.createElement(e.getTag());
+                a.setTextContent(e.getContextText());
+
+                notepad.appendChild(a);
+            }
+            
+            notepads.appendChild(notepad);
+            
+        }
+        
+        return notepads;
     }
 
     /**
@@ -1109,7 +1148,7 @@ public class XMLBuilder {
         stepDirector.constructStep();
         Step stepConfiguration = stepDirector.getStep();
 
-        for (pdi.xml.Element e : stepConfiguration.getElements()) {
+        for (pdi.components.xml.Element e : stepConfiguration.getElements()) {
             Element a = doc.createElement(e.getTag());
             a.setTextContent(e.getContextText());
 

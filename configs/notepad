@@ -1,0 +1,16 @@
+width: 20
+heigth: 21
+fontname: Arial
+fontsize: 10
+fontbold: N
+fontitalic: N
+fontcolorred: 0
+fontcolorgreen: 0
+fontcolorblue: 0
+backgroundcolorred: 255
+backgroundcolorgreen: 205
+backgroundcolorblue: 112
+bordercolorred: 100
+bordercolorgreen: 100
+bordercolorblue: 100
+drawshadow: Y

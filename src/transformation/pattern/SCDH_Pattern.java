@@ -33,7 +33,7 @@ public class SCDH_Pattern extends PatternBuilder {
         for (Transition t : trans) {
             if (t.isSubPage()) {
                 String[] normalizeAxis = Utilities.normalizeAxis(t.getPosX(), t.getPosY());
-                map = new MappingComponent(t.getText(), "TransExecutor", normalizeAxis[0], normalizeAxis[1]);
+                map = new MappingComponent(t.getText(), "TransExecutor", normalizeAxis[0], normalizeAxis[1],t.getSubPageInfo().getName());
                 maps.add(map);
             }
         }

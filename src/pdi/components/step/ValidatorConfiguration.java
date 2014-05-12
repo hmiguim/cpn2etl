@@ -1,7 +1,5 @@
 package pdi.components.step;
 
-import pdi.components.step.TransExecutorConfiguration;
-import pdi.components.step.StepBuilder;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

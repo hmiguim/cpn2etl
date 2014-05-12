@@ -12,6 +12,7 @@ public class MappingComponent {
     private String kettleElement;
     private String xloc;
     private String yloc;
+    private String filename;
     
     
     public MappingComponent() {
@@ -25,11 +26,20 @@ public class MappingComponent {
         this.yloc = yloc;
     }
     
+    public MappingComponent(String cpnElement, String kettleElement, String xloc, String yloc, String filename) {
+        this.cpnElement = cpnElement;
+        this.kettleElement = kettleElement;
+        this.xloc = xloc;
+        this.yloc = yloc;
+        this.filename = filename;
+    }
+    
     public MappingComponent(MappingComponent map) {
         this.cpnElement = map.getCpnElement();
         this.kettleElement = map.getKettleElement();
         this.xloc = map.getXloc();
         this.yloc = map.getYloc();
+        this.filename = map.getFilename();
     }
 
     public String getCpnElement() {
@@ -64,13 +74,22 @@ public class MappingComponent {
         this.yloc = yloc;
     }
 
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 11 * hash + Objects.hashCode(this.cpnElement);
-        hash = 11 * hash + Objects.hashCode(this.kettleElement);
-        hash = 11 * hash + Objects.hashCode(this.xloc);
-        hash = 11 * hash + Objects.hashCode(this.yloc);
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.cpnElement);
+        hash = 17 * hash + Objects.hashCode(this.kettleElement);
+        hash = 17 * hash + Objects.hashCode(this.xloc);
+        hash = 17 * hash + Objects.hashCode(this.yloc);
+        hash = 17 * hash + Objects.hashCode(this.filename);
         return hash;
     }
 
@@ -92,12 +111,15 @@ public class MappingComponent {
         if (!Objects.equals(this.xloc, other.xloc)) {
             return false;
         }
-        return Objects.equals(this.yloc, other.yloc);
+        if (!Objects.equals(this.yloc, other.yloc)) {
+            return false;
+        }
+        return Objects.equals(this.filename, other.filename);
     }
 
     @Override
     public String toString() {
-        return "Mapping{" + "cpnElement=" + cpnElement + ", kettleElement=" + kettleElement + ", xloc=" + xloc + ", yloc=" + yloc + '}';
+        return "MappingComponent{" + "cpnElement=" + cpnElement + ", kettleElement=" + kettleElement + ", xloc=" + xloc + ", yloc=" + yloc + ", filename=" + filename + '}';
     }
     
     @Override

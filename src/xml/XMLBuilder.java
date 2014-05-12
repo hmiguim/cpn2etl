@@ -1156,6 +1156,12 @@ public class XMLBuilder {
         }
 
         step.appendChild(this.createTransformationGUI(doc, map));
+        
+        if (map.getKettleElement().equals("TransExecutor")) {
+            Element file = doc.createElement("filename");
+            file.setTextContent(this.path + "/" + Utilities.normalize(map.getFilename()) + ".ktr");
+            step.appendChild(file);
+        }
 
         return step;
     }

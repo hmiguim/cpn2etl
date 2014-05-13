@@ -1167,44 +1167,6 @@ public class XMLBuilder {
     }
 
     /**
-     * Method in charge of create a {@code partitioning} element and return it
-     * to be appended
-     *
-     * @param doc Original document capable of create element to be appended
-     * @return A {@link Element} {@code partitioning} with all the child nodes
-     */
-    private Element createTrasnformationPartitioning(Document doc) {
-
-        Element partitioning = doc.createElement("partitioning");
-        Element method = doc.createElement("method");
-        method.setTextContent("none");
-        partitioning.appendChild(method);
-        Element schema_name = doc.createElement("schema_name");
-        partitioning.appendChild(schema_name);
-
-        return partitioning;
-    }
-
-    /**
-     * Method in charge of create a {@code remotesteps} element and return it to
-     * be appended
-     *
-     * @param doc Original document capable of create element to be appended
-     * @return A {@link Element} {@code remotesteps} with all the child nodes
-     */
-    private Element createTransformationRemoteStep(Document doc) {
-        Element remotesteps = doc.createElement("remotesteps");
-
-        Element input = doc.createElement("input");
-        remotesteps.appendChild(input);
-
-        Element output = doc.createElement("output");
-        remotesteps.appendChild(output);
-
-        return remotesteps;
-    }
-
-    /**
      * Method in charge of create a {@code GUI} element and return it to be
      * appended
      *

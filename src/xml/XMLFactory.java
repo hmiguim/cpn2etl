@@ -1,10 +1,13 @@
 package xml;
 
+import xml.parser.XMLParser;
+import cpn.Cpn;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
+import xml.builder.XMLBuilder;
 
 /**
  *
@@ -55,11 +58,13 @@ public class XMLFactory {
      * Creates a new instance of a {@code XMLBuilder} using the currently
      * configured parameters.
      *
+     * @param file
+     * @param cpnPages
      * @return A new instance of a XMLBuilder
      * @throws ParserConfigurationException Indicates a serious configuration
      * error.
      */
-    public XMLBuilder newXMLBuilder() throws ParserConfigurationException {
-        return new XMLBuilder();
+    public XMLBuilder newXMLBuilder(File file, Cpn cpnPages) throws ParserConfigurationException {
+        return new XMLBuilder(file,cpnPages);
     }
 }

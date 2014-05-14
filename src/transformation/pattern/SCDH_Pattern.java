@@ -8,7 +8,7 @@ import java.util.List;
 import transformation.pattern.constraints.PatternConstraintBuilder;
 import transformation.mapping.MappingComponent;
 import transformation.mapping.MappingOrder;
-import utils.Utilities;
+import utils.Helper;
 
 /**
  *
@@ -32,7 +32,7 @@ public class SCDH_Pattern extends PatternBuilder {
 
         for (Transition t : trans) {
             if (t.isSubPage()) {
-                String[] normalizeAxis = Utilities.normalizeAxis(t.getPosX(), t.getPosY());
+                String[] normalizeAxis = Helper.normalizeAxis(t.getPosX(), t.getPosY());
                 map = new MappingComponent(t.getText(), "TransExecutor", normalizeAxis[0], normalizeAxis[1],t.getSubPageInfo().getName());
                 maps.add(map);
             }

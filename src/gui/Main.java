@@ -7,7 +7,6 @@ package gui;
 
 import cpn.Cpn;
 import cpn.Stats;
-import cpn.Transition;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
@@ -19,9 +18,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import org.xml.sax.SAXException;
-import xml.XMLBuilder;
 import xml.XMLFactory;
-import xml.XMLParser;
+import xml.parser.XMLParser;
+import xml.builder.XMLBuilder;
 
 /**
  *
@@ -209,12 +208,11 @@ public class Main extends javax.swing.JFrame {
     private void btnGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateActionPerformed
 
         try {
-            XMLBuilder xmlBuilder = this.xmlFactory.newXMLBuilder();
-            
             int returnVal = this.saveFile.showSaveDialog(this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                xmlBuilder.construct(this.saveFile.getSelectedFile(),this.cpn);
+                XMLBuilder xmlBuilder = this.xmlFactory.newXMLBuilder(this.saveFile.getSelectedFile(), this.cpn);
+                xmlBuilder.construct();
                 this.generateLabel.setText("Saved file: " + this.saveFile.getSelectedFile().getAbsolutePath());
                 this.debug.append("\n[SUCCESS] File generated successfully");
             }

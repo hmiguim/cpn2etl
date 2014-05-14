@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import transformation.pattern.constraints.PatternConstraintBuilder;
 import transformation.mapping.MappingComponent;
 import transformation.mapping.MappingOrder;
-import utils.Utilities;
+import utils.Helper;
 
 /**
  *
@@ -29,7 +29,7 @@ public class SKP_Pattern extends PatternBuilder {
         for (Place place : this.pattern.getSubPageInfo().getPage().getPlaces().values()) {
 
             if (place.getText().toLowerCase().contains("lookup table")) {
-                String[] axis = Utilities.normalizeAxis(place.getPosX(), place.getPosY());
+                String[] axis = Helper.normalizeAxis(place.getPosX(), place.getPosY());
                 map = new MappingComponent(place.getText(), "DBLookup", axis[0], axis[1]);
                 maps.add(map);
             } else if (place.getText().toLowerCase().contains("fact records")) {

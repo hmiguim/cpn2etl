@@ -9,7 +9,7 @@ import java.util.List;
 import pdi.components.notepad.Notepad;
 import transformation.mapping.MappingComponent;
 import transformation.mapping.MappingOrder;
-import utils.Utilities;
+import utils.Helper;
 
 /**
  *
@@ -26,43 +26,42 @@ public class AuditDataVerificationPatternActivity extends PatternActivityBuilder
         Collection<Place> places = this.activity.getSubPageInfo().getPage().getPlaces().values();
         Collection<Transition> transitions = this.activity.getSubPageInfo().getPage().getTransitions().values();
 
-        places = Utilities.normalizePlaces(places);
+        places = Helper.normalizePlaces(places);
 
         for (Place p : places) {
             switch (p.getText().toLowerCase()) {
                 case "audit records": {
-                    map = new MappingComponent(p.getText(), "TableInput", Utilities.removePointZero(p.getPosX()), Utilities.removePointZero(p.getPosY()));
+                    map = new MappingComponent(p.getText(), "TableInput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
                 }
                 case "error log": {
-                    map = new MappingComponent(p.getText(), "TableOutput", Utilities.removePointZero(p.getPosX()), Utilities.removePointZero(p.getPosY()));
+                    map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
                 }
                 case "quarantine table": {
-                    map = new MappingComponent(p.getText(), "TableOutput", Utilities.removePointZero(p.getPosX()), Utilities.removePointZero(p.getPosY()));
+                    map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
                 }
                 case "etl log": {
-                    map = new MappingComponent(p.getText(), "TableOutput", Utilities.removePointZero(p.getPosX()), Utilities.removePointZero(p.getPosY()));
+                    map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
                 }
                 case "verified audit records": {
-                    map = new MappingComponent(p.getText(), "TableOutput", Utilities.removePointZero(p.getPosX()), Utilities.removePointZero(p.getPosY()));
+                    map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
                 }
             }
         }
 
-        transitions = Utilities.normalizeTransitions(transitions);
-
+        transitions = Helper.normalizeTransitions(transitions);
         for (Transition t : transitions) {
             if (t.getText().toLowerCase().equals("audit data verification")) {
-                map = new MappingComponent(t.getText(), "Validator", Utilities.removePointZero(t.getPosX()), Utilities.removePointZero(t.getPosY()));
+                map = new MappingComponent(t.getText(), "Validator", Helper.removePointZero(t.getPosX()), Helper.removePointZero(t.getPosY()));
                 maps.add(map);
             }
         }
@@ -94,7 +93,7 @@ public class AuditDataVerificationPatternActivity extends PatternActivityBuilder
 
                             if (orders.contains(new MappingOrder(j, i))) {
 
-                                String[] middlePoint = Utilities.middlePoint(i.getXloc(), i.getYloc(), j.getXloc(), j.getYloc());
+                                String[] middlePoint = Helper.middlePoint(i.getXloc(), i.getYloc(), j.getXloc(), j.getYloc());
 
                                 Notepad note = new Notepad("Warning", middlePoint[0], middlePoint[1]);
 

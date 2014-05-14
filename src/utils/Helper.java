@@ -11,12 +11,12 @@ import java.util.Date;
  *
  * @author hmg
  */
-public class Utilities {
+public class Helper {
 
     private static final String _USER = "cpn2etl";
 
     public static String getUser() {
-        return Utilities._USER;
+        return Helper._USER;
     }
 
     public static String normalize(String str) {

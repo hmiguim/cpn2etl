@@ -9,12 +9,12 @@ import pdi.components.job.JobChannelLogConfiguration;
  *
  * @author hmg
  */
-public class JobsLogFactory {
+public class JobLogFactory {
 
     /**
      * Protected constructor
      */
-    protected JobsLogFactory() {
+    protected JobLogFactory() {
     }
 
     /**
@@ -23,8 +23,8 @@ public class JobsLogFactory {
      *
      * @return A new instance of a {@code JobsLogTableFactory}
      */
-    public static JobsLogFactory newInstance() {
-        return new JobsLogFactory();
+    public static JobLogFactory newInstance() {
+        return new JobLogFactory();
     }
 
     /**

@@ -1,4 +1,4 @@
-package xml;
+package xml.parser;
 
 import cpn.Arc;
 import cpn.Cpn;

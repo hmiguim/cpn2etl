@@ -59,6 +59,9 @@ public class StepFactory {
             case "Validator":
                 sb = new ValidatorConfiguration();
                 break;
+            case "SwitchCase":
+                sb = new SwitchCaseConfiguration();
+                break;
         }
         return sb;
     }

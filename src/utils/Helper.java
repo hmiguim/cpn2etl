@@ -105,6 +105,7 @@ public class Helper {
         double great_negative_y = 0;
         double great_negative_x = 0;
         double great_positive_y = 0;
+        double great_positive_x = 0;
 
         for (Place p : places) {
             if (p.getPosY() < great_negative_y) {
@@ -117,12 +118,11 @@ public class Helper {
 
         if (great_negative_x < 0 || great_negative_y < 0) {
             for (Place p : places) {
-                p.setPosX(p.getPosX() + great_negative_x);
+                p.setPosX(p.getPosX() + (great_negative_x * -1));
                 p.setPosY(p.getPosY() + (great_negative_y * -1));
 
-                if (p.getPosY() > great_positive_y) {
-                    great_positive_y = p.getPosY();
-                }
+                if (p.getPosY() > great_positive_y) great_positive_y = p.getPosY();
+                
             }
         }
 
@@ -149,7 +149,7 @@ public class Helper {
 
         if (great_negative_x < 0 || great_negative_y < 0) {
             for (Transition t : transitions) {
-                t.setPosX(t.getPosX() + great_negative_x);
+                t.setPosX(t.getPosX() + (great_negative_x * -1));
                 t.setPosY(t.getPosY() + (great_negative_y * -1));
 
                 if (t.getPosY() > great_positive_y) {

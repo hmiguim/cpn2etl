@@ -208,7 +208,7 @@ public class JobBuilder {
 
         // filename element
         Element filename_element = doc.createElement("filename");
-        filename_element.setTextContent(path + "/" + Helper.normalize(trans.getSubPageInfo().getPage().getName()) + ".ktr");
+        filename_element.setTextContent(this.path + "/" + Helper.normalize(trans.getSubPageInfo().getPage().getName()) + ".ktr");
         entry.appendChild(filename_element);
 
         // transname element

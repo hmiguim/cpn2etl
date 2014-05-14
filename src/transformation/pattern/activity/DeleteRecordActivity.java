@@ -15,7 +15,7 @@ import utils.Helper;
  *
  * @author hmg
  */
-public class AuditDataVerificationPatternActivity extends PatternActivityBuilder {
+public class DeleteRecordActivity extends PatternActivityBuilder {
 
     @Override
     protected ArrayList<MappingComponent> convertComponents() {
@@ -26,43 +26,51 @@ public class AuditDataVerificationPatternActivity extends PatternActivityBuilder
         Collection<Place> places = this.activity.getSubPageInfo().getPage().getPlaces().values();
         Collection<Transition> transitions = this.activity.getSubPageInfo().getPage().getTransitions().values();
 
+        for (Place p : places) {
+            System.out.println(p);
+        }
+
         places = Helper.normalizePlaces(places);
+
+        System.out.println(" - - - -- - - - -  -- - - ");
+
+        for (Place p : places) {
+            System.out.println(p);
+        }
 
         for (Place p : places) {
             switch (p.getText().toLowerCase()) {
-                case "audit records": {
+                case "verified audit records":
                     map = new MappingComponent(p.getText(), "TableInput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
-                }
-                case "error log": {
+                case "etl log":
                     map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
-                }
-                case "quarantine table": {
+                case "slowly changing dim":
                     map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
-                }
-                case "etl log": {
-                    map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
+                case "lookup table":
+                    map = new MappingComponent(p.getText(), "DBLookup", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
-                }
-                case "verified audit records": {
-                    map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
-                    maps.add(map);
-                    break;
-                }
             }
+
+        }
+
+        for (Transition t : transitions) {
+            System.out.println(t);
         }
 
         transitions = Helper.normalizeTransitions(transitions);
+
         for (Transition t : transitions) {
-            if (t.getText().toLowerCase().equals("audit data verification")) {
-                map = new MappingComponent(t.getText(), "Validator", Helper.removePointZero(t.getPosX()), Helper.removePointZero(t.getPosY()));
-                maps.add(map);
+            switch (t.getText().toLowerCase()) {
+                case "select record to delete":
+                    map = new MappingComponent(t.getText(), "SwitchCase", Helper.removePointZero(t.getPosX()), Helper.removePointZero(t.getPosY()));
+                    maps.add(map);
             }
         }
 
@@ -86,38 +94,30 @@ public class AuditDataVerificationPatternActivity extends PatternActivityBuilder
                     List connected = this.activity.getSubPageInfo().getPage().connected(i.getCpnElement(), j.getCpnElement());
 
                     if (connected != null) {
-                        if (connected.size() == 1) {
+                        if (connected.size() < 4) {
 
                             MappingOrder order = new MappingOrder(i, j);
                             orders.add(order);
 
                             if (orders.contains(new MappingOrder(j, i))) {
-
                                 String[] middlePoint = Helper.middlePoint(i.getXloc(), i.getYloc(), j.getXloc(), j.getYloc());
-
                                 Notepad note = new Notepad("Warning", middlePoint[0], middlePoint[1]);
-
                                 this.notepads.add(note);
-
                             }
                         }
                     }
-
                 }
             }
         }
 
         return orders;
+
     }
 
     @Override
     public boolean convert() {
-
         this.mapping.setComponents(this.convertComponents());
-
         this.mapping.setOrder(this.convertOrders());
-
         return true;
     }
-
 }

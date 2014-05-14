@@ -5,7 +5,7 @@ package transformation.pattern.activity;
  * @author hmg
  */
 public class PatternActivityFactory {
-    
+
     /**
      * Protected constructor
      */
@@ -13,8 +13,8 @@ public class PatternActivityFactory {
     }
 
     /**
-     * Obtain a new instance of a {@code PatternActivityFactory}. This static method
-     * creates a new factory instance.
+     * Obtain a new instance of a {@code PatternActivityFactory}. This static
+     * method creates a new factory instance.
      *
      * @return A new instance of a {@code PatternActivityFactory}
      */
@@ -36,21 +36,24 @@ public class PatternActivityFactory {
      * Returns a PatternActivityBuilder for the specific {@code type}
      *
      * @param type The type of the various ETL patterns activities
-     * @return The {@code PatternActivity} for the ETL pattern activity that match the
-     * {@code type} parameter
+     * @return The {@code PatternActivity} for the ETL pattern activity that
+     * match the {@code type} parameter
      */
     public PatternActivityBuilder newPatternActivityBuilder(String type) {
-        
-        switch(type) {
-            case "Audit Data Verification": return new AuditDataVerificationPatternActivity();
+
+        switch (type) {
+            case "Audit Data Verification":
+                return new AuditDataVerificationActivity();
+
             case "Delete Record":
-                break;
+                return new DeleteRecordActivity();
+
             case "Update Record":
                 break;
             case "Insert Record":
                 break;
         }
-        
+
         return null;
     }
 }

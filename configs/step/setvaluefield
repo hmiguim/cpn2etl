@@ -1,0 +1,8 @@
+description: []
+distribute: Y
+custom_distribution: []
+copies: 1
+partitioning: { method; none, schema_name; [] }
+fields: []
+cluster_schema: []
+remotesteps: { input; [], output; [] }

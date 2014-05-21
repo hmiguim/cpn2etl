@@ -26,7 +26,7 @@ public class AuditDataVerificationActivity extends PatternActivityBuilder {
         Collection<Place> places = this.activity.getSubPageInfo().getPage().getPlaces().values();
         Collection<Transition> transitions = this.activity.getSubPageInfo().getPage().getTransitions().values();
 
-        places = Helper.normalizePlaces(places);
+     //   places = Helper.normalizePlaces(places);
 
         for (Place p : places) {
             switch (p.getText().toLowerCase()) {

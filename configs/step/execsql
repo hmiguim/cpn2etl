@@ -1,0 +1,19 @@
+description: []
+distribute: Y
+custom_distribution: []
+copies: 1
+partitioning: { method; none, schema_name; [] }
+connection: []
+execute_each_row: N
+single_statement: N
+replace_variables: N
+quoteString: N
+sql: []
+set_params: N
+insert_field: []
+update_field: []
+delete_field: []
+read_field: []
+arguments: []
+cluster_schema: []
+remotesteps: { input; [], output; [] }

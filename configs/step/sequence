@@ -1,0 +1,17 @@
+description: []
+distribute: Y
+custom_distribution: []
+copies: 1
+partitioning: { method; none, schema_name; [] }
+valuename: valuename
+use_database: N
+connection: []
+schema: []
+seqname: SEQ_
+use_counter: Y
+counter_name: []
+start_at: 1
+increment_by: 1
+max_value: 999999999
+cluster_schema: []
+remotesteps: { input; [], output; [] }

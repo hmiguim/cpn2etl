@@ -62,6 +62,15 @@ public class StepFactory {
             case "SwitchCase":
                 sb = new SwitchCaseConfiguration();
                 break;
+            case "ExecSQL":
+                sb = new ExecSQLConfiguration();
+                break;
+            case "SetValueField":
+                sb = new SetValueField();
+                break;
+            case "Sequence":
+                sb = new Sequence();
+                break;
         }
         return sb;
     }

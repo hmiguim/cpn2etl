@@ -56,6 +56,68 @@ public class Graph {
         return new Graph(this);
     }
 
+    public void construct_insert(Page p) {
+
+        Collection<Arc> arcs = p.getArcs().values();
+        Collection<Arc> arcs_assign_sk = p.getModulesPerPage().get(0).getSubPageInfo().getPage().getArcs().values();
+
+        for (Arc a : arcs_assign_sk) {
+
+            String place;
+            String transition;
+
+            if (a.getPlaceEnd().havePort()) {
+                place = a.getPlaceEnd().getPort().getPlace().getText();
+                transition = a.getTransEnd().getText();
+                this.graph.addVertex(place);
+                this.graph.addVertex(transition);
+            } else {
+                place = a.getPlaceEnd().getText();
+                transition = a.getTransEnd().getText();
+                this.graph.addVertex(place);
+                this.graph.addVertex(transition);
+            }
+
+            switch (a.getOrientation()) {
+                case "PtoT":
+                    this.graph.addEdge(place, transition);
+                    break;
+                case "TtoP":
+                    this.graph.addEdge(transition, place);
+                    break;
+                case "BOTHDIR":
+                    this.graph.addEdge(transition, place);
+                    break;
+            }
+
+        }
+
+        for (Arc a : arcs) {
+
+            String place;
+            String transition;
+
+            place = a.getPlaceEnd().getText();
+            transition = a.getTransEnd().getText();
+            this.graph.addVertex(place);
+            this.graph.addVertex(transition);
+
+            switch (a.getOrientation()) {
+                case "PtoT":
+                    this.graph.addEdge(a.getPlaceEnd().getText(), a.getTransEnd().getText());
+                    break;
+                case "TtoP":
+                    this.graph.addEdge(a.getTransEnd().getText(), a.getPlaceEnd().getText());
+                    break;
+                case "BOTHDIR":
+                    this.graph.addEdge(a.getTransEnd().getText(), a.getPlaceEnd().getText());
+                    break;
+            }
+
+        }
+
+    }
+
     public void construct(Page p) {
 
         Collection<Arc> arcs = p.getArcs().values();
@@ -64,18 +126,13 @@ public class Graph {
 
             switch (a.getOrientation()) {
                 case "PtoT":
+                    this.graph.addVertex(a.getPlaceEnd().getText());
+                    this.graph.addVertex(a.getTransEnd().getText());
 
-                    String place = a.getPlaceEnd().getText() ;
-                    String trans  = a.getTransEnd().getText();
-                    
-                    this.graph.addVertex(place);
-                    this.graph.addVertex(trans);
-
-                    this.graph.addEdge(place,trans);
+                    this.graph.addEdge(a.getPlaceEnd().getText(), a.getTransEnd().getText());
 
                     break;
                 case "TtoP":
-
                     this.graph.addVertex(a.getTransEnd().getText());
                     this.graph.addVertex(a.getPlaceEnd().getText());
 

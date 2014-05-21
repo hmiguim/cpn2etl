@@ -44,14 +44,12 @@ public class PatternActivityFactory {
         switch (type) {
             case "Audit Data Verification":
                 return new AuditDataVerificationActivity();
-
             case "Delete Record":
                 return new DeleteRecordActivity();
-
             case "Update Record":
-                break;
+                return new UpdateRecordActivity();
             case "Insert Record":
-                break;
+                return new InsertRecordActivity();
         }
 
         return null;

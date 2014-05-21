@@ -15,7 +15,7 @@ import utils.Helper;
  *
  * @author hmg
  */
-public class DeleteRecordActivity extends PatternActivityBuilder {
+public class UpdateRecordActivity extends PatternActivityBuilder {
 
     @Override
     protected ArrayList<MappingComponent> convertComponents() {
@@ -62,13 +62,16 @@ public class DeleteRecordActivity extends PatternActivityBuilder {
                     map = new MappingComponent(p.getText(), "DBLookup", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
+                case "dim historic":
+                    map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
+                    maps.add(map);
             }
 
         }
 
         for (Transition t : transitions) {
 
-            if (t.getText().toLowerCase().equals("select record to delete")) {
+            if (t.getText().toLowerCase().equals("select record to update")) {
                 map = new MappingComponent(t.getText(), "SwitchCase", Helper.removePointZero(t.getPosX()), Helper.removePointZero(t.getPosY()));
                 maps.add(map);
             }
@@ -95,6 +98,7 @@ public class DeleteRecordActivity extends PatternActivityBuilder {
 
         test.add("slowlychangingdimetllog");
         test.add("slowlychangingdimlookuptable");
+        test.add("slowlychangingdimdimhistoric");
         
         for (MappingComponent i : components) {
             for (MappingComponent j : components) {
@@ -131,6 +135,8 @@ public class DeleteRecordActivity extends PatternActivityBuilder {
     public boolean convert() {
         this.mapping.setComponents(this.convertComponents());
         this.mapping.setOrder(this.convertOrders());
+        
         return true;
     }
+    
 }

@@ -101,6 +101,37 @@ public class Helper {
 
         return r;
     }
+    
+    
+    public static ArrayList<Transition> getTransitions(ArrayList<Object> objs) {
+        ArrayList<Transition> transitions = new ArrayList<>();
+
+        Transition trans;
+
+        for (Object o : objs) {
+            if (o.getClass().getCanonicalName().equals("cpn.Transition")) {
+                trans = (Transition) o;
+                transitions.add(trans);
+            }
+        }
+        
+        return transitions;
+    }
+    
+    public static ArrayList<Place> getPlaces(ArrayList<Object> objs) {
+        ArrayList<Place> places = new ArrayList<>();
+
+        Place place;
+
+        for (Object o : objs) {
+            if (o.getClass().getCanonicalName().equals("cpn.Place")) {
+                place = (Place) o;
+                places.add(place);
+            }
+        }
+        
+        return places;
+    }
 
     public static ArrayList<Object> normalize(Collection<Place> places, Collection<Transition> trans) {
 

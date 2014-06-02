@@ -25,24 +25,8 @@ public class DeleteRecordActivity extends PatternActivityBuilder {
 
         ArrayList<Object> objs = Helper.normalize(this.activity.getSubPageInfo().getPage().getPlaces().values(), this.activity.getSubPageInfo().getPage().getTransitions().values());
 
-        ArrayList<Place> places = new ArrayList<>();
-        ArrayList<Transition> transitions = new ArrayList<>();
-
-        Place place;
-        Transition trans;
-
-        for (Object o : objs) {
-            switch (o.getClass().getCanonicalName()) {
-                case "cpn.Place":
-                    place = (Place) o;
-                    places.add(place);
-                    break;
-                case "cpn.Transition":
-                    trans = (Transition) o;
-                    transitions.add(trans);
-                    break;
-            }
-        }
+        ArrayList<Place> places = Helper.getPlaces(objs);
+        ArrayList<Transition> transitions = Helper.getTransitions(objs);
 
         for (Place p : places) {
             switch (p.getText().toLowerCase()) {

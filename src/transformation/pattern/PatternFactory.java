@@ -44,9 +44,8 @@ public class PatternFactory {
             case "SKP":
                 return new SKP_Pattern();
             default: 
-                if (type.toLowerCase().contains("scd/h")) {
-                    return new SCDH_Pattern();
-                }
+                if (type.toLowerCase().contains("scd/h")) return new SCDH_Pattern();
+                if (type.toLowerCase().contains("cdc")) return new CDC_Pattern();
             break;
         }
 

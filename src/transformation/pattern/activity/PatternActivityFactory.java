@@ -43,13 +43,13 @@ public class PatternActivityFactory {
 
         switch (type) {
             case "Audit Data Verification":
-                return new AuditDataVerificationActivity();
+                return new SCD_AuditDataVerificationActivity();
             case "Delete Record":
-                return new DeleteRecordActivity();
+                return new SCD_DeleteRecordActivity();
             case "Update Record":
-                return new UpdateRecordActivity();
+                return new SCD_UpdateRecordActivity();
             case "Insert Record":
-                return new InsertRecordActivity();
+                return new SCD_InsertRecordActivity();
         }
 
         return null;

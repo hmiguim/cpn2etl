@@ -1,10 +1,10 @@
 package transformation.pattern.activity;
 
-import cpn.Page;
 import cpn.Place;
 import cpn.Transition;
 import cpn.graph.Graph;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import pdi.components.notepad.Notepad;
 import transformation.mapping.MappingComponent;
@@ -15,7 +15,7 @@ import utils.Helper;
  *
  * @author hmg
  */
-public class UpdateRecordActivity extends PatternActivityBuilder {
+public class SCD_AuditDataVerificationActivity extends PatternActivityBuilder {
 
     @Override
     protected ArrayList<MappingComponent> convertComponents() {
@@ -23,43 +23,47 @@ public class UpdateRecordActivity extends PatternActivityBuilder {
 
         ArrayList<MappingComponent> maps = new ArrayList<>();
 
-        ArrayList<Object> objs = Helper.normalize(this.activity.getSubPageInfo().getPage().getPlaces().values(), this.activity.getSubPageInfo().getPage().getTransitions().values());
+        Collection<Place> places = this.activity.getSubPageInfo().getPage().getPlaces().values();
+        Collection<Transition> transitions = this.activity.getSubPageInfo().getPage().getTransitions().values();
 
-        ArrayList<Place> places = Helper.getPlaces(objs);
-        ArrayList<Transition> transitions = Helper.getTransitions(objs);
+     //   places = Helper.normalizePlaces(places);
 
         for (Place p : places) {
             switch (p.getText().toLowerCase()) {
-                case "verified audit records":
+                case "audit records": {
                     map = new MappingComponent(p.getText(), "TableInput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
-                case "etl log":
+                }
+                case "error log": {
                     map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
-                case "slowly changing dim":
+                }
+                case "quarantine table": {
                     map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
-                case "lookup table":
-                    map = new MappingComponent(p.getText(), "DBLookup", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
-                    maps.add(map);
-                    break;
-                case "dim historic":
+                }
+                case "etl log": {
                     map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
+                    break;
+                }
+                case "verified audit records": {
+                    map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
+                    maps.add(map);
+                    break;
+                }
             }
-
         }
 
+        transitions = Helper.normalizeTransitions(transitions);
         for (Transition t : transitions) {
-
-            if (t.getText().toLowerCase().equals("select record to update")) {
-                map = new MappingComponent(t.getText(), "SwitchCase", Helper.removePointZero(t.getPosX()), Helper.removePointZero(t.getPosY()));
+            if (t.getText().toLowerCase().equals("audit data verification")) {
+                map = new MappingComponent(t.getText(), "Validator", Helper.removePointZero(t.getPosX()), Helper.removePointZero(t.getPosY()));
                 maps.add(map);
             }
-            
         }
 
         return maps;
@@ -70,57 +74,50 @@ public class UpdateRecordActivity extends PatternActivityBuilder {
         ArrayList<MappingOrder> orders = new ArrayList<>();
         ArrayList<MappingComponent> components = this.mapping.getComponents();
 
-        Page p = this.activity.getSubPageInfo().getPage();
-        
         Graph graph = new Graph();
 
-        graph.construct(p);
+        graph.construct(this.activity.getSubPageInfo().getPage());
 
-        p.setGraph(graph);
-        
-        ArrayList<String> test = new ArrayList<>();
+        this.activity.getSubPageInfo().getPage().setGraph(graph);
 
-        test.add("slowlychangingdimetllog");
-        test.add("slowlychangingdimlookuptable");
-        test.add("slowlychangingdimdimhistoric");
-        
         for (MappingComponent i : components) {
             for (MappingComponent j : components) {
                 if (!i.getCpnElement().equals(j.getCpnElement())) {
-                    List connected = p.connected(i.getCpnElement(), j.getCpnElement());
+                    List connected = this.activity.getSubPageInfo().getPage().connected(i.getCpnElement(), j.getCpnElement());
 
                     if (connected != null) {
-                        if (connected.size() < 4) {
+                        if (connected.size() == 1) {
 
-                            String s = i.getCpnElement().toLowerCase().replace(" ", "");
-                            s += j.getCpnElement().toLowerCase().replace(" ", "");
-                            
-                            if (!test.contains(s)) {
-                                MappingOrder order = new MappingOrder(i, j);
-                                orders.add(order);
-                            }
-                            
+                            MappingOrder order = new MappingOrder(i, j);
+                            orders.add(order);
+
                             if (orders.contains(new MappingOrder(j, i))) {
+
                                 String[] middlePoint = Helper.middlePoint(i.getXloc(), i.getYloc(), j.getXloc(), j.getYloc());
+
                                 Notepad note = new Notepad("Warning", middlePoint[0], middlePoint[1]);
+
                                 this.notepads.add(note);
+
                             }
                         }
                     }
+
                 }
             }
         }
 
         return orders;
-
     }
 
     @Override
     public boolean convert() {
+
         this.mapping.setComponents(this.convertComponents());
+
         this.mapping.setOrder(this.convertOrders());
-        
+
         return true;
     }
-    
+
 }

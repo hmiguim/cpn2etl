@@ -15,7 +15,7 @@ import utils.Helper;
  *
  * @author hmg
  */
-public class DeleteRecordActivity extends PatternActivityBuilder {
+public class SCD_DeleteRecordActivity extends PatternActivityBuilder {
 
     @Override
     protected ArrayList<MappingComponent> convertComponents() {

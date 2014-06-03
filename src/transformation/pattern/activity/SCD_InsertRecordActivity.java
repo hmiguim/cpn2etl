@@ -1,4 +1,4 @@
-package transformation.pattern;
+package transformation.pattern.activity;
 
 import cpn.Page;
 import cpn.Place;
@@ -16,7 +16,7 @@ import utils.Helper;
  *
  * @author hmg
  */
-public class CDC_Pattern extends PatternBuilder {
+public class SCD_InsertRecordActivity extends PatternActivityBuilder {
 
     @Override
     protected ArrayList<MappingComponent> convertComponents() {
@@ -24,26 +24,41 @@ public class CDC_Pattern extends PatternBuilder {
 
         ArrayList<MappingComponent> maps = new ArrayList<>();
 
-        ArrayList<Object> normalize = Helper.normalize(this.pattern.getSubPageInfo().getPage().getPlaces().values(), this.pattern.getSubPageInfo().getPage().getTransitions().values());
+        ArrayList<Object> objs = Helper.normalize(this.activity.getSubPageInfo().getPage().getPlaces().values(), this.activity.getSubPageInfo().getPage().getTransitions().values());
 
-        ArrayList<Transition> transitions = Helper.getTransitions(normalize);
-        ArrayList<Place> places = Helper.getPlaces(normalize);
-        
+        ArrayList<Place> places = Helper.getPlaces(objs);
+        ArrayList<Transition> transitions = Helper.getTransitions(objs);
+
         for (Place p : places) {
-            switch(p.getText().toLowerCase()) {
-                case "transact log":
-                    map = new MappingComponent(p.getText(), "TableInput",Helper.removePointZero(p.getPosX()),Helper.removePointZero(p.getPosY()));
+            switch (p.getText().toLowerCase()) {
+                case "verified audit records":
+                    map = new MappingComponent(p.getText(), "TableInput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
-                    case "audit table":
-                        map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()),Helper.removePointZero(p.getPosY()));
-                        maps.add(map);
+                    break;
+                case "etl log":
+                    map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
+                    maps.add(map);
+                    break;
+                case "slowly changing dim":
+                    map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
+                    maps.add(map);
+                    break;
             }
+
         }
-        
+
         for (Transition t : transitions) {
-            if (t.isSubPage()) {
-                maps.addAll(this.decomposeTransition(t));
+
+            switch (t.getText().toLowerCase()) {
+                case "select record to insert":
+                    map = new MappingComponent(t.getText(), "SwitchCase", Helper.removePointZero(t.getPosX()), Helper.removePointZero(t.getPosY()));
+                    maps.add(map);
+                    break;
+                case "assign sk":
+                    maps.addAll(this.decomposeTransition(t));
+                    break;
             }
+
         }
 
         return maps;
@@ -54,33 +69,43 @@ public class CDC_Pattern extends PatternBuilder {
         ArrayList<MappingOrder> orders = new ArrayList<>();
         ArrayList<MappingComponent> components = this.mapping.getComponents();
 
-        Page p = this.pattern.getSubPageInfo().getPage();
-        
+        Page p = this.activity.getSubPageInfo().getPage();
+
         Graph graph = new Graph();
 
-        graph.construct(p);
-
+        graph.construct_insert(p);        
+        
         p.setGraph(graph);
-
+        
         ArrayList<String> test = new ArrayList<>();
 
-        test.add("readtransactionlogupdateaudittables");
-        
+        test.add("verifiedauditrecordsgeneratesk");
+        test.add("counterlookuptable");
+        test.add("selectrecordtoinsertlookuptable");
+        test.add("selectrecordtoinsertcounter");
+
         for (MappingComponent i : components) {
             for (MappingComponent j : components) {
-
                 if (!i.getCpnElement().equals(j.getCpnElement())) {
-
                     List connected = p.connected(i.getCpnElement(), j.getCpnElement());
 
                     if (connected != null) {
-                        String s = i.getCpnElement().toLowerCase().replace(" ", "");
+                        if (connected.size() < 4) {
+
+                            String s = i.getCpnElement().toLowerCase().replace(" ", "");
                             s += j.getCpnElement().toLowerCase().replace(" ", "");
                             
                             if (!test.contains(s)) {
                                 MappingOrder order = new MappingOrder(i, j);
                                 orders.add(order);
                             }
+
+                            if (orders.contains(new MappingOrder(j, i))) {
+                                String[] middlePoint = Helper.middlePoint(i.getXloc(), i.getYloc(), j.getXloc(), j.getYloc());
+                                Notepad note = new Notepad("Warning", middlePoint[0], middlePoint[1]);
+                                this.notepads.add(note);
+                            }
+                        }
                     }
                 }
             }
@@ -91,18 +116,18 @@ public class CDC_Pattern extends PatternBuilder {
 
     @Override
     public boolean convert() {
+
         this.mapping.setComponents(this.convertComponents());
+        this.mapping.setOrder(this.convertOrders());
         
         return true;
     }
 
     private ArrayList<MappingComponent> decomposeTransition(Transition trans) {
 
-        ArrayList<Object> normalized = Helper.normalize(trans.getSubPageInfo().getPage().getPlaces().values(), trans.getSubPageInfo().getPage().getTransitions().values());
-        
-        ArrayList<Place> places = Helper.getPlaces(normalized);
-        ArrayList<Transition> transitions = Helper.getTransitions(normalized);
-        
+        Collection<Place> places = trans.getSubPageInfo().getPage().getPlaces().values();
+        Collection<Transition> transitions = trans.getSubPageInfo().getPage().getTransitions().values();
+
         ArrayList<MappingComponent> maps = new ArrayList<>();
 
         MappingComponent map;

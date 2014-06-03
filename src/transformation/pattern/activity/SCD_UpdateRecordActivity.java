@@ -5,7 +5,6 @@ import cpn.Place;
 import cpn.Transition;
 import cpn.graph.Graph;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import pdi.components.notepad.Notepad;
 import transformation.mapping.MappingComponent;
@@ -16,7 +15,7 @@ import utils.Helper;
  *
  * @author hmg
  */
-public class InsertRecordActivity extends PatternActivityBuilder {
+public class SCD_UpdateRecordActivity extends PatternActivityBuilder {
 
     @Override
     protected ArrayList<MappingComponent> convertComponents() {
@@ -43,22 +42,24 @@ public class InsertRecordActivity extends PatternActivityBuilder {
                     map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
+                case "lookup table":
+                    map = new MappingComponent(p.getText(), "DBLookup", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
+                    maps.add(map);
+                    break;
+                case "dim historic":
+                    map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
+                    maps.add(map);
             }
 
         }
 
         for (Transition t : transitions) {
 
-            switch (t.getText().toLowerCase()) {
-                case "select record to insert":
-                    map = new MappingComponent(t.getText(), "SwitchCase", Helper.removePointZero(t.getPosX()), Helper.removePointZero(t.getPosY()));
-                    maps.add(map);
-                    break;
-                case "assign sk":
-                    maps.addAll(this.decomposeTransition(t));
-                    break;
+            if (t.getText().toLowerCase().equals("select record to update")) {
+                map = new MappingComponent(t.getText(), "SwitchCase", Helper.removePointZero(t.getPosX()), Helper.removePointZero(t.getPosY()));
+                maps.add(map);
             }
-
+            
         }
 
         return maps;
@@ -70,20 +71,19 @@ public class InsertRecordActivity extends PatternActivityBuilder {
         ArrayList<MappingComponent> components = this.mapping.getComponents();
 
         Page p = this.activity.getSubPageInfo().getPage();
-
+        
         Graph graph = new Graph();
 
-        graph.construct_insert(p);        
-        
+        graph.construct(p);
+
         p.setGraph(graph);
         
         ArrayList<String> test = new ArrayList<>();
 
-        test.add("verifiedauditrecordsgeneratesk");
-        test.add("counterlookuptable");
-        test.add("selectrecordtoinsertlookuptable");
-        test.add("selectrecordtoinsertcounter");
-
+        test.add("slowlychangingdimetllog");
+        test.add("slowlychangingdimlookuptable");
+        test.add("slowlychangingdimdimhistoric");
+        
         for (MappingComponent i : components) {
             for (MappingComponent j : components) {
                 if (!i.getCpnElement().equals(j.getCpnElement())) {
@@ -99,7 +99,7 @@ public class InsertRecordActivity extends PatternActivityBuilder {
                                 MappingOrder order = new MappingOrder(i, j);
                                 orders.add(order);
                             }
-
+                            
                             if (orders.contains(new MappingOrder(j, i))) {
                                 String[] middlePoint = Helper.middlePoint(i.getXloc(), i.getYloc(), j.getXloc(), j.getYloc());
                                 Notepad note = new Notepad("Warning", middlePoint[0], middlePoint[1]);
@@ -112,48 +112,15 @@ public class InsertRecordActivity extends PatternActivityBuilder {
         }
 
         return orders;
+
     }
 
     @Override
     public boolean convert() {
-
         this.mapping.setComponents(this.convertComponents());
         this.mapping.setOrder(this.convertOrders());
         
         return true;
     }
-
-    private ArrayList<MappingComponent> decomposeTransition(Transition trans) {
-
-        Collection<Place> places = trans.getSubPageInfo().getPage().getPlaces().values();
-        Collection<Transition> transitions = trans.getSubPageInfo().getPage().getTransitions().values();
-
-        ArrayList<MappingComponent> maps = new ArrayList<>();
-
-        MappingComponent map;
-
-        for (Place p : places) {
-            switch (p.getText().toLowerCase()) {
-                case "counter":
-                    map = new MappingComponent(p.getText(), "Sequence", "100", "200");
-                    maps.add(map);
-                    break;
-                case "lookup table":
-                    map = new MappingComponent(p.getText(), "TableOutput", "300", "200");
-                    maps.add(map);
-                    break;
-            }
-        }
-
-        for (Transition t : transitions) {
-            switch (t.getText().toLowerCase()) {
-                case "generate sk":
-                    map = new MappingComponent(t.getText(), "SetValueField", "200", "200");
-                    maps.add(map);
-                    break;
-            }
-        }
-
-        return maps;
-    }
+    
 }

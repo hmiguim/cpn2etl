@@ -71,6 +71,9 @@ public class StepFactory {
             case "Sequence":
                 sb = new Sequence();
                 break;
+            case "FilterRows":
+                sb = new FilterRows();
+                break;
         }
         return sb;
     }

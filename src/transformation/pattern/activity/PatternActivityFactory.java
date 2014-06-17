@@ -50,6 +50,12 @@ public class PatternActivityFactory {
                 return new SCD_UpdateRecordActivity();
             case "Insert Record":
                 return new SCD_InsertRecordActivity();
+            case "Read Transaction Log":
+                return new CDC_ReadTransactionLogActivity();
+            case "Decode Row Log  Contents":
+                return new CDC_DecodeRowLogContentsActivity();
+            case "Update Audit Tables":
+                return new CDC_UpdateAuditTablesActivity();
         }
 
         return null;

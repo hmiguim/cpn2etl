@@ -32,16 +32,15 @@ import utils.Helper;
  * @author hmg
  */
 public class TransformationBuilder {
-    
+
     private final DocumentBuilder documentBuilder;
     private final String path;
-    
-    
+
     private final StepFactory stepFactory;
     private final TransformationFactory transLogFactory;
     private final TransLogDirector transLogDirector;
     private final TransInfoDirector transInfoDirector;
-    
+
     public TransformationBuilder(DocumentBuilder documentBuilder, String path) throws ParserConfigurationException {
         this.stepFactory = StepFactory.newInstance();
         this.transLogFactory = TransformationFactory.newInstance();
@@ -50,7 +49,7 @@ public class TransformationBuilder {
         this.documentBuilder = documentBuilder;
         this.path = path;
     }
-    
+
     /**
      * Method in charge of create a {@code transformation} element and return it
      * to be appended
@@ -94,7 +93,7 @@ public class TransformationBuilder {
 
         return doc;
     }
-    
+
     /**
      * Method in charge of create a {@code transformation} element and return it
      * to be appended
@@ -137,7 +136,7 @@ public class TransformationBuilder {
 
         return doc;
     }
-    
+
     /**
      * Method in charge of create a {@code info} element and return it to be
      * appended
@@ -240,7 +239,7 @@ public class TransformationBuilder {
 
         return info;
     }
-    
+
     /**
      * Method in charge of create a {@code maxdate} element and return it to be
      * appended
@@ -277,46 +276,46 @@ public class TransformationBuilder {
 
         return maxdate;
     }
-    
+
     private Element createTransformationNotepads(Document doc, ArrayList<Notepad> npdas) {
-        
+
         // Notepads Element
         Element notepads = doc.createElement("notepads");
-        
+
         if (npdas == null) {
             return notepads;
         }
-        
+
         for (Notepad n : npdas) {
-            
+
             Element notepad = doc.createElement("notepad");
-            
+
             Element note = doc.createElement("note");
             note.setTextContent(n.getNote());
             notepad.appendChild(note);
-            
+
             Element xloc = doc.createElement("xloc");
             xloc.setTextContent(n.getXloc());
             notepad.appendChild(xloc);
-            
+
             Element yloc = doc.createElement("yloc");
             yloc.setTextContent(n.getYloc());
             notepad.appendChild(yloc);
-            
+
             for (pdi.components.xml.Element e : n.getElements()) {
                 Element a = doc.createElement(e.getTag());
                 a.setTextContent(e.getContextText());
 
                 notepad.appendChild(a);
             }
-            
+
             notepads.appendChild(notepad);
-            
+
         }
-        
+
         return notepads;
     }
-    
+
     /**
      * Method in charge of create a {@code order} element and return it to be
      * appended
@@ -337,7 +336,7 @@ public class TransformationBuilder {
         }
         return order;
     }
-    
+
     /**
      * Method in charge of create a {@code hop} element and return it to be
      * appended
@@ -364,7 +363,7 @@ public class TransformationBuilder {
 
         return hop;
     }
-    
+
     /**
      * Method in charge of create a {@code step} element and return it to be
      * appended
@@ -392,15 +391,39 @@ public class TransformationBuilder {
         stepDirector.constructStep();
         Step stepConfiguration = stepDirector.getStep();
 
+        Element a,b;
+
         for (pdi.components.xml.Element e : stepConfiguration.getElements()) {
-            Element a = doc.createElement(e.getTag());
-            a.setTextContent(e.getContextText());
+
+            if (e.isNested()) {
+                a = doc.createElement(e.getTag());
+
+                for (pdi.components.xml.Element f : e.getElements()) {
+                    if (f.isNested()) {
+                        b = doc.createElement(f.getTag());
+
+                        for (pdi.components.xml.Element g : f.getElements()) {
+                            Element c = doc.createElement(g.getTag());
+                            c.setTextContent(g.getContextText());
+                            b.appendChild(c);
+                        }
+                    } else {
+                        b = doc.createElement(f.getTag());
+                        b.setTextContent(f.getContextText());
+                    }
+                    a.appendChild(b);
+                }
+            } else {
+
+                a = doc.createElement(e.getTag());
+                a.setTextContent(e.getContextText());
+            }
 
             step.appendChild(a);
         }
 
         step.appendChild(this.createTransformationGUI(doc, map));
-        
+
         if (map.getKettleElement().equals("TransExecutor")) {
             Element file = doc.createElement("filename");
             file.setTextContent(this.path + "/" + Helper.normalize(map.getFilename()) + ".ktr");
@@ -409,7 +432,7 @@ public class TransformationBuilder {
 
         return step;
     }
-    
+
     /**
      * Method in charge of create a {@code GUI} element and return it to be
      * appended
@@ -437,7 +460,7 @@ public class TransformationBuilder {
         return gui;
 
     }
-    
+
     /**
      * Method in charge of create all the different child log elements
      *
@@ -478,7 +501,7 @@ public class TransformationBuilder {
 
         return log;
     }
-    
+
     /**
      * Method in charge of create a {@code step-log-table} element and return it
      * to be appended
@@ -520,7 +543,7 @@ public class TransformationBuilder {
 
         return step_log_table;
     }
-    
+
     /**
      * Method in charge of create a {@code channel-log-table} element and return
      * it to be appended
@@ -563,7 +586,7 @@ public class TransformationBuilder {
 
         return channel_log_table;
     }
-    
+
     /**
      * Method in charge of create a {@code perf-log-table} element and return it
      * to be appended
@@ -610,7 +633,7 @@ public class TransformationBuilder {
         return perf_log_table;
 
     }
-    
+
     /**
      * Method in charge of create a {
      *
@@ -654,7 +677,7 @@ public class TransformationBuilder {
 
         return metrics_log_table;
     }
-    
+
     /**
      * Method in charge of create a {@code trans-log-table} element and return
      * it to be appended

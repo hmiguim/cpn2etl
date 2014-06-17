@@ -511,7 +511,7 @@ public class JobBuilder {
                     f = new File(this.path + "/" + Helper.normalize(pattern.getSubPageInfo().getPage().getName()) + ".ktr");
                     XMLHelper.finalize(transformation, f);
 
-                    if (pattern.getSubPageInfo().getPage().getName().equals("SCD/H 3")) {
+                    if (pattern.getSubPageInfo().getPage().getName().equals("SCD/H 3") || pattern.getSubPageInfo().getPage().getName().equals("CDC 1")) {
                         ArrayList<Transition> modulesPerPage = pattern.getSubPageInfo().getPage().getModulesPerPage();
                         for (Transition t : modulesPerPage) {
                            PatternActivityBuilder patternActivityBuilder = this.patternActivityFactory.newPatternActivityBuilder(t.getText());

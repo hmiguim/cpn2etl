@@ -8,14 +8,14 @@ import java.util.logging.Logger;
  *
  * @author hmg
  */
-public class Sequence extends StepBuilder {
+public class FilterRows extends StepBuilder  {
 
     @Override
     public void buildStep() {
-         try {
-            this.step.setElements(this.readConfig("configs/step/sequence"));
+        try {
+            this.step.setElements(this.readConfig("configs/step/filterrows"));
         } catch (IOException ex) {
-            Logger.getLogger(Sequence.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FilterRows.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
     

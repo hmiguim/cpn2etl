@@ -10,6 +10,7 @@ import pdi.components.notepad.Notepad;
 import transformation.mapping.MappingComponent;
 import transformation.mapping.MappingOrder;
 import transformation.pattern.activity.PatternActivityBuilder;
+import transformation.pattern.constraints.connections.PatternConnectionConstraintUpdateRecord;
 import utils.Helper;
 
 /**
@@ -79,11 +80,10 @@ public class UpdateRecordActivity extends PatternActivityBuilder {
 
         p.setGraph(graph);
         
-        ArrayList<String> test = new ArrayList<>();
-
-        test.add("slowlychangingdimetllog");
-        test.add("slowlychangingdimlookuptable");
-        test.add("slowlychangingdimdimhistoric");
+        PatternConnectionConstraintUpdateRecord connectionConstraint = this.patternConnectionConstraintFactory.newPatternConnectionConstraintUpdateRecord();
+        
+        this.patternConnectionConstraintDirector.setConnectionConstraintBuilder(connectionConstraint);
+        this.patternConnectionConstraintDirector.constructConnectionConstraint();
         
         for (MappingComponent i : components) {
             for (MappingComponent j : components) {
@@ -96,7 +96,7 @@ public class UpdateRecordActivity extends PatternActivityBuilder {
                             String s = i.getCpnElement().toLowerCase().replace(" ", "");
                             s += j.getCpnElement().toLowerCase().replace(" ", "");
                             
-                            if (!test.contains(s)) {
+                            if (!this.patternConnectionConstraintDirector.verifyConnectionConstraint(i.getCpnElement(), j.getCpnElement())) {
                                 MappingOrder order = new MappingOrder(i, j);
                                 orders.add(order);
                             }

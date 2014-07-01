@@ -47,10 +47,10 @@ public class CDC_Pattern extends PatternBuilder {
 
         p.setGraph(graph);
 
-        PatternConnectionConstraintCDC connectionConstraintCDC = this.patternConnectionConstraintFactory.newPatternConnectionConstraintCDC();
+        PatternConnectionConstraintCDC connectionConstraint = this.patternConnectionConstraintFactory.newPatternConnectionConstraintCDC();
 
-        connectionConstraintCDC.createConnectionConstraint();
-        connectionConstraintCDC.buildConnectionConstraint();
+        this.patternConnectionConstraintDirector.setConnectionConstraintBuilder(connectionConstraint);
+        this.patternConnectionConstraintDirector.constructConnectionConstraint();
 
         for (MappingComponent i : components) {
             for (MappingComponent j : components) {
@@ -61,7 +61,7 @@ public class CDC_Pattern extends PatternBuilder {
 
                     if (connected != null) {
 
-                        if (!connectionConstraintCDC.verifyConnectionConstraint(i.getCpnElement(), j.getCpnElement())) {
+                        if (!this.patternConnectionConstraintDirector.verifyConnectionConstraint(i.getCpnElement(), j.getCpnElement())) {
                             MappingOrder order = new MappingOrder(i, j);
                             orders.add(order);
                         }

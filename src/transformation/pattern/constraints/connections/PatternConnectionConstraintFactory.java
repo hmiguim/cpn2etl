@@ -37,4 +37,12 @@ public class PatternConnectionConstraintFactory {
     public PatternConnectionConstraintDeleteRecord newPatternConnectionConstraintDeleteRecord() {
         return new PatternConnectionConstraintDeleteRecord();
     }
+    
+    public PatternConnectionConstraintInsertRecord newPatternConnectionConstraintInsertRecord() {
+        return new PatternConnectionConstraintInsertRecord();
+    }
+    
+    public PatternConnectionConstraintUpdateRecord newPatternConnectionConstraintUpdateRecord() {
+        return new PatternConnectionConstraintUpdateRecord();
+    }
 }

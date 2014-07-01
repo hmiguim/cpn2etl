@@ -11,6 +11,7 @@ import pdi.components.notepad.Notepad;
 import transformation.mapping.MappingComponent;
 import transformation.mapping.MappingOrder;
 import transformation.pattern.activity.PatternActivityBuilder;
+import transformation.pattern.constraints.connections.PatternConnectionConstraintInsertRecord;
 import utils.Helper;
 
 /**
@@ -76,13 +77,11 @@ public class InsertRecordActivity extends PatternActivityBuilder {
         
         p.setGraph(graph);
         
-        ArrayList<String> test = new ArrayList<>();
-
-        test.add("verifiedauditrecordsgeneratesk");
-        test.add("counterlookuptable");
-        test.add("selectrecordtoinsertlookuptable");
-        test.add("selectrecordtoinsertcounter");
-
+        PatternConnectionConstraintInsertRecord connectionConstraint = this.patternConnectionConstraintFactory.newPatternConnectionConstraintInsertRecord();
+        
+        this.patternConnectionConstraintDirector.setConnectionConstraintBuilder(connectionConstraint);
+        this.patternConnectionConstraintDirector.constructConnectionConstraint();
+        
         for (MappingComponent i : components) {
             for (MappingComponent j : components) {
                 if (!i.getCpnElement().equals(j.getCpnElement())) {
@@ -90,11 +89,8 @@ public class InsertRecordActivity extends PatternActivityBuilder {
 
                     if (connected != null) {
                         if (connected.size() < 4) {
-
-                            String s = i.getCpnElement().toLowerCase().replace(" ", "");
-                            s += j.getCpnElement().toLowerCase().replace(" ", "");
                             
-                            if (!test.contains(s)) {
+                            if (!this.patternConnectionConstraintDirector.verifyConnectionConstraint(i.getCpnElement(), j.getCpnElement())) {
                                 MappingOrder order = new MappingOrder(i, j);
                                 orders.add(order);
                             }

@@ -37,7 +37,7 @@ public class PatternConnectionConstraintDirector {
      * @param to
      * @return {@code true} or {@code false} depending if the constraint is verify or not
      */
-    public boolean verifyConnectionContraint(String from, String to) {
+    public boolean verifyConnectionConstraint(String from, String to) {
         return this.connectionConstraintBuilder.verifyConnectionConstraint(from,to);
     }
 }

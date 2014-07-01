@@ -78,8 +78,8 @@ public class DeleteRecordActivity extends PatternActivityBuilder {
         
         PatternConnectionConstraintDeleteRecord connectionConstraint = this.patternConnectionConstraintFactory.newPatternConnectionConstraintDeleteRecord();
 
-        connectionConstraint.createConnectionConstraint();
-        connectionConstraint.buildConnectionConstraint();
+        this.patternConnectionConstraintDirector.setConnectionConstraintBuilder(connectionConstraint);
+        this.patternConnectionConstraintDirector.constructConnectionConstraint();
         
         for (MappingComponent i : components) {
             for (MappingComponent j : components) {
@@ -89,7 +89,7 @@ public class DeleteRecordActivity extends PatternActivityBuilder {
                     if (connected != null) {
                         if (connected.size() < 4) {
 
-                            if (!connectionConstraint.verifyConnectionConstraint(i.getCpnElement(), j.getCpnElement())) {
+                            if (!this.patternConnectionConstraintDirector.verifyConnectionConstraint(i.getCpnElement(), j.getCpnElement())) {
                                 MappingOrder order = new MappingOrder(i, j);
                                 orders.add(order);
                             }

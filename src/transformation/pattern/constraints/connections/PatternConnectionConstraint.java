@@ -1,4 +1,4 @@
-package transformation.pattern.constraints;
+package transformation.pattern.constraints.connections;
 
 import java.util.ArrayList;
 
@@ -6,15 +6,15 @@ import java.util.ArrayList;
  *
  * @author hmg
  */
-public class PatternConstraint {
+public class PatternConnectionConstraint {
     
     private ArrayList<Keyword> keywords;
     
     /**
      * Public Method
      */
-    public PatternConstraint() {
-        this.keywords = new ArrayList<>(); 
+    public PatternConnectionConstraint() {
+        this.keywords = new ArrayList<>();
     }
     
     /**
@@ -27,7 +27,7 @@ public class PatternConstraint {
     
     /**
      * Gets the keywords
-     * @return An ArrayList of {@link Keywords}
+     * @return An ArrayList of keywords
      */
     public ArrayList<Keyword> getKeywords() {
         return this.keywords;

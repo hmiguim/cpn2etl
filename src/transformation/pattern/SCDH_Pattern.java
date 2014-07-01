@@ -1,5 +1,6 @@
 package transformation.pattern;
 
+import cpn.Place;
 import cpn.Transition;
 import cpn.graph.Graph;
 import java.util.ArrayList;
@@ -27,13 +28,14 @@ public class SCDH_Pattern extends PatternBuilder {
         MappingComponent map;
 
         ArrayList<MappingComponent> maps = new ArrayList<>();
-
-        Collection<Transition> trans = this.pattern.getSubPageInfo().getPage().getTransitions().values();
-
+        
+        ArrayList<Object> normalized = Helper.normalize(this.pattern.getSubPageInfo().getPage());
+        
+        ArrayList<Transition> trans = Helper.getTransitions(normalized);
+        
         for (Transition t : trans) {
             if (t.isSubPage()) {
-                String[] normalizeAxis = Helper.normalizeAxis(t.getPosX(), t.getPosY());
-                map = new MappingComponent(t.getText(), "TransExecutor", normalizeAxis[0], normalizeAxis[1],t.getSubPageInfo().getName());
+                map = new MappingComponent(t.getText(), "TransExecutor", Helper.removePointZero(t.getPosX()), Helper.removePointZero(t.getPosY()) ,t.getSubPageInfo().getName());
                 maps.add(map);
             }
         }

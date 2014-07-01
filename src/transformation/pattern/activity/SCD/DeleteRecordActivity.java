@@ -1,4 +1,4 @@
-package transformation.pattern.activity;
+package transformation.pattern.activity.SCD;
 
 import cpn.Page;
 import cpn.Place;
@@ -9,13 +9,16 @@ import java.util.List;
 import pdi.components.notepad.Notepad;
 import transformation.mapping.MappingComponent;
 import transformation.mapping.MappingOrder;
+import transformation.pattern.activity.PatternActivityBuilder;
+import transformation.pattern.constraints.connections.PatternConnectionConstraintCDC;
+import transformation.pattern.constraints.connections.PatternConnectionConstraintDeleteRecord;
 import utils.Helper;
 
 /**
  *
  * @author hmg
  */
-public class SCD_UpdateRecordActivity extends PatternActivityBuilder {
+public class DeleteRecordActivity extends PatternActivityBuilder {
 
     @Override
     protected ArrayList<MappingComponent> convertComponents() {
@@ -23,10 +26,10 @@ public class SCD_UpdateRecordActivity extends PatternActivityBuilder {
 
         ArrayList<MappingComponent> maps = new ArrayList<>();
 
-        ArrayList<Object> objs = Helper.normalize(this.activity.getSubPageInfo().getPage().getPlaces().values(), this.activity.getSubPageInfo().getPage().getTransitions().values());
+        ArrayList<Object> normalized = Helper.normalize(this.activity.getSubPageInfo().getPage());
 
-        ArrayList<Place> places = Helper.getPlaces(objs);
-        ArrayList<Transition> transitions = Helper.getTransitions(objs);
+        ArrayList<Transition> trans = Helper.getTransitions(normalized);
+        ArrayList<Place> places = Helper.getPlaces(normalized);
 
         for (Place p : places) {
             switch (p.getText().toLowerCase()) {
@@ -46,20 +49,15 @@ public class SCD_UpdateRecordActivity extends PatternActivityBuilder {
                     map = new MappingComponent(p.getText(), "DBLookup", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
-                case "dim historic":
-                    map = new MappingComponent(p.getText(), "TableOutput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
-                    maps.add(map);
             }
 
         }
 
-        for (Transition t : transitions) {
-
-            if (t.getText().toLowerCase().equals("select record to update")) {
+        for (Transition t : trans) {
+            if (t.getText().toLowerCase().equals("select record to delete")) {
                 map = new MappingComponent(t.getText(), "SwitchCase", Helper.removePointZero(t.getPosX()), Helper.removePointZero(t.getPosY()));
                 maps.add(map);
-            }
-            
+            }    
         }
 
         return maps;
@@ -78,11 +76,10 @@ public class SCD_UpdateRecordActivity extends PatternActivityBuilder {
 
         p.setGraph(graph);
         
-        ArrayList<String> test = new ArrayList<>();
+        PatternConnectionConstraintDeleteRecord connectionConstraint = this.patternConnectionConstraintFactory.newPatternConnectionConstraintDeleteRecord();
 
-        test.add("slowlychangingdimetllog");
-        test.add("slowlychangingdimlookuptable");
-        test.add("slowlychangingdimdimhistoric");
+        connectionConstraint.createConnectionConstraint();
+        connectionConstraint.buildConnectionConstraint();
         
         for (MappingComponent i : components) {
             for (MappingComponent j : components) {
@@ -92,10 +89,7 @@ public class SCD_UpdateRecordActivity extends PatternActivityBuilder {
                     if (connected != null) {
                         if (connected.size() < 4) {
 
-                            String s = i.getCpnElement().toLowerCase().replace(" ", "");
-                            s += j.getCpnElement().toLowerCase().replace(" ", "");
-                            
-                            if (!test.contains(s)) {
+                            if (!connectionConstraint.verifyConnectionConstraint(i.getCpnElement(), j.getCpnElement())) {
                                 MappingOrder order = new MappingOrder(i, j);
                                 orders.add(order);
                             }
@@ -122,5 +116,4 @@ public class SCD_UpdateRecordActivity extends PatternActivityBuilder {
         
         return true;
     }
-    
 }

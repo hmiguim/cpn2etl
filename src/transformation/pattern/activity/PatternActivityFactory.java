@@ -1,5 +1,8 @@
 package transformation.pattern.activity;
 
+import transformation.pattern.activity.SCD.*;
+import transformation.pattern.activity.CDC.*;
+
 /**
  *
  * @author hmg
@@ -43,19 +46,19 @@ public class PatternActivityFactory {
 
         switch (type) {
             case "Audit Data Verification":
-                return new SCD_AuditDataVerificationActivity();
+                return new AuditDataVerificationActivity();
             case "Delete Record":
-                return new SCD_DeleteRecordActivity();
+                return new DeleteRecordActivity();
             case "Update Record":
-                return new SCD_UpdateRecordActivity();
+                return new UpdateRecordActivity();
             case "Insert Record":
-                return new SCD_InsertRecordActivity();
+                return new InsertRecordActivity();
             case "Read Transaction Log":
-                return new CDC_ReadTransactionLogActivity();
+                return new ReadTransactionLogActivity();
             case "Decode Row Log  Contents":
-                return new CDC_DecodeRowLogContentsActivity();
+                return new DecodeRowLogContentsActivity();
             case "Update Audit Tables":
-                return new CDC_UpdateAuditTablesActivity();
+                return new UpdateAuditTablesActivity();
         }
 
         return null;

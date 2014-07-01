@@ -38,49 +38,12 @@ public class Helper {
         return today;
     }
 
-    public static String[] normalizeAxis(double x, double y) {
-
-        String[] normalized_axis = {normalizeX(x), normalizeY(y)};
-
-        return normalized_axis;
-    }
-
-    private static String normalizeX(double axis) {
-        String str;
-
-        if (axis < 0) {
-            axis *= -1;
-        } else if (axis == 0) {
-            axis += 60;
-        }
-
-        DecimalFormat df = new DecimalFormat("#");
-        str = df.format(axis);
-
-        return str;
-    }
-
     public static String removePointZero(double number) {
 
         String str;
 
         DecimalFormat df = new DecimalFormat("#");
         str = df.format(number);
-
-        return str;
-    }
-
-    private static String normalizeY(double axis) {
-        String str;
-
-        if (axis < 0) {
-            axis *= -1;
-        } else {
-            axis += 100;
-        }
-
-        DecimalFormat df = new DecimalFormat("#");
-        str = df.format(axis);
 
         return str;
     }
@@ -218,120 +181,4 @@ public class Helper {
 
         return objs;
     }
-
-    public static ArrayList<Object> normalize(Collection<Place> places, Collection<Transition> trans) {
-
-        ArrayList<Object> objs = new ArrayList<>();
-
-        for (Place place : places) {
-            objs.add(place);
-        }
-
-        for (Transition transition : trans) {
-            objs.add(transition);
-        }
-
-        double great_negative_y = 0;
-        double great_negative_x = 0;
-        double great_positive_y = 0;
-
-        Transition t;
-        Place p;
-
-        for (Object o : objs) {
-            switch (o.getClass().getCanonicalName()) {
-                case "cpn.Place":
-                    p = (Place) o;
-                    if (p.getPosY() < great_negative_y) {
-                        great_negative_y = p.getPosY();
-                    }
-                    if (p.getPosX() < great_negative_x) {
-                        great_negative_x = p.getPosX();
-                    }
-                    break;
-                case "cpn.Transition":
-                    t = (Transition) o;
-                    if (t.getPosY() < great_negative_y) {
-                        great_negative_y = t.getPosY();
-                    }
-                    if (t.getPosX() < great_negative_x) {
-                        great_negative_x = t.getPosX();
-                    }
-                    break;
-            }
-        }
-
-        for (Object o : objs) {
-            switch (o.getClass().getCanonicalName()) {
-                case "cpn.Place":
-                    p = (Place) o;
-                    p.setPosX(p.getPosX() + (great_negative_x * -1));
-                    p.setPosY(p.getPosY() + (great_negative_y * -1));
-
-                    if (p.getPosY() > great_positive_y) {
-                        great_positive_y = p.getPosY();
-                    }
-                    break;
-                case "cpn.Transition":
-                    t = (Transition) o;
-                    t.setPosX(t.getPosX() + (great_negative_x * -1));
-                    t.setPosY(t.getPosY() + (great_negative_y * -1));
-
-                    if (t.getPosY() > great_positive_y) {
-                        great_positive_y = t.getPosY();
-                    }
-                    break;
-            }
-
-        }
-
-        for (Object o : objs) {
-            switch (o.getClass().getCanonicalName()) {
-                case "cpn.Place":
-                    p = (Place) o;
-                    p.setPosY(Math.abs(p.getPosY() - great_positive_y));
-                    break;
-                case "cpn.Transition":
-                    t = (Transition) o;
-                    t.setPosY(Math.abs(t.getPosY() - great_positive_y));
-                    break;
-            }
-
-        }
-
-        return objs;
-    }
-
-    public static Collection<Transition> normalizeTransitions(Collection<Transition> transitions) {
-        double great_negative_y = 0;
-        double great_negative_x = 0;
-        double great_positive_y = 0;
-
-        for (Transition t : transitions) {
-            if (t.getPosY() < great_negative_y) {
-                great_negative_y = t.getPosY();
-            }
-            if (t.getPosX() < great_negative_x) {
-                great_negative_x = t.getPosX();
-            }
-        }
-
-        if (great_negative_x < 0 || great_negative_y < 0) {
-            for (Transition t : transitions) {
-                t.setPosX(t.getPosX() + (great_negative_x * -1));
-                t.setPosY(t.getPosY() + (great_negative_y * -1));
-
-                if (t.getPosY() > great_positive_y) {
-                    great_positive_y = t.getPosY();
-                }
-            }
-        }
-
-        for (Transition t : transitions) {
-            t.setPosY(Math.abs(t.getPosY() - great_positive_y));
-        }
-
-        return transitions;
-    }
-
 }

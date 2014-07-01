@@ -7,6 +7,8 @@ import transformation.mapping.MappingComponent;
 import transformation.mapping.MappingOrder;
 import transformation.pattern.constraints.PatternConstraintDirector;
 import transformation.pattern.constraints.PatternConstraintFactory;
+import transformation.pattern.constraints.connections.PatternConnectionConstraintDirector;
+import transformation.pattern.constraints.connections.PatternConnectionConstraintFactory;
 
 /**
  *
@@ -17,6 +19,9 @@ public abstract class PatternBuilder {
     protected Mapping mapping;
     protected PatternConstraintFactory patternConstraintFactory;
     protected PatternConstraintDirector patternConstraintDirector;
+    protected PatternConnectionConstraintFactory patternConnectionConstraintFactory;
+    protected PatternConnectionConstraintDirector patternConnectionConstraintDirector;
+    
     protected Transition pattern;
 
     /**
@@ -37,6 +42,8 @@ public abstract class PatternBuilder {
         this.mapping = new Mapping();
         this.patternConstraintFactory = PatternConstraintFactory.newInstance();
         this.patternConstraintDirector = this.patternConstraintFactory.newPatternConstraintDirector();
+        this.patternConnectionConstraintFactory = PatternConnectionConstraintFactory.newInstance();
+        this.patternConnectionConstraintDirector = this.patternConnectionConstraintFactory.newPatternConnectionConstraintDirector();
         this.pattern = pattern;
     }
 

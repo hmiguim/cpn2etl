@@ -6,6 +6,8 @@ import pdi.components.notepad.Notepad;
 import transformation.mapping.Mapping;
 import transformation.mapping.MappingComponent;
 import transformation.mapping.MappingOrder;
+import transformation.pattern.constraints.connections.PatternConnectionConstraintDirector;
+import transformation.pattern.constraints.connections.PatternConnectionConstraintFactory;
 
 /**
  *
@@ -15,8 +17,11 @@ public abstract class PatternActivityBuilder {
 
     protected Mapping mapping;
     protected ArrayList<Notepad> notepads;
+    protected PatternConnectionConstraintFactory patternConnectionConstraintFactory;
+    protected PatternConnectionConstraintDirector patternConnectionConstraintDirector;
+    
     protected Transition activity;
-
+    
     /**
      * Gets the {@link Mapping}
      *
@@ -38,6 +43,8 @@ public abstract class PatternActivityBuilder {
     public void createMapping(Transition activity) {
         this.mapping = new Mapping();
         this.notepads = new ArrayList<>();
+        this.patternConnectionConstraintFactory = PatternConnectionConstraintFactory.newInstance();
+        this.patternConnectionConstraintDirector = this.patternConnectionConstraintFactory.newPatternConnectionConstraintDirector();
         this.activity = activity;
     } 
     

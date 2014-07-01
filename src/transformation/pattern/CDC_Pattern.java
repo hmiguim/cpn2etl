@@ -1,14 +1,13 @@
 package transformation.pattern;
 
 import cpn.Page;
-import cpn.Place;
 import cpn.Transition;
 import cpn.graph.Graph;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import transformation.mapping.MappingComponent;
 import transformation.mapping.MappingOrder;
+import transformation.pattern.constraints.connections.PatternConnectionConstraintCDC;
 import utils.Helper;
 
 /**
@@ -27,8 +26,7 @@ public class CDC_Pattern extends PatternBuilder {
 
         for (Transition t : trans) {
             if (t.isSubPage()) {
-                String[] normalizeAxis = Helper.normalizeAxis(t.getPosX(), t.getPosY());
-                map = new MappingComponent(t.getText(), "TransExecutor", normalizeAxis[0], normalizeAxis[1],t.getSubPageInfo().getName());
+                map = new MappingComponent(t.getText(), "TransExecutor", Helper.removePointZero(t.getPosX()), Helper.removePointZero(t.getPosY()), t.getSubPageInfo().getName());
                 maps.add(map);
             }
         }
@@ -42,17 +40,18 @@ public class CDC_Pattern extends PatternBuilder {
         ArrayList<MappingComponent> components = this.mapping.getComponents();
 
         Page p = this.pattern.getSubPageInfo().getPage();
-        
+
         Graph graph = new Graph();
 
         graph.construct(p);
 
         p.setGraph(graph);
 
-        ArrayList<String> test = new ArrayList<>();
+        PatternConnectionConstraintCDC connectionConstraintCDC = this.patternConnectionConstraintFactory.newPatternConnectionConstraintCDC();
 
-        test.add("readtransactionlogupdateaudittables");
-        
+        connectionConstraintCDC.createConnectionConstraint();
+        connectionConstraintCDC.buildConnectionConstraint();
+
         for (MappingComponent i : components) {
             for (MappingComponent j : components) {
 
@@ -61,27 +60,24 @@ public class CDC_Pattern extends PatternBuilder {
                     List connected = p.connected(i.getCpnElement(), j.getCpnElement());
 
                     if (connected != null) {
-                        String s = i.getCpnElement().toLowerCase().replace(" ", "");
-                            s += j.getCpnElement().toLowerCase().replace(" ", "");
-                            
-                            if (!test.contains(s)) {
-                                MappingOrder order = new MappingOrder(i, j);
-                                orders.add(order);
-                            }
+
+                        if (!connectionConstraintCDC.verifyConnectionConstraint(i.getCpnElement(), j.getCpnElement())) {
+                            MappingOrder order = new MappingOrder(i, j);
+                            orders.add(order);
+                        }
                     }
                 }
             }
         }
-
         return orders;
     }
 
     @Override
     public boolean convert() {
         this.mapping.setComponents(this.convertComponents());
-        
+
         this.mapping.setOrder(this.convertOrders());
-        
+
         return true;
     }
 }

@@ -5,35 +5,41 @@
         <group>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/mapping/Mapping.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/step/DBLookupConfiguration.java</file>
-            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/SCD_DeleteRecordActivity.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/PatternDirector.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/step/StepDirector.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/cpn/Arc.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/SCD/InsertRecordActivity.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/PatternActivityDirector.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/xml/Element.java</file>
-            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/SCD_UpdateRecordActivity.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/constraints/PatternConstraintSKP.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/step/Step.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/job/JobLog.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/log/TransLog.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/constraints/connections/Keyword.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/step/SetValueField.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/xml/builder/XMLBuilder.java</file>
-            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/SCD_InsertRecordActivity.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/PatternBuilder.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/step/ValidatorConfiguration.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/cpn/graph/Graph.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/CDC/DecodeRowLogContentsActivity.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/xml/builder/JobBuilder.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/SCDH_Pattern.java</file>
-            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/CDC_DecodeTransactionLogActivity.java</file>
-            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/CDC_ReadTransactionLogActivity.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/CDC/ReadTransactionLogActivity.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/PatternActivityBuilder.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/constraints/connections/PatternConnectionConstraintFactory.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/notepad/Notepad.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/SCD/UpdateRecordActivity.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/mapping/MappingComponent.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/constraints/connections/PatternConnectionConstraintBuilder.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/xml/XMLHelper.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/info/TransInfo.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/constraints/Keyword.java</file>
-            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/SCD_AuditDataVerificationActivity.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/step/TableInputConfiguration.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/CDC/UpdateAuditTablesActivity.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/SCD/AuditDataVerificationActivity.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/step/SwitchCaseConfiguration.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/step/TransExecutorConfiguration.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/constraints/connections/PatternConnectionConstraintCDC.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/step/Sequence.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/step/ExecSQLConfiguration.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/CDC_Pattern.java</file>
@@ -45,6 +51,7 @@
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/PatternActivityFactory.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/xml/XMLFactory.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/xml/parser/XMLParser.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/constraints/PatternConstraintDirector.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/step/TableOutputConfiguration.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/SKP_Pattern.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/main/Main.java</file>
@@ -52,7 +59,11 @@
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/utils/Helper.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/PatternFactory.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/cpn/Transition.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/activity/SCD/DeleteRecordActivity.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/constraints/connections/PatternConnectionConstraint.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/constraints/connections/PatternConnectionConstraintDirector.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/cpn/Place.java</file>
+            <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/transformation/pattern/constraints/PatternConstraintSCDH.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/pdi/components/step/StepFactory.java</file>
             <file>file:/Users/hmg/Documents/MSc%20Dissertation/Project/cpn2etl/src/cpn/Page.java</file>
         </group>

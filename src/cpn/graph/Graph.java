@@ -56,7 +56,7 @@ public class Graph {
         return new Graph(this);
     }
 
-    public void construct_insert(Page p) {
+    public void constructWithModules(Page p) {
 
         Collection<Arc> arcs = p.getArcs().values();
         Collection<Arc> arcs_assign_sk = p.getModulesPerPage().get(0).getSubPageInfo().getPage().getArcs().values();

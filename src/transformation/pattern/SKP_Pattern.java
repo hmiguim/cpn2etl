@@ -25,21 +25,27 @@ public class SKP_Pattern extends PatternBuilder {
         MappingComponent map;
 
         ArrayList<MappingComponent> maps = new ArrayList<>();
+        
+        ArrayList<Object> normalized = Helper.normalize(this.pattern.getSubPageInfo().getPage());
 
-        for (Place place : this.pattern.getSubPageInfo().getPage().getPlaces().values()) {
+        ArrayList<Place> places = Helper.getPlaces(normalized);
 
-            if (place.getText().toLowerCase().contains("lookup table")) {
-                String[] axis = Helper.normalizeAxis(place.getPosX(), place.getPosY());
-                map = new MappingComponent(place.getText(), "DBLookup", axis[0], axis[1]);
-                maps.add(map);
-            } else if (place.getText().toLowerCase().contains("fact records")) {
-                map = new MappingComponent(place.getText(), "TableInput", "30", "223");
-                maps.add(map);
-            } else if (place.getText().toLowerCase().contains("fact table")) {
-                map = new MappingComponent(place.getText(), "TableOutput", "461", "11");
-                maps.add(map);
+        for (Place place : places) {
+
+            switch(place.getText().toLowerCase()) {
+                case "lookup table":
+                    map = new MappingComponent(place.getText(), "DBLookup", Helper.removePointZero(place.getPosX()),Helper.removePointZero(place.getPosY()));
+                    maps.add(map);
+                    break;
+                case "fact records":
+                    map = new MappingComponent(place.getText(), "TableInput", Helper.removePointZero(place.getPosX()),Helper.removePointZero(place.getPosY()));
+                    maps.add(map);
+                    break;
+                case "fact table":
+                    map = new MappingComponent(place.getText(), "TableOutput", Helper.removePointZero(place.getPosX()),Helper.removePointZero(place.getPosY()));
+                    maps.add(map);
+                    break;
             }
-
         }
         return maps;
     }

@@ -1,4 +1,4 @@
-package transformation.pattern.activity;
+package transformation.pattern.activity.CDC;
 
 import cpn.Page;
 import cpn.Place;
@@ -9,13 +9,14 @@ import java.util.List;
 import pdi.components.notepad.Notepad;
 import transformation.mapping.MappingComponent;
 import transformation.mapping.MappingOrder;
+import transformation.pattern.activity.PatternActivityBuilder;
 import utils.Helper;
 
 /**
  *
  * @author hmg
  */
-public class CDC_UpdateAuditTablesActivity extends PatternActivityBuilder {
+public class DecodeRowLogContentsActivity extends PatternActivityBuilder {
 
     @Override
     protected ArrayList<MappingComponent> convertComponents() {
@@ -32,19 +33,19 @@ public class CDC_UpdateAuditTablesActivity extends PatternActivityBuilder {
         for (Place p : places) {
             switch(p.getText().toLowerCase()) {
                 
-                case "row": 
+                case "tlog record": 
                     map = new MappingComponent(p.getText(), "TableInput", Helper.removePointZero(p.getPosX()), Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
-                case "end time":
+                case "opr":
                     map = new MappingComponent(p.getText(), "TableInput",Helper.removePointZero(p.getPosX()),Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
-                case "tlog prog":
+                case "tlog rec":
                     map = new MappingComponent(p.getText(), "TableOutput",Helper.removePointZero(p.getPosX()),Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
-                case "audit table":
+                case "row":
                     map = new MappingComponent(p.getText(), "TableOutput",Helper.removePointZero(p.getPosX()),Helper.removePointZero(p.getPosY()));
                     maps.add(map);
                     break;
@@ -53,7 +54,7 @@ public class CDC_UpdateAuditTablesActivity extends PatternActivityBuilder {
         
         for (Transition t : trans) {
             switch (t.getText().toLowerCase()) {
-                case "update audit table":
+                case "row log contents simulation":
                     map = new MappingComponent(t.getText(), "ExecSQL", Helper.removePointZero(t.getPosX()),Helper.removePointZero(t.getPosY()));
                     maps.add(map);
                     break;
@@ -69,13 +70,13 @@ public class CDC_UpdateAuditTablesActivity extends PatternActivityBuilder {
         ArrayList<MappingComponent> components = this.mapping.getComponents();
 
         Page p = this.activity.getSubPageInfo().getPage();
-
+        
         Graph graph = new Graph();
 
         graph.construct(p);
 
         p.setGraph(graph);
-
+        
         for (MappingComponent i : components) {
             for (MappingComponent j : components) {
                 if (!i.getCpnElement().equals(j.getCpnElement())) {
@@ -83,10 +84,10 @@ public class CDC_UpdateAuditTablesActivity extends PatternActivityBuilder {
 
                     if (connected != null) {
                         if (connected.size() < 2) {
-
+                            
                             MappingOrder order = new MappingOrder(i, j);
                             orders.add(order);
-
+                            
                             if (orders.contains(new MappingOrder(j, i))) {
                                 String[] middlePoint = Helper.middlePoint(i.getXloc(), i.getYloc(), j.getXloc(), j.getYloc());
                                 Notepad note = new Notepad("Warning", middlePoint[0], middlePoint[1]);
@@ -99,15 +100,14 @@ public class CDC_UpdateAuditTablesActivity extends PatternActivityBuilder {
         }
 
         return orders;
+
     }
 
     @Override
     public boolean convert() {
-        
         this.mapping.setComponents(this.convertComponents());
         this.mapping.setOrder(this.convertOrders());
         
         return true;
-    }
-    
+    }    
 }

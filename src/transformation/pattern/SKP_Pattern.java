@@ -32,19 +32,15 @@ public class SKP_Pattern extends PatternBuilder {
 
         for (Place place : places) {
 
-            switch(place.getText().toLowerCase()) {
-                case "lookup table":
-                    map = new MappingComponent(place.getText(), "DBLookup", Helper.removePointZero(place.getPosX()),Helper.removePointZero(place.getPosY()));
-                    maps.add(map);
-                    break;
-                case "fact records":
-                    map = new MappingComponent(place.getText(), "TableInput", Helper.removePointZero(place.getPosX()),Helper.removePointZero(place.getPosY()));
-                    maps.add(map);
-                    break;
-                case "fact table":
-                    map = new MappingComponent(place.getText(), "TableOutput", Helper.removePointZero(place.getPosX()),Helper.removePointZero(place.getPosY()));
-                    maps.add(map);
-                    break;
+            if (place.getText().toLowerCase().contains("lookup table")) {
+                map = new MappingComponent(place.getText(), "DBLookup", Helper.removePointZero(place.getPosX()),Helper.removePointZero(place.getPosY()));
+                maps.add(map);
+            } else if (place.getText().toLowerCase().contains("fact records")) {
+                map = new MappingComponent(place.getText(), "TableInput", Helper.removePointZero(place.getPosX()),Helper.removePointZero(place.getPosY()));
+                maps.add(map);
+            } else if (place.getText().toLowerCase().contains("fact table")) {
+                map = new MappingComponent(place.getText(), "TableOutput", Helper.removePointZero(place.getPosX()),Helper.removePointZero(place.getPosY()));
+                maps.add(map);
             }
         }
         return maps;

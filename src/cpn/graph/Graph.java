@@ -144,7 +144,6 @@ public class Graph {
                     this.graph.addVertex(a.getPlaceEnd().getText());
 
                     this.graph.addEdge(a.getTransEnd().getText(), a.getPlaceEnd().getText());
-                    this.graph.addEdge(a.getPlaceEnd().getText(), a.getTransEnd().getText());
                     break;
             }
 
